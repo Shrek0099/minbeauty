@@ -15,7 +15,50 @@ export const siteConfig = {
   zalo: "0901234567",
   facebook: "https://facebook.com/minbeauty",
   instagram: "https://instagram.com/minbeauty",
+  promoModal: {
+    enabled: true,
+    showOncePerSession: true,
+    image: "/images/promo/promo-modal.jpg",
+    title: "Min Beauty",
+    subtitle: "Tư vấn dịch vụ phù hợp với từng gương mặt",
+    buttonText: "Đăng ký tư vấn",
+  },
 };
+
+export const promoModalServices = [
+  "Môi baby",
+  "Nâng tầng mặt giữa",
+  "Bọng mắt cười",
+  "Làm đầy trán hóm",
+  "Meso",
+  "Trẻ hóa vùng mắt",
+  "Chăm sóc da",
+];
+
+type HeaderNavLink = { href: string; label: string };
+type HeaderNavDropdown = { label: string; dropdown: HeaderNavLink[] };
+export type HeaderNavItem = HeaderNavLink | HeaderNavDropdown;
+
+export const headerNavItems: HeaderNavItem[] = [
+  { href: "#", label: "Trang chủ" },
+  {
+    label: "Dịch vụ",
+    dropdown: [
+      { href: "/dich-vu/tham-my", label: "Dịch vụ thẩm mỹ" },
+      { href: "/dich-vu/spa", label: "Dịch vụ Spa" },
+    ],
+  },
+  { href: "#hinh-anh", label: "Hình ảnh thực tế" },
+  { href: "#video", label: "Video" },
+  {
+    label: "Tin tức",
+    dropdown: [
+      { href: "/tin-tuc/su-kien", label: "Tin tức & Sự kiện" },
+      { href: "/tin-tuc/meo-lam-dep", label: "Mẹo làm đẹp" },
+    ],
+  },
+  { href: "#lien-he", label: "Liên hệ" },
+];
 
 export const navLinks = [
   { href: "#", label: "Trang chủ" },

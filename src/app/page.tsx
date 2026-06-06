@@ -1,6 +1,6 @@
 import { Header } from "@/components/header";
 import { Hero } from "@/components/hero";
-import { LuxuryAtmosphere } from "@/components/luxury-atmosphere";
+import { SakuraPetals } from "@/components/sakura-petals";
 import { Services } from "@/components/services";
 import { Gallery } from "@/components/gallery";
 import { Process } from "@/components/process";
@@ -10,12 +10,13 @@ import { Knowledge } from "@/components/knowledge";
 import { ConsultationForm } from "@/components/consultation-form";
 import { Footer } from "@/components/footer";
 import { FloatingContact } from "@/components/floating-contact";
+import { PromoModal } from "@/components/promo-modal";
 
 export default function Home() {
   return (
     <>
-      <LuxuryAtmosphere />
-      <div className="relative z-[2]">
+      <SakuraPetals />
+      <div className="relative z-[3]">
         <Header />
         <main>
           <Hero />
@@ -30,6 +31,7 @@ export default function Home() {
         <Footer />
       </div>
       <FloatingContact />
+      <PromoModal />
     </>
   );
 }
