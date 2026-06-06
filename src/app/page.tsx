@@ -15,7 +15,6 @@ import { PromoModal } from "@/components/promo-modal";
 export default function Home() {
   return (
     <>
-      <SakuraPetals />
       <div className="relative z-[3]">
         <Header />
         <main>
@@ -30,6 +29,7 @@ export default function Home() {
         </main>
         <Footer />
       </div>
+      <SakuraPetals />
       <FloatingContact />
       <PromoModal />
     </>

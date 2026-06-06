@@ -5,6 +5,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 type PetalConfig = {
   id: number;
   x: number;
+  startY: number;
   size: number;
   depth: number;
   opacity: number;
@@ -12,7 +13,7 @@ type PetalConfig = {
   rotation: number;
   duration: number;
   delay: number;
-  drift: number;
+  alt: boolean;
 };
 
 function seededRandom(seed: number) {
@@ -37,17 +38,17 @@ function getPetalCount(width: number) {
 function generatePetals(count: number): PetalConfig[] {
   return Array.from({ length: count }, (_, i) => {
     const depth = lerp(0.4, 1.4, seededRandom(i + 1));
-    const baseSize = lerp(10, 34, seededRandom(i + 11));
-    const size = baseSize * lerp(0.82, 1.08, depth / 1.4);
-    const opacity = Math.min(0.22, Math.max(0.08, lerp(0.08, 0.14, 1 - depth / 1.4) + depth * 0.06));
-    const blur = Math.max(0, lerp(1.8, 0, depth / 1.4));
-    const duration = lerp(30, 14, depth / 1.4) + seededRandom(i + 21) * 4;
+    const baseSize = lerp(12, 34, seededRandom(i + 11));
+    const size = baseSize * lerp(0.88, 1.12, depth / 1.4);
+    const opacity = Math.min(0.38, Math.max(0.16, lerp(0.12, 0.2, depth / 1.4) + seededRandom(i + 9) * 0.12));
+    const blur = Math.max(0, lerp(1.4, 0, depth / 1.4));
+    const duration = lerp(28, 14, depth / 1.4) + seededRandom(i + 21) * 4;
     const delay = -seededRandom(i + 31) * duration;
-    const drift = lerp(-50, 50, seededRandom(i + 41));
 
     return {
       id: i,
       x: seededRandom(i + 51) * 100,
+      startY: seededRandom(i + 71) * 85,
       size,
       depth,
       opacity,
@@ -55,7 +56,7 @@ function generatePetals(count: number): PetalConfig[] {
       rotation: lerp(-40, 40, seededRandom(i + 61)),
       duration,
       delay,
-      drift,
+      alt: seededRandom(i + 81) > 0.5,
     };
   });
 }
@@ -77,12 +78,12 @@ export function SakuraPetals() {
 
   useEffect(() => {
     reducedMotionRef.current = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (reducedMotionRef.current) return;
 
     const applyCount = () => {
       hostRefs.current = [];
       setPetals(generatePetals(getPetalCount(window.innerWidth)));
     };
+
     applyCount();
 
     let resizeTimer: number | undefined;
@@ -229,19 +230,19 @@ export function SakuraPetals() {
           className="sakura-petal-host"
           style={{
             left: `${petal.x}%`,
-            ["--depth" as string]: String(petal.depth),
+            ["--start-y" as string]: `${petal.startY}vh`,
           }}
         >
           <span
-            className="sakura-petal"
+            className={`sakura-petal${petal.alt ? " sakura-petal--alt" : ""}`}
             style={{
-              ["--size" as string]: `${petal.size}px`,
-              ["--duration" as string]: `${petal.duration}s`,
-              ["--delay" as string]: `${petal.delay}s`,
-              ["--opacity" as string]: String(petal.opacity),
-              ["--blur" as string]: `${petal.blur}px`,
-              ["--drift" as string]: `${petal.drift}px`,
-              ["--rotation" as string]: `${petal.rotation}deg`,
+              width: `${petal.size}px`,
+              height: `${petal.size * 0.72}px`,
+              opacity: petal.opacity,
+              filter: `blur(${petal.blur}px)`,
+              transform: `rotate(${petal.rotation}deg)`,
+              animationDuration: `${petal.duration}s`,
+              animationDelay: `${petal.delay}s`,
             }}
           />
         </div>

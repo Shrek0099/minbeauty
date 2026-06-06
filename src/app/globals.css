@@ -77,6 +77,10 @@ body {
     transition: none !important;
     scroll-behavior: auto !important;
   }
+
+  .sakura-petal {
+    animation: none !important;
+  }
 }
 
 /* Layout */
@@ -154,13 +158,13 @@ body {
   inset: 0;
   pointer-events: none;
   overflow: hidden;
-  z-index: 2;
+  z-index: 5;
   perspective: 1200px;
 }
 
 .sakura-petal-host {
   position: absolute;
-  top: -10vh;
+  top: var(--start-y, -10vh);
   transform-style: preserve-3d;
   transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
   will-change: transform;
@@ -168,16 +172,29 @@ body {
 
 @keyframes petalFloat {
   0% {
-    transform: translate3d(0, -12vh, 0) rotateX(0deg) rotateY(0deg) rotateZ(0deg);
+    transform: translate3d(0, -8vh, 0) rotateX(0deg) rotateY(0deg) rotateZ(0deg);
   }
 
   50% {
-    transform: translate3d(var(--drift, 40px), 50vh, 0) rotateX(60deg) rotateY(25deg) rotateZ(160deg);
+    transform: translate3d(36px, 18vh, 0) rotateX(60deg) rotateY(25deg) rotateZ(160deg);
   }
 
   100% {
-    transform: translate3d(calc(var(--drift, 40px) * -0.75), 112vh, 0) rotateX(120deg) rotateY(60deg)
-      rotateZ(320deg);
+    transform: translate3d(-28px, 42vh, 0) rotateX(120deg) rotateY(60deg) rotateZ(320deg);
+  }
+}
+
+@keyframes petalFloatAlt {
+  0% {
+    transform: translate3d(0, -6vh, 0) rotateX(10deg) rotateY(-10deg) rotateZ(0deg);
+  }
+
+  50% {
+    transform: translate3d(-42px, 20vh, 0) rotateX(50deg) rotateY(35deg) rotateZ(140deg);
+  }
+
+  100% {
+    transform: translate3d(30px, 44vh, 0) rotateX(110deg) rotateY(50deg) rotateZ(300deg);
   }
 }
 
@@ -185,7 +202,6 @@ body {
   display: block;
   width: var(--size);
   height: calc(var(--size) * 0.72);
-  opacity: var(--opacity);
   filter: blur(var(--blur));
   background: radial-gradient(circle at 35% 30%, #fff 0%, #fbe8e7 38%, #e7a6ae 100%);
   border-radius: 70% 30% 70% 30%;
@@ -197,42 +213,46 @@ body {
   animation-delay: var(--delay);
 }
 
+.sakura-petal--alt {
+  animation-name: petalFloatAlt;
+}
+
 .sakura-petal.is-burst {
   animation-play-state: paused;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .sakura-layer {
-    display: none;
+  .sakura-petal {
+    animation: none !important;
   }
 }
 
 /* Section backgrounds */
 .section-glow-light {
-  background-color: rgba(255, 255, 255, 0.94);
+  background-color: rgba(255, 255, 255, 0.86);
   background-image:
     radial-gradient(circle at 8% 12%, rgba(231, 166, 174, 0.09), transparent 42%),
     radial-gradient(circle at 92% 88%, rgba(216, 181, 123, 0.08), transparent 42%);
 }
 
 .services-section {
-  background: linear-gradient(180deg, rgba(255, 249, 246, 0.94) 0%, rgba(251, 237, 234, 0.94) 100%);
+  background: linear-gradient(180deg, rgba(255, 249, 246, 0.86) 0%, rgba(251, 237, 234, 0.86) 100%);
 }
 
 .process-section {
-  background: linear-gradient(135deg, rgba(246, 236, 231, 0.94) 0%, rgba(255, 244, 216, 0.94) 100%);
+  background: linear-gradient(135deg, rgba(246, 236, 231, 0.86) 0%, rgba(255, 244, 216, 0.86) 100%);
 }
 
 .about-section {
-  background: rgba(246, 236, 231, 0.94);
+  background: rgba(246, 236, 231, 0.86);
 }
 
 .contact-section {
-  background: rgba(255, 249, 246, 0.94);
+  background: rgba(255, 249, 246, 0.86);
 }
 
 .knowledge-section {
-  background: rgba(255, 244, 234, 0.94);
+  background: rgba(255, 244, 234, 0.86);
   background-image:
     radial-gradient(circle at 95% 8%, rgba(231, 166, 174, 0.08), transparent 40%),
     radial-gradient(circle at 5% 92%, rgba(216, 181, 123, 0.07), transparent 40%);
@@ -1034,7 +1054,7 @@ body {
 
 /* Video */
 .video-section {
-  background: rgba(255, 255, 255, 0.94);
+  background: rgba(255, 255, 255, 0.86);
 }
 
 .video-card {
