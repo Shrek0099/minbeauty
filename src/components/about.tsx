@@ -21,7 +21,7 @@ export function About() {
               <img
                 src="/images/about/facility.jpg"
                 alt={`Không gian ${siteConfig.name}`}
-                className="aspect-[4/3] w-full object-cover"
+                className="boutique-card-image aspect-[4/3]"
               />
             </div>
           </div>

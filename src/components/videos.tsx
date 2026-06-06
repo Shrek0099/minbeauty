@@ -18,7 +18,7 @@ export function Videos() {
                 <img
                   src={video.thumbnail}
                   alt={video.title}
-                  className="aspect-[9/16] w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+                  className="boutique-card-image aspect-[9/16]"
                 />
                 <div className="absolute inset-0 flex items-center justify-center bg-[rgba(47,32,34,0.14)] transition-colors group-hover:bg-[rgba(47,32,34,0.22)]">
                   <div className="video-play-btn">
@@ -27,9 +27,7 @@ export function Videos() {
                 </div>
                 <span className="luxury-tag absolute top-4 left-4">{video.service}</span>
               </div>
-              <div className="border-t border-border/60 p-4">
-                <p className="text-sm font-semibold text-foreground">{video.title}</p>
-              </div>
+              <h3 className="boutique-card-title">{video.title}</h3>
             </div>
           ))}
         </div>

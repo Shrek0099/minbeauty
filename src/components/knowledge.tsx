@@ -20,11 +20,11 @@ export function Knowledge() {
                 <img
                   src={article.image}
                   alt={article.title}
-                  className="news-card-image"
+                className="boutique-card-image news-card-image"
                 />
                 <span className="news-category">{article.category}</span>
               </div>
-              <div className="news-card-content">
+              <div className="news-card-content boutique-card-body">
                 <h3 className="news-title">{article.title}</h3>
                 <p className="news-excerpt">{article.excerpt}</p>
                 <a href="#" className="news-link">

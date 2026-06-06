@@ -20,10 +20,11 @@ export function Gallery() {
                 <img
                   src={item.image}
                   alt={`Kết quả ${item.service}`}
-                  className="aspect-[3/4] w-full object-cover"
+                  className="boutique-card-image aspect-[3/4]"
                 />
                 <span className="luxury-tag absolute top-4 left-4">{item.service}</span>
               </div>
+              <h3 className="boutique-card-title">{item.service}</h3>
             </article>
           ))}
         </div>

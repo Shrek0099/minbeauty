@@ -48,9 +48,9 @@ export function Services() {
               <img
                 src={service.image}
                 alt={service.title}
-                className="service-card-image"
+                className="boutique-card-image service-card-image"
               />
-              <h3 className="service-card-title">{service.title}</h3>
+              <h3 className="boutique-card-title service-card-title">{service.title}</h3>
             </article>
           ))}
         </div>
