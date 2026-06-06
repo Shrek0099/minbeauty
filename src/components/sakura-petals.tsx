@@ -2,18 +2,26 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 
+type PetalTone = "soft" | "bloom" | "deep";
+
 type PetalConfig = {
   id: number;
   x: number;
   startY: number;
   size: number;
-  depth: number;
   opacity: number;
   blur: number;
   rotation: number;
   duration: number;
   delay: number;
+  tone: PetalTone;
   alt: boolean;
+};
+
+const TONE_COLORS: Record<PetalTone, { light: string; mid: string; deep: string }> = {
+  soft: { light: "#FFF0F4", mid: "#FFC2D1", deep: "#F08FA8" },
+  bloom: { light: "#FFFFFF", mid: "#FF9EB8", deep: "#E86B8A" },
+  deep: { light: "#FFE4EC", mid: "#FF7DA0", deep: "#D65378" },
 };
 
 function seededRandom(seed: number) {
@@ -30,54 +38,107 @@ function randomInt(min: number, max: number) {
 }
 
 function getPetalCount(width: number) {
-  if (width < 768) return randomInt(8, 12);
-  if (width < 1024) return randomInt(12, 16);
-  return randomInt(18, 24);
+  if (width < 768) return randomInt(10, 14);
+  if (width < 1024) return randomInt(14, 18);
+  return randomInt(20, 26);
 }
 
 function generatePetals(count: number): PetalConfig[] {
+  const tones: PetalTone[] = ["soft", "bloom", "deep"];
+
   return Array.from({ length: count }, (_, i) => {
-    const depth = lerp(0.4, 1.4, seededRandom(i + 1));
-    const baseSize = lerp(12, 34, seededRandom(i + 11));
-    const size = baseSize * lerp(0.88, 1.12, depth / 1.4);
-    const opacity = Math.min(0.38, Math.max(0.16, lerp(0.12, 0.2, depth / 1.4) + seededRandom(i + 9) * 0.12));
-    const blur = Math.max(0, lerp(1.4, 0, depth / 1.4));
-    const duration = lerp(28, 14, depth / 1.4) + seededRandom(i + 21) * 4;
-    const delay = -seededRandom(i + 31) * duration;
+    const depth = lerp(0.45, 1.35, seededRandom(i + 1));
+    const size = lerp(18, 42, seededRandom(i + 11)) * lerp(0.92, 1.18, depth / 1.35);
+    const opacity = lerp(0.55, 0.92, depth / 1.35) * lerp(0.9, 1, seededRandom(i + 9));
+    const blur = Math.max(0, lerp(1.2, 0, depth / 1.35));
+    const duration = lerp(16, 28, 1 - depth / 1.35) + seededRandom(i + 21) * 5;
+    const tone = tones[Math.floor(seededRandom(i + 91) * tones.length)];
 
     return {
       id: i,
       x: seededRandom(i + 51) * 100,
-      startY: seededRandom(i + 71) * 85,
+      startY: -8,
       size,
-      depth,
-      opacity,
+      opacity: Math.min(0.82, opacity),
       blur,
-      rotation: lerp(-40, 40, seededRandom(i + 61)),
+      rotation: lerp(-50, 50, seededRandom(i + 61)),
       duration,
-      delay,
+      delay: -seededRandom(i + 31) * duration,
+      tone,
       alt: seededRandom(i + 81) > 0.5,
     };
   });
 }
 
-const MOUSE_RADIUS = 160;
-const MOUSE_FORCE = 72;
+function SakuraPetalSvg({
+  id,
+  size,
+  tone,
+  opacity,
+  blur,
+}: {
+  id: number;
+  size: number;
+  tone: PetalTone;
+  opacity: number;
+  blur: number;
+}) {
+  const colors = TONE_COLORS[tone];
+  const gradientId = `sakura-grad-${id}`;
+
+  return (
+    <svg
+      width={size}
+      height={size * 1.15}
+      viewBox="0 0 28 32"
+      fill="none"
+      aria-hidden="true"
+      style={{ opacity, filter: blur > 0 ? `blur(${blur}px)` : undefined }}
+    >
+      <defs>
+        <linearGradient id={gradientId} x1="8" y1="4" x2="22" y2="28" gradientUnits="userSpaceOnUse">
+          <stop stopColor={colors.light} />
+          <stop offset="0.45" stopColor={colors.mid} />
+          <stop offset="1" stopColor={colors.deep} />
+        </linearGradient>
+      </defs>
+      <path
+        d="M14 1.8C19 8.5 24.5 16 14 30.2C3.5 16 9 8.5 14 1.8Z"
+        fill={`url(#${gradientId})`}
+      />
+      <path
+        d="M14 1.8C11.2 6.2 9.8 10.8 14 16.2C18.2 10.8 16.8 6.2 14 1.8Z"
+        fill="rgba(255,255,255,0.35)"
+      />
+      <path
+        d="M14 7V23.5"
+        stroke="rgba(255,255,255,0.7)"
+        strokeWidth="0.7"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+}
+
+const MOUSE_RADIUS = 170;
+const MOUSE_FORCE = 85;
 const MOUSE_IDLE_MS = 700;
 const MOBILE_BURST_MS = 700;
 
 export function SakuraPetals() {
   const [petals, setPetals] = useState<PetalConfig[]>([]);
+  const [mounted, setMounted] = useState(false);
+  const [reducedMotion, setReducedMotion] = useState(false);
   const hostRefs = useRef<(HTMLDivElement | null)[]>([]);
   const mouseRef = useRef({ x: -9999, y: -9999, active: false });
   const rafRef = useRef<number | null>(null);
   const idleTimerRef = useRef<number | null>(null);
   const mobileBurstTimerRef = useRef<number | null>(null);
   const touchScrollPendingRef = useRef(false);
-  const reducedMotionRef = useRef(false);
 
   useEffect(() => {
-    reducedMotionRef.current = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    setMounted(true);
+    setReducedMotion(window.matchMedia("(prefers-reduced-motion: reduce)").matches);
 
     const applyCount = () => {
       hostRefs.current = [];
@@ -89,7 +150,7 @@ export function SakuraPetals() {
     let resizeTimer: number | undefined;
     const onResize = () => {
       window.clearTimeout(resizeTimer);
-      resizeTimer = window.setTimeout(applyCount, 180);
+      resizeTimer = window.setTimeout(applyCount, 200);
     };
 
     window.addEventListener("resize", onResize);
@@ -100,11 +161,11 @@ export function SakuraPetals() {
   }, []);
 
   useEffect(() => {
-    if (petals.length === 0 || reducedMotionRef.current) return;
+    if (!mounted || petals.length === 0 || reducedMotion) return;
 
     const clearBurst = (host: HTMLDivElement) => {
       host.style.transform = "";
-      host.querySelector(".sakura-petal")?.classList.remove("is-burst");
+      host.querySelector(".sakura-petal-inner")?.classList.remove("is-burst");
     };
 
     const applyHostBurst = (
@@ -113,11 +174,9 @@ export function SakuraPetals() {
       y: number,
       rotate: number,
       scale: number,
-      pause = true,
     ) => {
       host.style.transform = `translate3d(${x}px, ${y}px, 0) rotate(${rotate}deg) scale(${scale})`;
-      const inner = host.querySelector(".sakura-petal");
-      if (pause) inner?.classList.add("is-burst");
+      host.querySelector(".sakura-petal-inner")?.classList.add("is-burst");
     };
 
     const resetAllBursts = () => {
@@ -152,10 +211,7 @@ export function SakuraPetals() {
 
         if (distance > 0 && distance < MOUSE_RADIUS) {
           const force = ((MOUSE_RADIUS - distance) / MOUSE_RADIUS) * MOUSE_FORCE;
-          const burstX = (dx / distance) * force;
-          const burstY = (dy / distance) * force;
-          const burstRotate = (burstX + burstY) * 0.35;
-          applyHostBurst(host, burstX, burstY, burstRotate, 1, true);
+          applyHostBurst(host, (dx / distance) * force, (dy / distance) * force, (dx + dy) * 0.28, 1);
         } else {
           clearBurst(host);
         }
@@ -177,47 +233,41 @@ export function SakuraPetals() {
     const triggerMobileBurst = () => {
       hostRefs.current.forEach((host) => {
         if (!host) return;
-        const burstX = randomInt(-80, 80);
-        const burstY = randomInt(-60, 60);
-        const burstRotate = randomInt(-90, 90);
-        const burstScale = lerp(0.8, 1.25, Math.random());
-        applyHostBurst(host, burstX, burstY, burstRotate, burstScale, true);
+        applyHostBurst(
+          host,
+          randomInt(-90, 90),
+          randomInt(-70, 70),
+          randomInt(-100, 100),
+          lerp(0.85, 1.2, Math.random()),
+        );
       });
 
       if (mobileBurstTimerRef.current) window.clearTimeout(mobileBurstTimerRef.current);
       mobileBurstTimerRef.current = window.setTimeout(resetAllBursts, MOBILE_BURST_MS);
     };
 
-    const runTouchScrollFrame = () => {
-      touchScrollPendingRef.current = false;
-      if (window.innerWidth >= 768) return;
-      triggerMobileBurst();
-    };
-
     const queueTouchScrollBurst = () => {
       if (touchScrollPendingRef.current) return;
       touchScrollPendingRef.current = true;
-      window.requestAnimationFrame(runTouchScrollFrame);
-    };
-
-    const onTouchMove = () => queueTouchScrollBurst();
-    const onScroll = () => {
-      if (window.innerWidth < 768) queueTouchScrollBurst();
+      window.requestAnimationFrame(() => {
+        touchScrollPendingRef.current = false;
+        if (window.innerWidth < 768) triggerMobileBurst();
+      });
     };
 
     window.addEventListener("mousemove", onMouseMove, { passive: true });
-    window.addEventListener("touchmove", onTouchMove, { passive: true });
-    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("touchmove", queueTouchScrollBurst, { passive: true });
+    window.addEventListener("scroll", queueTouchScrollBurst, { passive: true });
 
     return () => {
       window.removeEventListener("mousemove", onMouseMove);
-      window.removeEventListener("touchmove", onTouchMove);
-      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("touchmove", queueTouchScrollBurst);
+      window.removeEventListener("scroll", queueTouchScrollBurst);
       if (rafRef.current) window.cancelAnimationFrame(rafRef.current);
       if (idleTimerRef.current) window.clearTimeout(idleTimerRef.current);
       if (mobileBurstTimerRef.current) window.clearTimeout(mobileBurstTimerRef.current);
     };
-  }, [petals.length]);
+  }, [mounted, petals.length, reducedMotion]);
 
   const petalElements = useMemo(
     () =>
@@ -228,29 +278,31 @@ export function SakuraPetals() {
             hostRefs.current[index] = node;
           }}
           className="sakura-petal-host"
-          style={{
-            left: `${petal.x}%`,
-            ["--start-y" as string]: `${petal.startY}vh`,
-          }}
+          style={{ left: `${petal.x}%`, top: `${petal.startY}vh` }}
         >
-          <span
-            className={`sakura-petal${petal.alt ? " sakura-petal--alt" : ""}`}
+          <div
+            className={`sakura-petal-inner${petal.alt ? " sakura-petal-inner--alt" : ""}${reducedMotion ? " sakura-petal-inner--static" : ""}`}
             style={{
-              width: `${petal.size}px`,
-              height: `${petal.size * 0.72}px`,
-              opacity: petal.opacity,
-              filter: `blur(${petal.blur}px)`,
-              transform: `rotate(${petal.rotation}deg)`,
               animationDuration: `${petal.duration}s`,
               animationDelay: `${petal.delay}s`,
             }}
-          />
+          >
+            <div style={{ transform: `rotate(${petal.rotation}deg)` }}>
+              <SakuraPetalSvg
+                id={petal.id}
+                size={petal.size}
+                tone={petal.tone}
+                opacity={petal.opacity}
+                blur={petal.blur}
+              />
+            </div>
+          </div>
         </div>
       )),
-    [petals],
+    [petals, reducedMotion],
   );
 
-  if (petals.length === 0) return null;
+  if (!mounted || petals.length === 0) return null;
 
   return (
     <div className="sakura-layer" aria-hidden="true">
