@@ -148,68 +148,98 @@ body {
   left: 140%;
 }
 
-/* Floating luxury */
-@keyframes floatLuxury {
+/* Luxury atmosphere */
+.luxury-atmosphere {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  overflow: hidden;
+}
+
+.hero-luxury-petals {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 2;
+  overflow: hidden;
+}
+
+@keyframes sakuraFloat {
+  0% {
+    transform: translateY(-20px) rotate(0deg);
+  }
+
+  50% {
+    transform: translateY(20px) rotate(12deg);
+  }
+
+  100% {
+    transform: translateY(60px) rotate(25deg);
+  }
+}
+
+@keyframes luxurySparkleFade {
   0%,
   100% {
-    transform: translate3d(0, 0, 0) rotate(0deg);
-    opacity: 0.16;
+    opacity: var(--sparkle-opacity, 0.06);
+    transform: scale(1);
   }
+
   50% {
-    transform: translate3d(12px, -18px, 0) rotate(8deg);
-    opacity: 0.28;
+    opacity: calc(var(--sparkle-opacity, 0.06) * 1.6);
+    transform: scale(1.12);
   }
 }
 
-.floating-luxury-dot {
+.luxury-sakura-petal {
   position: absolute;
-  width: 8px;
-  height: 8px;
-  border-radius: 999px;
-  background: radial-gradient(circle, var(--gold-light), transparent 70%);
-  animation: floatLuxury 14s ease-in-out infinite;
   pointer-events: none;
-  z-index: 2;
+  border-radius: 50% 50% 50% 12%;
+  filter: blur(0.5px);
+  transform: rotate(var(--luxury-rotate, 0deg));
+  animation: sakuraFloat var(--luxury-duration, 18s) ease-in-out infinite alternate;
+  animation-delay: var(--luxury-delay, 0s);
+  will-change: transform;
 }
 
-.floating-luxury-petal {
+.luxury-sparkle {
   position: absolute;
-  width: 14px;
-  height: 14px;
-  border-radius: 40% 60% 50% 50%;
-  background: radial-gradient(circle at 30% 30%, var(--rose), transparent 72%);
-  opacity: 0.2;
-  animation: floatLuxury 16s ease-in-out infinite;
   pointer-events: none;
-  z-index: 2;
+  border-radius: 999px;
+  background: radial-gradient(circle, var(--gold-light) 0%, var(--gold) 55%, transparent 100%);
+  filter: blur(0.5px);
+  animation: luxurySparkleFade var(--luxury-duration, 10s) ease-in-out infinite;
+  animation-delay: var(--luxury-delay, 0s);
+  --sparkle-opacity: var(--luxury-sparkle-opacity, 0.07);
 }
 
 /* Section backgrounds */
 .section-glow-light {
-  background-color: var(--bg-card);
+  background-color: rgba(255, 255, 255, 0.94);
   background-image:
     radial-gradient(circle at 8% 12%, rgba(231, 166, 174, 0.09), transparent 42%),
     radial-gradient(circle at 92% 88%, rgba(216, 181, 123, 0.08), transparent 42%);
 }
 
 .services-section {
-  background: linear-gradient(180deg, #fff9f6 0%, #fbedea 100%);
+  background: linear-gradient(180deg, rgba(255, 249, 246, 0.94) 0%, rgba(251, 237, 234, 0.94) 100%);
 }
 
 .process-section {
-  background: linear-gradient(135deg, #f6ece7 0%, #fff4d8 100%);
+  background: linear-gradient(135deg, rgba(246, 236, 231, 0.94) 0%, rgba(255, 244, 216, 0.94) 100%);
 }
 
 .about-section {
-  background: var(--bg-soft);
+  background: rgba(246, 236, 231, 0.94);
 }
 
 .contact-section {
-  background: var(--bg);
+  background: rgba(255, 249, 246, 0.94);
 }
 
 .knowledge-section {
-  background: var(--bg-warm);
+  background: rgba(255, 244, 234, 0.94);
   background-image:
     radial-gradient(circle at 95% 8%, rgba(231, 166, 174, 0.08), transparent 40%),
     radial-gradient(circle at 5% 92%, rgba(216, 181, 123, 0.07), transparent 40%);
@@ -321,17 +351,6 @@ body {
   isolation: isolate;
 }
 
-.hero::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background:
-    radial-gradient(circle at 70% 28%, rgba(255, 255, 255, 0.28), transparent 28%),
-    radial-gradient(circle at 40% 80%, rgba(246, 227, 161, 0.18), transparent 30%);
-  pointer-events: none;
-  z-index: 1;
-}
-
 .hero-banner {
   position: relative;
   width: 100%;
@@ -340,6 +359,17 @@ body {
   aspect-ratio: 1024 / 546;
   max-height: 620px;
   z-index: 0;
+}
+
+.hero-banner::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 70% 28%, rgba(255, 255, 255, 0.28), transparent 28%),
+    radial-gradient(circle at 40% 80%, rgba(246, 227, 161, 0.18), transparent 30%);
+  pointer-events: none;
+  z-index: 1;
 }
 
 @media (max-width: 767px) {
@@ -572,7 +602,7 @@ body {
 
 /* Video */
 .video-section {
-  background: var(--bg-card);
+  background: rgba(255, 255, 255, 0.94);
 }
 
 .video-card {

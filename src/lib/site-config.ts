@@ -4,6 +4,7 @@ export const siteConfig = {
   description:
     "Min Beauty tập trung vào các dịch vụ môi, filler, trẻ hóa da và chăm sóc da. Mỗi khách hàng được tư vấn theo tình trạng thực tế trước khi thực hiện.",
   url: "https://minbeauty.vn",
+  logo: "/images/logo/min-beauty-logo.png",
   phone: "0901 234 567",
   phoneRaw: "+84901234567",
   email: "info@minbeauty.vn",

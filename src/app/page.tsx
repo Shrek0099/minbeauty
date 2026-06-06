@@ -1,5 +1,6 @@
 import { Header } from "@/components/header";
 import { Hero } from "@/components/hero";
+import { LuxuryAtmosphere } from "@/components/luxury-atmosphere";
 import { Services } from "@/components/services";
 import { Gallery } from "@/components/gallery";
 import { Process } from "@/components/process";
@@ -13,18 +14,21 @@ import { FloatingContact } from "@/components/floating-contact";
 export default function Home() {
   return (
     <>
-      <Header />
-      <main>
-        <Hero />
-        <Services />
-        <Gallery />
-        <Process />
-        <Videos />
-        <Knowledge />
-        <About />
-        <ConsultationForm />
-      </main>
-      <Footer />
+      <LuxuryAtmosphere />
+      <div className="relative z-[2]">
+        <Header />
+        <main>
+          <Hero />
+          <Services />
+          <Gallery />
+          <Process />
+          <Videos />
+          <Knowledge />
+          <About />
+          <ConsultationForm />
+        </main>
+        <Footer />
+      </div>
       <FloatingContact />
     </>
   );

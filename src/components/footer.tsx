@@ -1,4 +1,5 @@
 import { footerNavLinks, footerServiceLinks, siteConfig } from "@/lib/site-config";
+import { Logo } from "@/components/logo";
 
 export function Footer() {
   const currentYear = new Date().getFullYear();
@@ -8,11 +9,8 @@ export function Footer() {
       <div className="site-container py-12 md:py-14">
         <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-4">
           <div className="lg:col-span-1">
-            <div className="mb-5 flex items-center gap-3">
-              <div className="flex h-11 w-11 items-center justify-center rounded-full bg-primary shadow-[var(--shadow-card)] ring-2 ring-gold/35">
-                <span className="section-title text-base font-semibold text-white">M</span>
-              </div>
-              <p className="section-title text-xl text-white">Min Beauty</p>
+            <div className="mb-5">
+              <Logo variant="footer" />
             </div>
             <p className="site-footer-text">
               Cơ sở làm đẹp nhỏ, tập trung vào tư vấn rõ ràng và dịch vụ phù hợp với từng

@@ -1,11 +1,8 @@
 import Image from "next/image";
 
-const floatingDots = [
-  { top: "12%", left: "6%", delay: "0s" },
-  { top: "22%", right: "8%", delay: "2s" },
-  { top: "68%", left: "12%", delay: "4s" },
-  { top: "78%", right: "14%", delay: "1s" },
-  { top: "40%", left: "48%", delay: "3s" },
+const heroPetals = [
+  { top: "18%", left: "11%", size: 20, duration: 21, delay: -2, color: "#FBE8E7", opacity: 0.12, rotate: -16 },
+  { top: "28%", left: "84%", size: 26, duration: 24, delay: -8, color: "#EFC3C8", opacity: 0.1, rotate: 14 },
 ];
 
 export function Hero() {
@@ -25,21 +22,27 @@ export function Hero() {
           sizes="100vw"
           className="hero-banner-img"
         />
-      </div>
 
-      {floatingDots.map((dot, i) => (
-        <span
-          key={i}
-          className={i % 2 === 0 ? "floating-luxury-dot" : "floating-luxury-petal"}
-          style={{
-            top: dot.top,
-            left: dot.left,
-            right: dot.right,
-            animationDelay: dot.delay,
-          }}
-          aria-hidden="true"
-        />
-      ))}
+        <div className="hero-luxury-petals" aria-hidden="true">
+          {heroPetals.map((petal, i) => (
+            <span
+              key={i}
+              className="luxury-sakura-petal"
+              style={{
+                top: petal.top,
+                left: petal.left,
+                width: `${petal.size}px`,
+                height: `${petal.size * 1.12}px`,
+                backgroundColor: petal.color,
+                opacity: petal.opacity,
+                ["--luxury-duration" as string]: `${petal.duration}s`,
+                ["--luxury-delay" as string]: `${petal.delay}s`,
+                ["--luxury-rotate" as string]: `${petal.rotate}deg`,
+              }}
+            />
+          ))}
+        </div>
+      </div>
 
       <div className="hero-divider" aria-hidden="true" />
     </section>

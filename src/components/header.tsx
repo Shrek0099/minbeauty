@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Menu, X } from "lucide-react";
 import { navLinks, siteConfig } from "@/lib/site-config";
+import { Logo } from "@/components/logo";
 
 export function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -10,14 +11,8 @@ export function Header() {
   return (
     <header className="site-header">
       <div className="site-container site-header-inner">
-        <a href="#" className="group flex shrink-0 items-center gap-3">
-          <div className="flex h-11 w-11 items-center justify-center rounded-full bg-primary shadow-[var(--shadow-card)] ring-2 ring-gold/35 transition-transform group-hover:scale-105">
-            <span className="section-title text-base font-semibold text-white">M</span>
-          </div>
-          <div>
-            <p className="section-title text-xl leading-tight text-foreground">Min Beauty</p>
-            <p className="text-xs font-semibold tracking-wide text-primary">Làm đẹp tự nhiên</p>
-          </div>
+        <a href="#" className="group flex shrink-0 items-center">
+          <Logo variant="header" />
         </a>
 
         <nav className="hidden items-center gap-0.5 lg:flex">
