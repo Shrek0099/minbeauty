@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { ChevronDown, MapPin, Menu, Phone, Search, X } from "lucide-react";
+import { useState } from "react";
+import { ChevronDown, MapPin, Phone, Search } from "lucide-react";
 import { headerNavItems, siteConfig, type HeaderNavItem } from "@/lib/site-config";
 import { Logo } from "@/components/logo";
 
@@ -19,20 +19,18 @@ function NavDropdown({
   menuKey,
   openMenu,
   setOpenMenu,
-  onNavigate,
 }: {
   label: string;
   items: readonly { href: string; label: string }[];
   menuKey: DropdownKey;
   openMenu: DropdownKey | null;
   setOpenMenu: (key: DropdownKey | null) => void;
-  onNavigate?: () => void;
 }) {
   const isOpen = openMenu === menuKey;
 
   return (
     <div
-      className="site-nav-dropdown"
+      className="site-nav-dropdown shrink-0"
       onMouseEnter={() => setOpenMenu(menuKey)}
       onMouseLeave={() => setOpenMenu(null)}
     >
@@ -48,12 +46,7 @@ function NavDropdown({
       {isOpen && (
         <div className="site-nav-dropdown-panel">
           {items.map((item) => (
-            <a
-              key={item.href}
-              href={item.href}
-              className="site-nav-dropdown-item"
-              onClick={onNavigate}
-            >
+            <a key={item.href} href={item.href} className="site-nav-dropdown-item">
               {item.label}
             </a>
           ))}
@@ -64,15 +57,7 @@ function NavDropdown({
 }
 
 export function Header() {
-  const [mobileOpen, setMobileOpen] = useState(false);
   const [openMenu, setOpenMenu] = useState<DropdownKey | null>(null);
-  const [mobileDropdown, setMobileDropdown] = useState<DropdownKey | null>(null);
-
-  useEffect(() => {
-    if (!mobileOpen) {
-      setMobileDropdown(null);
-    }
-  }, [mobileOpen]);
 
   return (
     <header className="site-header">
@@ -106,7 +91,7 @@ export function Header() {
             <Logo variant="nav" />
           </a>
 
-          <nav className="site-main-nav hidden lg:flex">
+          <nav className="site-main-nav">
             {headerNavItems.map((item) => {
               if (hasDropdown(item)) {
                 const menuKey: DropdownKey = item.label === "Dịch vụ" ? "dich-vu" : "tin-tuc";
@@ -123,107 +108,14 @@ export function Header() {
               }
 
               return (
-                <a key={item.label} href={item.href} className="site-main-nav-link">
+                <a key={item.label} href={item.href} className="site-main-nav-link shrink-0">
                   {item.label}
                 </a>
               );
             })}
           </nav>
-
-          <div className="flex items-center gap-2 sm:gap-3">
-            <a
-              href={`https://zalo.me/${siteConfig.zalo}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="site-zalo-btn hidden sm:inline-flex"
-            >
-              Nhắn Zalo
-            </a>
-
-            <button
-              type="button"
-              className="site-mobile-menu-btn lg:hidden"
-              onClick={() => setMobileOpen(!mobileOpen)}
-              aria-label="Menu"
-            >
-              {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-            </button>
-          </div>
         </div>
       </div>
-
-      {mobileOpen && (
-        <nav className="site-mobile-nav lg:hidden">
-          <div className="site-container py-4">
-            <div className="mb-4 flex items-center justify-between gap-3 border-b border-border/70 pb-4 sm:hidden">
-              <a href={`tel:${siteConfig.phoneRaw}`} className="site-header-hotline text-sm">
-                <Phone className="h-4 w-4 shrink-0" />
-                {siteConfig.phone}
-              </a>
-              <a href="#lien-he" className="site-header-booking text-sm" onClick={() => setMobileOpen(false)}>
-                Đặt lịch hẹn
-              </a>
-            </div>
-
-            <div className="flex flex-col gap-1">
-              {headerNavItems.map((item) => {
-                if (hasDropdown(item)) {
-                  const menuKey: DropdownKey = item.label === "Dịch vụ" ? "dich-vu" : "tin-tuc";
-                  const expanded = mobileDropdown === menuKey;
-
-                  return (
-                    <div key={item.label} className="site-mobile-nav-group">
-                      <button
-                        type="button"
-                        className="site-mobile-nav-link"
-                        onClick={() => setMobileDropdown(expanded ? null : menuKey)}
-                      >
-                        {item.label}
-                        <ChevronDown className={`h-4 w-4 ${expanded ? "rotate-180" : ""}`} />
-                      </button>
-                      {expanded && (
-                        <div className="site-mobile-nav-sub">
-                          {item.dropdown.map((sub) => (
-                            <a
-                              key={sub.href}
-                              href={sub.href}
-                              className="site-mobile-nav-sub-link"
-                              onClick={() => setMobileOpen(false)}
-                            >
-                              {sub.label}
-                            </a>
-                          ))}
-                        </div>
-                      )}
-                    </div>
-                  );
-                }
-
-                return (
-                  <a
-                    key={item.label}
-                    href={item.href}
-                    className="site-mobile-nav-link"
-                    onClick={() => setMobileOpen(false)}
-                  >
-                    {item.label}
-                  </a>
-                );
-              })}
-
-              <a
-                href={`https://zalo.me/${siteConfig.zalo}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="site-zalo-btn mt-3 w-full justify-center"
-                onClick={() => setMobileOpen(false)}
-              >
-                Nhắn Zalo
-              </a>
-            </div>
-          </div>
-        </nav>
-      )}
     </header>
   );
 }

@@ -423,8 +423,18 @@ body {
 }
 
 .site-main-nav {
+  display: flex;
   align-items: stretch;
   gap: 0.125rem;
+  min-width: 0;
+  flex: 1;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.site-main-nav::-webkit-scrollbar {
+  display: none;
 }
 
 .site-main-nav-link {
@@ -438,6 +448,13 @@ body {
   color: #ffffff;
   white-space: nowrap;
   transition: background 0.2s ease, color 0.2s ease;
+}
+
+@media (max-width: 767px) {
+  .site-main-nav-link {
+    padding: 14px 11px;
+    font-size: 0.8125rem;
+  }
 }
 
 .site-main-nav-link:hover,
@@ -476,85 +493,6 @@ body {
 }
 
 .site-nav-dropdown-item:hover {
-  background: #f6ece7;
-  color: #a56b5a;
-}
-
-.site-zalo-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 999px;
-  border: 1px solid rgba(255, 244, 216, 0.55);
-  background: rgba(255, 255, 255, 0.12);
-  padding: 0.625rem 1.125rem;
-  font-size: 0.875rem;
-  font-weight: 700;
-  color: #fff4d8;
-  transition: background 0.2s ease, border-color 0.2s ease;
-}
-
-.site-zalo-btn:hover {
-  background: rgba(255, 255, 255, 0.2);
-  border-color: rgba(255, 244, 216, 0.85);
-}
-
-.site-mobile-menu-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 999px;
-  padding: 0.5rem;
-  color: #fff4d8;
-  transition: background 0.2s ease;
-}
-
-.site-mobile-menu-btn:hover {
-  background: rgba(255, 255, 255, 0.14);
-}
-
-.site-mobile-nav {
-  background: #fff9f6;
-  border-top: 1px solid rgba(216, 181, 123, 0.35);
-}
-
-.site-mobile-nav-link {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: 100%;
-  padding: 0.875rem 0.75rem;
-  border-radius: 12px;
-  font-size: 0.9375rem;
-  font-weight: 700;
-  color: var(--text);
-  transition: background 0.2s ease, color 0.2s ease;
-}
-
-.site-mobile-nav-link:hover {
-  background: #f6ece7;
-  color: #a56b5a;
-}
-
-.site-mobile-nav-sub {
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
-  padding: 0.25rem 0 0.5rem 0.75rem;
-}
-
-.site-mobile-nav-sub-link {
-  display: block;
-  padding: 0.75rem 0.875rem;
-  border-radius: 10px;
-  font-size: 0.8125rem;
-  font-weight: 700;
-  letter-spacing: 0.25px;
-  text-transform: uppercase;
-  color: var(--text-muted);
-}
-
-.site-mobile-nav-sub-link:hover {
   background: #f6ece7;
   color: #a56b5a;
 }
