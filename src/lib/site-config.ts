@@ -1,8 +1,8 @@
 export const siteConfig = {
   name: "Min Beauty",
-  tagline: "Tận tâm vì sắc đẹp",
+  tagline: "Làm đẹp tự nhiên, nhẹ nhàng",
   description:
-    "Min Beauty - Thẩm mỹ viện chuyên nghiệp, cung cấp dịch vụ làm đẹp an toàn, hiện đại với đội ngũ bác sĩ giàu kinh nghiệm. Chăm sóc da, phun xăm, filler botox, HIFU và nhiều dịch vụ spa cao cấp.",
+    "Min Beauty tập trung vào các dịch vụ môi, filler, trẻ hóa da và chăm sóc da. Mỗi khách hàng được tư vấn theo tình trạng thực tế trước khi thực hiện.",
   url: "https://minbeauty.vn",
   phone: "0901 234 567",
   phoneRaw: "+84901234567",
@@ -14,172 +14,193 @@ export const siteConfig = {
   zalo: "0901234567",
   facebook: "https://facebook.com/minbeauty",
   instagram: "https://instagram.com/minbeauty",
-  businessLicense: "0312345678",
-  medicalLicense: "12345/HCM-GPHĐ",
 };
 
-export const beautyServices = [
+export const navLinks = [
+  { href: "#", label: "Trang chủ" },
+  { href: "#dich-vu", label: "Dịch vụ" },
+  { href: "#hinh-anh", label: "Hình ảnh thực tế" },
+  { href: "#video", label: "Video" },
+  { href: "#kien-thuc", label: "Kiến thức" },
+  { href: "#lien-he", label: "Liên hệ" },
+];
+
+export const cosmeticServices = [
   {
-    id: "nang-mui",
-    title: "Nâng Mũi",
-    description: "Tạo dáng mũi hài hòa, tự nhiên với công nghệ hiện đại",
-    image:
-      "https://images.unsplash.com/photo-1516975080664-ed2fc6a32937?w=600&h=400&fit=crop",
+    id: "moi-baby",
+    title: "Môi baby",
+    image: "/images/services/moi-baby.jpg",
   },
   {
-    id: "tham-my-mat",
-    title: "Thẩm Mỹ Mắt",
-    description: "Mắt to tròn, long lanh với phương pháp an toàn",
-    image:
-      "https://images.unsplash.com/photo-1487412946677-5d558153d4e1?w=600&h=400&fit=crop",
+    id: "nang-tang-mat-giua",
+    title: "Nâng tầng mặt giữa",
+    image: "/images/services/nang-tang-mat-giua.jpg",
   },
   {
-    id: "filler-botox",
-    title: "Filler / Botox",
-    description: "Trẻ hóa da, xóa nhăn không cần phẫu thuật",
-    image:
-      "https://images.unsplash.com/photo-1570172619644-dfd0edec74c2?w=600&h=400&fit=crop",
+    id: "bong-mat-cuoi",
+    title: "Bọng mắt cười",
+    image: "/images/services/bong-mat-cuoi.jpg",
   },
   {
-    id: "cang-da-chi",
-    title: "Căng Da / Chỉ",
-    description: "Lifting da mặt, chống lão hóa hiệu quả",
-    image:
-      "https://images.unsplash.com/photo-1616394584738-fc6e612e71b9?w=600&h=400&fit=crop",
+    id: "lam-day-tran-hom",
+    title: "Làm đầy trán hóm",
+    image: "/images/services/lam-day-tran-hom.jpg",
   },
 ];
 
 export const spaServices = [
   {
-    id: "cham-soc-da",
-    title: "Chăm Sóc Da",
-    description: "Liệu trình chăm sóc da chuyên sâu, phục hồi làn da",
-    image:
-      "https://images.unsplash.com/photo-1570172619644-dfd0edec74c2?w=600&h=400&fit=crop",
-  },
-  {
-    id: "phun-xam",
-    title: "Phun Xăm Thẩm Mỹ",
-    description: "Phun mày, môi, eyeliner tự nhiên, bền màu",
-    image:
-      "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=600&h=400&fit=crop",
-  },
-  {
-    id: "hifu",
-    title: "Công Nghệ HIFU",
-    description: "Nâng cơ, săn chắc da không xâm lấn",
-    image:
-      "https://images.unsplash.com/photo-1515377905703-c4788e51af15?w=600&h=400&fit=crop",
-  },
-  {
     id: "meso",
-    title: "Tiêm Meso",
-    description: "Cấp ẩm, dưỡng trắng da từ sâu bên trong",
-    image:
-      "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=600&h=400&fit=crop",
+    title: "Meso",
+    image: "/images/services/meso.jpg",
+  },
+  {
+    id: "tre-hoa-vung-mat",
+    title: "Trẻ hóa vùng mắt",
+    image: "/images/services/tre-hoa-vung-mat.jpg",
+  },
+  {
+    id: "cham-soc-da",
+    title: "Chăm sóc da",
+    image: "/images/services/cham-soc-da.jpg",
+  },
+  {
+    id: "phuc-hoi-da",
+    title: "Phục hồi da",
+    image: "/images/services/phuc-hoi-da.jpg",
   },
 ];
 
-export const commitments = [
-  {
-    title: "Bác sĩ chuyên môn cao",
-    description: "Đội ngũ bác sĩ được đào tạo bài bản, giàu kinh nghiệm thực tế",
-    icon: "stethoscope" as const,
-  },
-  {
-    title: "Công nghệ hiện đại",
-    description: "Trang thiết bị nhập khẩu chính hãng, cập nhật xu hướng mới nhất",
-    icon: "sparkles" as const,
-  },
-  {
-    title: "An toàn tuyệt đối",
-    description: "Quy trình vô trùng khép kín, tuân thủ tiêu chuẩn y khoa",
-    icon: "shield" as const,
-  },
-  {
-    title: "Cam kết bảo hành",
-    description: "Hỗ trợ chăm sóc sau liệu trình, bảo hành dịch vụ rõ ràng",
-    icon: "heart" as const,
-  },
-];
-
-export const stats = [
-  { value: "50+", label: "Dịch vụ" },
-  { value: "10.000+", label: "Khách hàng" },
-  { value: "5+", label: "Năm kinh nghiệm" },
-];
-
-export const newsArticles = [
-  {
-    slug: "cham-soc-da-mua-he",
-    title: "Chăm sóc da mùa hè: 5 bước giữ làn da khỏe mạnh",
-    excerpt:
-      "Mùa hè với ánh nắng gay gắt đòi hỏi chế độ chăm sóc da đặc biệt. Cùng Min Beauty tìm hiểu các bước cơ bản để bảo vệ làn da.",
-    date: "15/05/2026",
-    image:
-      "https://images.unsplash.com/photo-1556228578-0d85b1a4d571?w=600&h=400&fit=crop",
-  },
-  {
-    slug: "filler-botox-co-an-toan-khong",
-    title: "Filler Botox có an toàn không? Những điều cần biết",
-    excerpt:
-      "Filler và Botox là phương pháp làm đẹp không xâm lấn phổ biến. Tuy nhiên, cần lựa chọn cơ sở uy tín để đảm bảo an toàn.",
-    date: "10/05/2026",
-    image:
-      "https://images.unsplash.com/photo-1570172619644-dfd0edec74c2?w=600&h=400&fit=crop",
-  },
-  {
-    slug: "phun-may-tu-nhien",
-    title: "Phun mày tự nhiên: Xu hướng làm đẹp 2026",
-    excerpt:
-      "Phun mày tự nhiên giúp bạn sở hữu đôi lông mày hoàn hảo mà không cần trang điểm hàng ngày.",
-    date: "05/05/2026",
-    image:
-      "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=600&h=400&fit=crop",
-  },
-  {
-    slug: "hifu-nang-co-da",
-    title: "HIFU nâng cơ da: Giải pháp chống lão hóa không phẫu thuật",
-    excerpt:
-      "Công nghệ HIFU sử dụng sóng siêu âm tập trung để kích thích collagen, giúp da săn chắc tự nhiên.",
-    date: "01/05/2026",
-    image:
-      "https://images.unsplash.com/photo-1515377905703-c4788e51af15?w=600&h=400&fit=crop",
-  },
-];
-
-export const consultationServices = [
-  "NÂNG MŨI",
-  "THẨM MỸ MẮT",
-  "CĂNG DA / CHỈ",
-  "BOTOX / FILLER",
-  "CHĂM SÓC DA",
-  "PHUN XĂM THẨM MỸ",
-  "NÂNG NGỰC",
-  "TIÊM MESO",
-  "CÔNG NGHỆ HIFU",
-];
+export const services = [...cosmeticServices, ...spaServices];
 
 export const galleryItems = [
   {
+    id: "1",
+    service: "Môi baby",
+    image: "/images/gallery/moi-baby.jpg",
+  },
+  {
+    id: "2",
+    service: "Nâng tầng mặt giữa",
+    image: "/images/gallery/nang-tang-mat-giua.jpg",
+  },
+  {
+    id: "3",
+    service: "Trẻ hóa vùng mắt",
+    image: "/images/gallery/tre-hoa-vung-mat.jpg",
+  },
+];
+
+export const processSteps = [
+  {
+    step: 1,
+    title: "Gửi hình hoặc đến trực tiếp",
+    description: "Bạn có thể gửi hình qua Zalo hoặc đến cơ sở để trao đổi trực tiếp.",
+  },
+  {
+    step: 2,
+    title: "Tư vấn theo tình trạng thực tế",
+    description: "Chúng tôi lắng nghe mong muốn và xem xét tình trạng hiện tại của bạn.",
+  },
+  {
+    step: 3,
+    title: "Thống nhất dịch vụ phù hợp",
+    description: "Cùng thảo luận và chọn phương án phù hợp với gương mặt của bạn.",
+  },
+  {
+    step: 4,
+    title: "Thực hiện và hướng dẫn chăm sóc sau dịch vụ",
+    description: "Sau khi thực hiện, bạn sẽ được hướng dẫn cách chăm sóc tại nhà.",
+  },
+];
+
+export const knowledgeArticles = [
+  {
+    id: "1",
+    slug: "moi-baby-la-gi",
+    category: "Môi",
+    title: "Môi Baby là gì? Những điều nên biết trước khi thực hiện",
+    excerpt:
+      "Môi Baby hướng đến dáng môi mềm mại, tự nhiên và hài hòa với gương mặt. Trước khi thực hiện, bạn nên được tư vấn kỹ về dáng môi, chất liệu và cách chăm sóc sau dịch vụ.",
+    image: "/images/news/moi-baby-la-gi.jpg",
+  },
+  {
+    id: "2",
+    slug: "khi-nao-nen-lam-day-tang-mat-giua",
+    category: "Filler",
+    title: "Khi nào nên làm đầy tầng mặt giữa?",
+    excerpt:
+      "Vùng mặt giữa có thể trông thiếu đầy đặn do cơ địa hoặc thay đổi theo thời gian. Việc tư vấn trực tiếp giúp xác định phương án phù hợp với từng gương mặt.",
+    image: "/images/news/lam-day-tang-mat-giua.jpg",
+  },
+  {
+    id: "3",
+    slug: "meso-ho-tro-cham-soc-da",
+    category: "Da",
+    title: "Meso hỗ trợ chăm sóc da như thế nào?",
+    excerpt:
+      "Meso thường được nhắc đến trong các liệu trình hỗ trợ cấp ẩm, làm sáng và cải thiện bề mặt da. Hiệu quả có thể khác nhau tùy tình trạng da và cách chăm sóc sau liệu trình.",
+    image: "/images/news/meso-cham-soc-da.jpg",
+  },
+  {
+    id: "4",
+    slug: "cham-soc-sau-filler",
+    category: "Chăm sóc sau dịch vụ",
+    title: "Chăm sóc sau filler: những điều nên lưu ý",
+    excerpt:
+      "Sau khi thực hiện filler, bạn nên tuân thủ hướng dẫn chăm sóc, tránh tác động mạnh vào vùng vừa làm và theo dõi tình trạng theo lời dặn của chuyên viên.",
+    image: "/images/news/cham-soc-sau-filler.jpg",
+  },
+  {
+    id: "5",
+    slug: "hieu-lam-ve-filler",
+    category: "Filler",
+    title: "Những hiểu lầm thường gặp về filler",
+    excerpt:
+      "Filler không phải lúc nào cũng cần làm nhiều mới đẹp. Kết quả tự nhiên thường đến từ việc lựa chọn lượng phù hợp và cân đối với tổng thể gương mặt.",
+    image: "/images/news/hieu-lam-ve-filler.jpg",
+  },
+  {
+    id: "6",
+    slug: "duy-tri-da-khoe-manh",
     category: "Chăm sóc da",
-    before:
-      "https://images.unsplash.com/photo-1596755389378-c31d21fd1273?w=400&h=500&fit=crop",
-    after:
-      "https://images.unsplash.com/photo-1616394584738-fc6e612e71b9?w=400&h=500&fit=crop",
+    title: "Làm sao để duy trì làn da khỏe mạnh mỗi ngày?",
+    excerpt:
+      "Làm sạch, dưỡng ẩm, chống nắng và sinh hoạt điều độ là nền tảng quan trọng để duy trì làn da khỏe. Các liệu trình chăm sóc nên được lựa chọn theo tình trạng da thực tế.",
+    image: "/images/news/duy-tri-lan-da-khoe.jpg",
+  },
+];
+
+export const videos = [
+  {
+    id: "1",
+    title: "Môi baby",
+    service: "Môi baby",
+    thumbnail: "/images/videos/moi-baby.jpg",
   },
   {
-    category: "Filler / Botox",
-    before:
-      "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=400&h=500&fit=crop",
-    after:
-      "https://images.unsplash.com/photo-1487412946677-5d558153d4e1?w=400&h=500&fit=crop",
+    id: "2",
+    title: "Nâng tầng mặt giữa",
+    service: "Nâng tầng mặt giữa",
+    thumbnail: "/images/videos/nang-tang-mat-giua.jpg",
   },
   {
-    category: "Phun xăm",
-    before:
-      "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&h=500&fit=crop",
-    after:
-      "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=400&h=500&fit=crop",
+    id: "3",
+    title: "Meso",
+    service: "Meso",
+    thumbnail: "/images/videos/meso.jpg",
   },
+];
+
+export const consultationServices = services.map((s) => s.title);
+
+export const footerServiceLinks = services.map((s) => s.title);
+
+export const footerNavLinks = [
+  { href: "#", label: "Trang chủ" },
+  { href: "#dich-vu", label: "Dịch vụ" },
+  { href: "#hinh-anh", label: "Hình ảnh thực tế" },
+  { href: "#video", label: "Video" },
+  { href: "#kien-thuc", label: "Kiến thức" },
+  { href: "#lien-he", label: "Liên hệ" },
 ];

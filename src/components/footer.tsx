@@ -1,49 +1,32 @@
-import { Phone, MapPin, Mail, Clock } from "lucide-react";
-import { siteConfig, beautyServices, spaServices } from "@/lib/site-config";
+import { footerNavLinks, footerServiceLinks, siteConfig } from "@/lib/site-config";
 
 export function Footer() {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="bg-foreground text-white">
-      <div className="mx-auto max-w-7xl px-4 py-12">
+    <footer className="site-footer">
+      <div className="site-container py-12 md:py-14">
         <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-4">
-          <div>
-            <p className="section-title mb-3 text-2xl font-bold text-primary-light">
-              Min Beauty
-            </p>
-            <p className="mb-4 text-sm leading-relaxed text-gray-400">
-              {siteConfig.description}
-            </p>
-            <div className="space-y-2 text-sm text-gray-400">
-              <p className="flex items-center gap-2">
-                <Phone className="h-4 w-4 shrink-0 text-primary-light" />
-                {siteConfig.phone}
-              </p>
-              <p className="flex items-center gap-2">
-                <Mail className="h-4 w-4 shrink-0 text-primary-light" />
-                {siteConfig.email}
-              </p>
-              <p className="flex items-start gap-2">
-                <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-primary-light" />
-                {siteConfig.fullAddress}
-              </p>
-              <p className="flex items-center gap-2">
-                <Clock className="h-4 w-4 shrink-0 text-primary-light" />
-                {siteConfig.hours}
-              </p>
+          <div className="lg:col-span-1">
+            <div className="mb-5 flex items-center gap-3">
+              <div className="flex h-11 w-11 items-center justify-center rounded-full bg-primary shadow-[var(--shadow-card)] ring-2 ring-gold/35">
+                <span className="section-title text-base font-semibold text-white">M</span>
+              </div>
+              <p className="section-title text-xl text-white">Min Beauty</p>
             </div>
+            <p className="site-footer-text">
+              Cơ sở làm đẹp nhỏ, tập trung vào tư vấn rõ ràng và dịch vụ phù hợp với từng
+              gương mặt.
+            </p>
           </div>
 
           <div>
-            <h3 className="mb-4 text-sm font-semibold tracking-wider uppercase">
-              Dịch vụ thẩm mỹ
-            </h3>
-            <ul className="space-y-2 text-sm text-gray-400">
-              {beautyServices.map((s) => (
-                <li key={s.id}>
-                  <a href="#dich-vu" className="hover:text-primary-light">
-                    {s.title}
+            <h3 className="site-footer-heading mb-4">Menu</h3>
+            <ul className="space-y-2.5">
+              {footerNavLinks.map((link) => (
+                <li key={link.label}>
+                  <a href={link.href} className="site-footer-link">
+                    {link.label}
                   </a>
                 </li>
               ))}
@@ -51,14 +34,12 @@ export function Footer() {
           </div>
 
           <div>
-            <h3 className="mb-4 text-sm font-semibold tracking-wider uppercase">
-              Dịch vụ Spa
-            </h3>
-            <ul className="space-y-2 text-sm text-gray-400">
-              {spaServices.map((s) => (
-                <li key={s.id}>
-                  <a href="#dich-vu" className="hover:text-primary-light">
-                    {s.title}
+            <h3 className="site-footer-heading mb-4">Dịch vụ</h3>
+            <ul className="space-y-2.5">
+              {footerServiceLinks.map((link) => (
+                <li key={link}>
+                  <a href="#dich-vu" className="site-footer-link">
+                    {link}
                   </a>
                 </li>
               ))}
@@ -66,39 +47,31 @@ export function Footer() {
           </div>
 
           <div>
-            <h3 className="mb-4 text-sm font-semibold tracking-wider uppercase">
-              Giấy phép
-            </h3>
-            <div className="space-y-4 text-sm text-gray-400">
-              <div>
-                <p className="font-medium text-gray-300">
-                  Giấy chứng nhận đăng ký doanh nghiệp
-                </p>
-                <p>Mã số: {siteConfig.businessLicense}</p>
-              </div>
-              <div>
-                <p className="font-medium text-gray-300">
-                  Giấy phép hoạt động khám bệnh, chữa bệnh
-                </p>
-                <p>Số: {siteConfig.medicalLicense}</p>
-              </div>
-            </div>
+            <h3 className="site-footer-heading mb-4">Liên hệ</h3>
+            <ul className="site-footer-text space-y-2.5">
+              <li>{siteConfig.fullAddress}</li>
+              <li>
+                <a href={`tel:${siteConfig.phoneRaw}`} className="site-footer-link">
+                  {siteConfig.phone}
+                </a>
+              </li>
+              <li>
+                <a
+                  href={`https://zalo.me/${siteConfig.zalo}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="site-footer-link"
+                >
+                  Zalo tư vấn
+                </a>
+              </li>
+              <li>{siteConfig.hours}</li>
+            </ul>
           </div>
         </div>
 
-        <div className="mt-10 flex flex-wrap items-center justify-between gap-4 border-t border-gray-700 pt-8 text-sm text-gray-500">
-          <p>Copyright {currentYear} © {siteConfig.name}</p>
-          <div className="flex gap-6">
-            <a href="#" className="hover:text-primary-light">
-              Chính sách bảo mật
-            </a>
-            <a href="#" className="hover:text-primary-light">
-              Chính sách bảo hành
-            </a>
-            <a href="#" className="hover:text-primary-light">
-              Miễn trừ trách nhiệm
-            </a>
-          </div>
+        <div className="site-footer-divider mt-10 pt-6 text-center text-xs text-[rgba(255,255,255,0.6)]">
+          Copyright {currentYear} © {siteConfig.name}
         </div>
       </div>
     </footer>

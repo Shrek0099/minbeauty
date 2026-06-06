@@ -1,11 +1,11 @@
 import { Header } from "@/components/header";
 import { Hero } from "@/components/hero";
 import { Services } from "@/components/services";
-import { Commitments } from "@/components/commitments";
 import { Gallery } from "@/components/gallery";
-import { Stats } from "@/components/stats";
+import { Process } from "@/components/process";
+import { Videos } from "@/components/videos";
 import { About } from "@/components/about";
-import { News } from "@/components/news";
+import { Knowledge } from "@/components/knowledge";
 import { ConsultationForm } from "@/components/consultation-form";
 import { Footer } from "@/components/footer";
 import { FloatingContact } from "@/components/floating-contact";
@@ -17,11 +17,11 @@ export default function Home() {
       <main>
         <Hero />
         <Services />
-        <Commitments />
         <Gallery />
-        <Stats />
+        <Process />
+        <Videos />
+        <Knowledge />
         <About />
-        <News />
         <ConsultationForm />
       </main>
       <Footer />

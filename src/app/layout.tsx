@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Playfair_Display, DM_Sans } from "next/font/google";
+import { Playfair_Display, Inter } from "next/font/google";
 import { JsonLd } from "@/components/json-ld";
 import { siteConfig } from "@/lib/site-config";
 import "./globals.css";
@@ -10,9 +10,9 @@ const playfair = Playfair_Display({
   display: "swap",
 });
 
-const dmSans = DM_Sans({
-  variable: "--font-dm-sans",
-  subsets: ["latin", "latin-ext"],
+const inter = Inter({
+  variable: "--font-inter",
+  subsets: ["latin", "vietnamese"],
   display: "swap",
 });
 
@@ -24,16 +24,13 @@ export const metadata: Metadata = {
   },
   description: siteConfig.description,
   keywords: [
-    "thẩm mỹ viện",
     "Min Beauty",
     "làm đẹp",
+    "filler",
+    "môi baby",
+    "meso",
+    "trẻ hóa da",
     "chăm sóc da",
-    "filler botox",
-    "phun xăm thẩm mỹ",
-    "HIFU",
-    "spa",
-    "nâng mũi",
-    "thẩm mỹ mắt",
     "TP Hồ Chí Minh",
   ],
   authors: [{ name: siteConfig.name }],
@@ -82,7 +79,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="vi" className={`${playfair.variable} ${dmSans.variable} scroll-smooth`}>
+    <html lang="vi" className={`${playfair.variable} ${inter.variable} scroll-smooth`}>
       <head>
         <JsonLd />
       </head>

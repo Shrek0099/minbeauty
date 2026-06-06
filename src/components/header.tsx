@@ -1,106 +1,79 @@
 "use client";
 
 import { useState } from "react";
-import { Menu, Phone, MapPin, X } from "lucide-react";
-import { siteConfig } from "@/lib/site-config";
-
-const navLinks = [
-  { href: "#dich-vu", label: "Dịch vụ" },
-  { href: "#cam-ket", label: "Cam kết" },
-  { href: "#hinh-anh", label: "Hình ảnh" },
-  { href: "#gioi-thieu", label: "Giới thiệu" },
-  { href: "#tin-tuc", label: "Tin tức" },
-  { href: "#tu-van", label: "Tư vấn" },
-];
+import { Menu, X } from "lucide-react";
+import { navLinks, siteConfig } from "@/lib/site-config";
 
 export function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   return (
-    <>
-      <div className="bg-primary text-white text-sm">
-        <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-2 px-4 py-2">
-          <div className="flex items-center gap-4">
-            <span className="flex items-center gap-1.5">
-              <MapPin className="h-3.5 w-3.5 shrink-0" />
-              {siteConfig.address}, {siteConfig.city}
-            </span>
+    <header className="site-header">
+      <div className="site-container site-header-inner">
+        <a href="#" className="group flex shrink-0 items-center gap-3">
+          <div className="flex h-11 w-11 items-center justify-center rounded-full bg-primary shadow-[var(--shadow-card)] ring-2 ring-gold/35 transition-transform group-hover:scale-105">
+            <span className="section-title text-base font-semibold text-white">M</span>
           </div>
+          <div>
+            <p className="section-title text-xl leading-tight text-foreground">Min Beauty</p>
+            <p className="text-xs font-semibold tracking-wide text-primary">Làm đẹp tự nhiên</p>
+          </div>
+        </a>
+
+        <nav className="hidden items-center gap-0.5 lg:flex">
+          {navLinks.map((link) => (
+            <a key={link.label} href={link.href} className="site-nav-link">
+              {link.label}
+            </a>
+          ))}
+        </nav>
+
+        <div className="flex items-center gap-3">
           <a
-            href={`tel:${siteConfig.phoneRaw}`}
-            className="flex items-center gap-1.5 font-semibold hover:underline"
+            href={`https://zalo.me/${siteConfig.zalo}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="btn-primary hidden sm:inline-flex"
           >
-            <Phone className="h-3.5 w-3.5" />
-            Hotline: {siteConfig.phone}
+            Nhắn Zalo
           </a>
+
+          <button
+            type="button"
+            className="rounded-full p-2 text-foreground transition-colors hover:bg-section-bg lg:hidden"
+            onClick={() => setMobileOpen(!mobileOpen)}
+            aria-label="Menu"
+          >
+            {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+          </button>
         </div>
       </div>
 
-      <header className="sticky top-0 z-50 border-b border-primary-light/60 bg-white/95 backdrop-blur-md">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4">
-          <a href="#" className="flex flex-col">
-            <span className="section-title text-2xl font-bold tracking-wide text-primary">
-              Min Beauty
-            </span>
-            <span className="text-xs tracking-widest text-gold uppercase">
-              Thẩm mỹ viện
-            </span>
-          </a>
-
-          <nav className="hidden items-center gap-8 lg:flex">
+      {mobileOpen && (
+        <nav className="border-t border-border bg-[rgba(255,249,246,0.98)] px-5 py-4 lg:hidden">
+          <div className="flex flex-col gap-1">
             {navLinks.map((link) => (
               <a
-                key={link.href}
+                key={link.label}
                 href={link.href}
-                className="text-sm font-medium text-foreground transition-colors hover:text-primary"
+                className="site-nav-link block rounded-xl px-3 py-3"
+                onClick={() => setMobileOpen(false)}
               >
                 {link.label}
               </a>
             ))}
-          </nav>
-
-          <div className="flex items-center gap-3">
             <a
-              href="#tu-van"
-              className="hidden rounded-full bg-primary px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-primary-dark sm:inline-block"
+              href={`https://zalo.me/${siteConfig.zalo}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn-primary mt-2 w-full py-3 text-sm"
+              onClick={() => setMobileOpen(false)}
             >
-              Đặt lịch hẹn
+              Nhắn Zalo
             </a>
-            <button
-              type="button"
-              className="rounded-lg p-2 text-foreground lg:hidden"
-              onClick={() => setMobileOpen(!mobileOpen)}
-              aria-label={mobileOpen ? "Đóng menu" : "Mở menu"}
-            >
-              {mobileOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-            </button>
           </div>
-        </div>
-
-        {mobileOpen && (
-          <nav className="border-t border-primary-light/60 bg-white px-4 py-4 lg:hidden">
-            <div className="flex flex-col gap-3">
-              {navLinks.map((link) => (
-                <a
-                  key={link.href}
-                  href={link.href}
-                  className="py-2 text-sm font-medium text-foreground hover:text-primary"
-                  onClick={() => setMobileOpen(false)}
-                >
-                  {link.label}
-                </a>
-              ))}
-              <a
-                href="#tu-van"
-                className="mt-2 rounded-full bg-primary px-5 py-2.5 text-center text-sm font-semibold text-white"
-                onClick={() => setMobileOpen(false)}
-              >
-                Đặt lịch hẹn
-              </a>
-            </div>
-          </nav>
-        )}
-      </header>
-    </>
+        </nav>
+      )}
+    </header>
   );
 }
