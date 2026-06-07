@@ -533,42 +533,6 @@ body {
     0 10px 30px rgba(165, 107, 90, 0.4);
 }
 
-.site-header-search {
-  align-items: center;
-  gap: 0.625rem;
-  min-width: 220px;
-  max-width: 280px;
-  flex: 1;
-  background: #f6ece7;
-  border: 1px solid #e6cec4;
-  border-radius: 999px;
-  padding: 10px 18px;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
-}
-
-.site-header-search:focus-within {
-  border-color: #a56b5a;
-  box-shadow: 0 0 0 3px rgba(165, 107, 90, 0.1);
-}
-
-.site-header-search input {
-  width: 100%;
-  border: none;
-  background: transparent;
-  font-size: 0.875rem;
-  color: var(--text);
-  outline: none;
-}
-
-.site-header-search input::placeholder {
-  color: var(--text-muted);
-}
-
-.site-header-search-icon {
-  color: #a56b5a;
-  flex-shrink: 0;
-}
-
 .site-header-address {
   flex: 1;
   align-items: center;

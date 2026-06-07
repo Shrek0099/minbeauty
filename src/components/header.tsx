@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { ChevronDown, MapPin, Menu, Phone, Search, X } from "lucide-react";
+import { ChevronDown, MapPin, Menu, Phone, X } from "lucide-react";
 import { headerNavItems, siteConfig, type HeaderNavItem } from "@/lib/site-config";
 import { Logo } from "@/components/logo";
 
@@ -235,11 +235,6 @@ export function Header() {
             <a href="#" className="site-header-logo group shrink-0" onClick={closeMobileMenu}>
               <Logo variant="topbar" />
             </a>
-
-            <label className="site-header-search hidden md:flex">
-              <Search className="site-header-search-icon h-4 w-4" />
-              <input type="search" placeholder="Tìm kiếm Dịch vụ..." aria-label="Tìm kiếm dịch vụ" />
-            </label>
 
             <AddressLink className="site-header-address hidden lg:inline-flex" />
 
