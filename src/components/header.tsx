@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ChevronDown, MapPin, Phone, Search } from "lucide-react";
 import { headerNavItems, siteConfig, type HeaderNavItem } from "@/lib/site-config";
 import { Logo } from "@/components/logo";
@@ -19,12 +19,14 @@ function NavDropdown({
   menuKey,
   openMenu,
   setOpenMenu,
+  alignEnd = false,
 }: {
   label: string;
   items: readonly { href: string; label: string }[];
   menuKey: DropdownKey;
   openMenu: DropdownKey | null;
   setOpenMenu: (key: DropdownKey | null) => void;
+  alignEnd?: boolean;
 }) {
   const isOpen = openMenu === menuKey;
 
@@ -44,9 +46,14 @@ function NavDropdown({
         <ChevronDown className={`h-4 w-4 transition-transform ${isOpen ? "rotate-180" : ""}`} />
       </button>
       {isOpen && (
-        <div className="site-nav-dropdown-panel">
+        <div className={`site-nav-dropdown-panel${alignEnd ? " site-nav-dropdown-panel--end" : ""}`}>
           {items.map((item) => (
-            <a key={item.href} href={item.href} className="site-nav-dropdown-item">
+            <a
+              key={item.href}
+              href={item.href}
+              className="site-nav-dropdown-item"
+              onClick={() => setOpenMenu(null)}
+            >
               {item.label}
             </a>
           ))}
@@ -58,9 +65,23 @@ function NavDropdown({
 
 export function Header() {
   const [openMenu, setOpenMenu] = useState<DropdownKey | null>(null);
+  const headerRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    if (!openMenu) return;
+
+    const onPointerDown = (event: PointerEvent) => {
+      if (!headerRef.current?.contains(event.target as Node)) {
+        setOpenMenu(null);
+      }
+    };
+
+    document.addEventListener("pointerdown", onPointerDown);
+    return () => document.removeEventListener("pointerdown", onPointerDown);
+  }, [openMenu]);
 
   return (
-    <header className="site-header">
+    <header ref={headerRef} className="site-header">
       <div className="site-header-topbar">
         <div className="site-container site-header-topbar-inner">
           <label className="site-header-search hidden md:flex">
@@ -74,9 +95,13 @@ export function Header() {
           </p>
 
           <div className="site-header-topbar-actions">
-            <a href={`tel:${siteConfig.phoneRaw}`} className="site-header-hotline">
+            <a
+              href={`tel:${siteConfig.phoneRaw}`}
+              className="site-header-hotline"
+              aria-label={`Gọi hotline ${siteConfig.phone}`}
+            >
               <Phone className="h-4 w-4 shrink-0" />
-              {siteConfig.phone}
+              <span className="site-header-hotline-text">{siteConfig.phone}</span>
             </a>
             <a href="#lien-he" className="site-header-booking">
               Đặt lịch hẹn
@@ -91,7 +116,7 @@ export function Header() {
             <Logo variant="nav" />
           </a>
 
-          <nav className="site-main-nav">
+          <nav className="site-main-nav" aria-label="Menu chính">
             {headerNavItems.map((item) => {
               if (hasDropdown(item)) {
                 const menuKey: DropdownKey = item.label === "Dịch vụ" ? "dich-vu" : "tin-tuc";
@@ -103,6 +128,7 @@ export function Header() {
                     menuKey={menuKey}
                     openMenu={openMenu}
                     setOpenMenu={setOpenMenu}
+                    alignEnd={item.label === "Tin tức"}
                   />
                 );
               }

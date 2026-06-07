@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Playfair_Display, Inter } from "next/font/google";
 import { JsonLd } from "@/components/json-ld";
 import { siteConfig } from "@/lib/site-config";
@@ -16,6 +16,12 @@ const inter = Inter({
   display: "swap",
 });
 
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
+};
+
 export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
   title: {
@@ -31,7 +37,8 @@ export const metadata: Metadata = {
     "meso",
     "trẻ hóa da",
     "chăm sóc da",
-    "TP Hồ Chí Minh",
+    "Tây Ninh",
+    "Hòa Thành",
   ],
   authors: [{ name: siteConfig.name }],
   creator: siteConfig.name,
@@ -87,7 +94,7 @@ export default function RootLayout({
       <head>
         <JsonLd />
       </head>
-      <body className="min-h-screen antialiased">{children}</body>
+      <body className="min-h-screen antialiased pb-[env(safe-area-inset-bottom)]">{children}</body>
     </html>
   );
 }

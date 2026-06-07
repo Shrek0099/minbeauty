@@ -99,7 +99,7 @@ export function PromoModal() {
                 </label>
                 <label className="promo-modal-field">
                   <span>Điện thoại *</span>
-                  <input name="phone" type="tel" required placeholder="0901 234 567" />
+                  <input name="phone" type="tel" required placeholder="0971.700.952" />
                 </label>
                 <label className="promo-modal-field">
                   <span>Chọn dịch vụ muốn tư vấn</span>

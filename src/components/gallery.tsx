@@ -21,8 +21,9 @@ export function Gallery() {
                   src={item.image}
                   alt={`Kết quả ${item.service}`}
                   className="boutique-card-image aspect-[3/4]"
+                  loading="lazy"
+                  decoding="async"
                 />
-                <span className="luxury-tag absolute top-4 left-4">{item.service}</span>
               </div>
               <h3 className="boutique-card-title">{item.service}</h3>
             </article>

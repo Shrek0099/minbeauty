@@ -3,7 +3,7 @@ import { siteConfig } from "@/lib/site-config";
 
 export function FloatingContact() {
   return (
-    <div className="fixed right-4 bottom-4 z-[100] flex flex-col gap-2.5 md:right-6 md:bottom-6">
+    <div className="floating-contact fixed z-[100] flex flex-col gap-2.5">
       <a
         href={`https://zalo.me/${siteConfig.zalo}`}
         target="_blank"

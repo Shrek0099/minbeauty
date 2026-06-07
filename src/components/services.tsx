@@ -49,6 +49,8 @@ export function Services() {
                 src={service.image}
                 alt={service.title}
                 className="boutique-card-image service-card-image"
+                loading="lazy"
+                decoding="async"
               />
               <h3 className="boutique-card-title service-card-title">{service.title}</h3>
             </article>

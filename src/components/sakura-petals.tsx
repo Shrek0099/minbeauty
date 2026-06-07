@@ -37,8 +37,12 @@ function randomInt(min: number, max: number) {
   return min + Math.floor(Math.random() * (max - min + 1));
 }
 
+function isMobileViewport(width: number) {
+  return width < 768;
+}
+
 function getPetalCount(width: number) {
-  if (width < 768) return randomInt(10, 14);
+  if (isMobileViewport(width)) return randomInt(6, 8);
   if (width < 1024) return randomInt(14, 18);
   return randomInt(20, 26);
 }
@@ -123,26 +127,28 @@ function SakuraPetalSvg({
 const MOUSE_RADIUS = 170;
 const MOUSE_FORCE = 85;
 const MOUSE_IDLE_MS = 700;
-const MOBILE_BURST_MS = 700;
 
 export function SakuraPetals() {
   const [petals, setPetals] = useState<PetalConfig[]>([]);
   const [mounted, setMounted] = useState(false);
   const [reducedMotion, setReducedMotion] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
   const hostRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const layerRef = useRef<HTMLDivElement | null>(null);
   const mouseRef = useRef({ x: -9999, y: -9999, active: false });
   const rafRef = useRef<number | null>(null);
   const idleTimerRef = useRef<number | null>(null);
-  const mobileBurstTimerRef = useRef<number | null>(null);
-  const touchScrollPendingRef = useRef(false);
+  const scrollEndTimerRef = useRef<number | null>(null);
 
   useEffect(() => {
     setMounted(true);
     setReducedMotion(window.matchMedia("(prefers-reduced-motion: reduce)").matches);
 
     const applyCount = () => {
+      const width = window.innerWidth;
       hostRefs.current = [];
-      setPetals(generatePetals(getPetalCount(window.innerWidth)));
+      setIsMobile(isMobileViewport(width));
+      setPetals(generatePetals(getPetalCount(width)));
     };
 
     applyCount();
@@ -159,6 +165,29 @@ export function SakuraPetals() {
       window.clearTimeout(resizeTimer);
     };
   }, []);
+
+  useEffect(() => {
+    if (!mounted || !isMobile || reducedMotion) return;
+
+    const layer = layerRef.current;
+    if (!layer) return;
+
+    const onScroll = () => {
+      layer.classList.add("sakura-layer--scrolling");
+
+      if (scrollEndTimerRef.current) window.clearTimeout(scrollEndTimerRef.current);
+      scrollEndTimerRef.current = window.setTimeout(() => {
+        layer.classList.remove("sakura-layer--scrolling");
+      }, 120);
+    };
+
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      if (scrollEndTimerRef.current) window.clearTimeout(scrollEndTimerRef.current);
+      layer.classList.remove("sakura-layer--scrolling");
+    };
+  }, [mounted, isMobile, reducedMotion]);
 
   useEffect(() => {
     if (!mounted || petals.length === 0 || reducedMotion) return;
@@ -224,48 +253,18 @@ export function SakuraPetals() {
     };
 
     const onMouseMove = (event: MouseEvent) => {
-      if (window.innerWidth < 768) return;
+      if (isMobileViewport(window.innerWidth)) return;
       mouseRef.current = { x: event.clientX, y: event.clientY, active: true };
       queueMouseFrame();
       scheduleMouseReset();
     };
 
-    const triggerMobileBurst = () => {
-      hostRefs.current.forEach((host) => {
-        if (!host) return;
-        applyHostBurst(
-          host,
-          randomInt(-90, 90),
-          randomInt(-70, 70),
-          randomInt(-100, 100),
-          lerp(0.85, 1.2, Math.random()),
-        );
-      });
-
-      if (mobileBurstTimerRef.current) window.clearTimeout(mobileBurstTimerRef.current);
-      mobileBurstTimerRef.current = window.setTimeout(resetAllBursts, MOBILE_BURST_MS);
-    };
-
-    const queueTouchScrollBurst = () => {
-      if (touchScrollPendingRef.current) return;
-      touchScrollPendingRef.current = true;
-      window.requestAnimationFrame(() => {
-        touchScrollPendingRef.current = false;
-        if (window.innerWidth < 768) triggerMobileBurst();
-      });
-    };
-
     window.addEventListener("mousemove", onMouseMove, { passive: true });
-    window.addEventListener("touchmove", queueTouchScrollBurst, { passive: true });
-    window.addEventListener("scroll", queueTouchScrollBurst, { passive: true });
 
     return () => {
       window.removeEventListener("mousemove", onMouseMove);
-      window.removeEventListener("touchmove", queueTouchScrollBurst);
-      window.removeEventListener("scroll", queueTouchScrollBurst);
       if (rafRef.current) window.cancelAnimationFrame(rafRef.current);
       if (idleTimerRef.current) window.clearTimeout(idleTimerRef.current);
-      if (mobileBurstTimerRef.current) window.clearTimeout(mobileBurstTimerRef.current);
     };
   }, [mounted, petals.length, reducedMotion]);
 
@@ -305,7 +304,11 @@ export function SakuraPetals() {
   if (!mounted || petals.length === 0) return null;
 
   return (
-    <div className="sakura-layer" aria-hidden="true">
+    <div
+      ref={layerRef}
+      className={`sakura-layer${isMobile ? " sakura-layer--mobile" : ""}`}
+      aria-hidden="true"
+    >
       {petalElements}
     </div>
   );

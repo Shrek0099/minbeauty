@@ -58,7 +58,7 @@ export function ConsultationForm() {
                     type="tel"
                     required
                     className="form-input"
-                    placeholder="0901 234 567"
+                    placeholder="0971.700.952"
                   />
                 </div>
                 <div>

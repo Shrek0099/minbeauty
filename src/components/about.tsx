@@ -22,6 +22,8 @@ export function About() {
                 src="/images/about/facility.jpg"
                 alt={`Không gian ${siteConfig.name}`}
                 className="boutique-card-image aspect-[4/3]"
+                loading="lazy"
+                decoding="async"
               />
             </div>
           </div>

@@ -20,7 +20,9 @@ export function Knowledge() {
                 <img
                   src={article.image}
                   alt={article.title}
-                className="boutique-card-image news-card-image"
+                  className="boutique-card-image news-card-image"
+                  loading="lazy"
+                  decoding="async"
                 />
                 <span className="news-category">{article.category}</span>
               </div>

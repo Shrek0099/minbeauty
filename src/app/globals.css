@@ -67,6 +67,7 @@ body {
     var(--bg);
   color: var(--text);
   font-family: var(--font-inter), system-ui, sans-serif;
+  -webkit-tap-highlight-color: transparent;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -157,29 +158,6 @@ body {
   pointer-events: none;
 }
 
-.boutique-card:hover,
-.service-card:hover,
-.before-after-card:hover,
-.video-card:hover,
-.news-card:hover,
-.process-card:hover,
-.about-image-card:hover,
-.luxury-card:hover {
-  transform: translateY(-10px) scale(1.018);
-  box-shadow: 0 26px 70px rgba(122, 75, 61, 0.22), 0 0 60px rgba(216, 181, 123, 0.22);
-}
-
-.boutique-card:hover::before,
-.service-card:hover::before,
-.before-after-card:hover::before,
-.video-card:hover::before,
-.news-card:hover::before,
-.process-card:hover::before,
-.about-image-card:hover::before,
-.luxury-card:hover::before {
-  left: 150%;
-}
-
 .boutique-card-image,
 .service-card-image,
 .news-card-image {
@@ -191,12 +169,37 @@ body {
   transition: transform 0.45s ease;
 }
 
-.boutique-card:hover .boutique-card-image,
-.service-card:hover .service-card-image,
-.before-after-card:hover .boutique-card-image,
-.video-card:hover .boutique-card-image,
-.news-card:hover .news-card-image {
-  transform: scale(1.05);
+@media (hover: hover) and (pointer: fine) {
+  .boutique-card:hover,
+  .service-card:hover,
+  .before-after-card:hover,
+  .video-card:hover,
+  .news-card:hover,
+  .process-card:hover,
+  .about-image-card:hover,
+  .luxury-card:hover {
+    transform: translateY(-10px) scale(1.018);
+    box-shadow: 0 26px 70px rgba(122, 75, 61, 0.22), 0 0 60px rgba(216, 181, 123, 0.22);
+  }
+
+  .boutique-card:hover::before,
+  .service-card:hover::before,
+  .before-after-card:hover::before,
+  .video-card:hover::before,
+  .news-card:hover::before,
+  .process-card:hover::before,
+  .about-image-card:hover::before,
+  .luxury-card:hover::before {
+    left: 150%;
+  }
+
+  .boutique-card:hover .boutique-card-image,
+  .service-card:hover .service-card-image,
+  .before-after-card:hover .boutique-card-image,
+  .video-card:hover .boutique-card-image,
+  .news-card:hover .news-card-image {
+    transform: scale(1.05);
+  }
 }
 
 .boutique-card-title,
@@ -207,9 +210,10 @@ body {
   text-align: center;
   text-transform: uppercase;
   font-weight: 900;
-  letter-spacing: 0.4px;
-  font-size: 20px;
-  padding: 18px 10px 20px;
+  letter-spacing: 0.35px;
+  font-size: 1rem;
+  line-height: 1.35;
+  padding: 14px 10px 16px;
   border-top: 1px solid rgba(216, 181, 123, 0.45);
   margin: 0;
 }
@@ -344,6 +348,72 @@ body {
 
 .sakura-petal-inner.is-burst {
   animation-play-state: paused;
+}
+
+@keyframes sakuraFallMobile {
+  0% {
+    transform: translate3d(0, -10vh, 0) rotate(0deg);
+    opacity: 0;
+  }
+
+  8% {
+    opacity: 1;
+  }
+
+  50% {
+    transform: translate3d(18px, 52vh, 0) rotate(180deg);
+  }
+
+  100% {
+    transform: translate3d(-14px, 115vh, 0) rotate(360deg);
+    opacity: 0.75;
+  }
+}
+
+@keyframes sakuraFallMobileAlt {
+  0% {
+    transform: translate3d(0, -10vh, 0) rotate(0deg);
+    opacity: 0;
+  }
+
+  8% {
+    opacity: 1;
+  }
+
+  50% {
+    transform: translate3d(-22px, 54vh, 0) rotate(-180deg);
+  }
+
+  100% {
+    transform: translate3d(16px, 117vh, 0) rotate(-360deg);
+    opacity: 0.75;
+  }
+}
+
+@media (max-width: 767px) {
+  .sakura-layer--mobile {
+    perspective: none;
+  }
+
+  .sakura-layer--mobile .sakura-petal-host {
+    transition: none;
+    will-change: auto;
+  }
+
+  .sakura-layer--mobile .sakura-petal-inner {
+    animation-name: sakuraFallMobile;
+    animation-timing-function: linear;
+    will-change: auto;
+    filter: none;
+  }
+
+  .sakura-layer--mobile .sakura-petal-inner--alt {
+    animation-name: sakuraFallMobileAlt;
+  }
+
+  .sakura-layer--mobile.sakura-layer--scrolling .sakura-petal-inner {
+    animation-play-state: paused;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -545,6 +615,8 @@ body {
   overflow-x: auto;
   scrollbar-width: none;
   -ms-overflow-style: none;
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-x;
 }
 
 .site-main-nav::-webkit-scrollbar {
@@ -565,6 +637,36 @@ body {
 }
 
 @media (max-width: 767px) {
+  .site-header-topbar-inner {
+    min-height: 48px;
+    gap: 0.5rem;
+  }
+
+  .site-header-hotline-text {
+    display: none;
+  }
+
+  .site-header-hotline {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 999px;
+    background: rgba(165, 107, 90, 0.12);
+  }
+
+  .site-header-booking {
+    font-size: 0.8125rem;
+    padding: 0.5rem 0.875rem;
+    border-radius: 999px;
+    background: rgba(165, 107, 90, 0.12);
+  }
+
+  .site-header-main-inner {
+    min-height: 52px;
+  }
+
   .site-main-nav-link {
     padding: 14px 11px;
     font-size: 0.8125rem;
@@ -593,6 +695,11 @@ body {
   border-top: none;
   border-radius: 0 0 16px 16px;
   box-shadow: 0 16px 40px rgba(122, 75, 61, 0.16);
+}
+
+.site-nav-dropdown-panel--end {
+  left: auto;
+  right: 0;
 }
 
 .site-nav-dropdown-item {
@@ -803,7 +910,7 @@ body {
   border-bottom: 1px solid #e6cec4;
   background: transparent;
   padding: 0.625rem 0;
-  font-size: 0.9375rem;
+  font-size: 1rem;
   color: #2e2522;
   outline: none;
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
@@ -1020,6 +1127,30 @@ body {
   box-shadow: 0 8px 24px rgba(165, 107, 90, 0.28);
 }
 
+.video-card-thumb {
+  aspect-ratio: 9 / 16;
+}
+
+@media (max-width: 639px) {
+  .video-card-thumb {
+    aspect-ratio: 4 / 5;
+    max-height: 420px;
+  }
+}
+
+/* Floating contact */
+.floating-contact {
+  right: max(1rem, env(safe-area-inset-right));
+  bottom: max(1rem, env(safe-area-inset-bottom));
+}
+
+@media (min-width: 768px) {
+  .floating-contact {
+    right: max(1.5rem, env(safe-area-inset-right));
+    bottom: max(1.5rem, env(safe-area-inset-bottom));
+  }
+}
+
 /* Form */
 .form-input {
   width: 100%;
@@ -1027,7 +1158,7 @@ body {
   background: var(--bg);
   border-radius: var(--radius-sm);
   padding: 0.875rem 1rem;
-  font-size: 0.875rem;
+  font-size: 1rem;
   color: var(--text);
   outline: none;
   transition: border-color 0.2s ease, box-shadow 0.2s ease;

@@ -12,7 +12,8 @@ export function JsonLd() {
     address: {
       "@type": "PostalAddress",
       streetAddress: siteConfig.address,
-      addressLocality: siteConfig.city,
+      addressLocality: "Hòa Thành",
+      addressRegion: "Tây Ninh",
       addressCountry: "VN",
     },
     openingHoursSpecification: {
