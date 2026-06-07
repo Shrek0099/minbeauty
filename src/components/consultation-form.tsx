@@ -127,7 +127,14 @@ export function ConsultationForm() {
                 <MapPin className="mt-0.5 h-5 w-5 shrink-0 text-gold" />
                 <div>
                   <p className="text-sm font-semibold text-foreground">Địa chỉ</p>
-                  <p className="text-sm text-muted">{siteConfig.fullAddress}</p>
+                  <a
+                    href={siteConfig.mapsUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-sm text-muted transition-colors hover:text-primary"
+                  >
+                    {siteConfig.fullAddress}
+                  </a>
                 </div>
               </li>
               <li className="flex gap-3.5">

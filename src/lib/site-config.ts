@@ -1,3 +1,6 @@
+const fullAddress =
+  "61A, hẻm 24 Trịnh Phong Đáng, Trường Giang, Trường Tây, Hòa Thành, Tây Ninh";
+
 export const siteConfig = {
   name: "Min Beauty",
   tagline: "Làm đẹp tự nhiên, nhẹ nhàng",
@@ -10,8 +13,8 @@ export const siteConfig = {
   email: "info@minbeauty.vn",
   address: "61A, hẻm 24 Trịnh Phong Đáng",
   city: "Hòa Thành, Tây Ninh",
-  fullAddress:
-    "61A, hẻm 24 Trịnh Phong Đáng, Trường Giang, Trường Tây, Hòa Thành, Tây Ninh",
+  fullAddress,
+  mapsUrl: `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(fullAddress)}`,
   hours: "8:00 - 20:00, Thứ Hai đến Chủ nhật",
   zalo: "0971700952",
   facebook: "https://facebook.com/minbeauty",

@@ -526,6 +526,13 @@ body {
   align-items: center;
 }
 
+.logo-mark-topbar {
+  box-shadow:
+    0 0 0 2px #fff9f6,
+    0 0 0 4px rgba(216, 181, 123, 0.9),
+    0 10px 30px rgba(165, 107, 90, 0.4);
+}
+
 .site-header-search {
   align-items: center;
   gap: 0.625rem;
@@ -564,10 +571,37 @@ body {
 
 .site-header-address {
   flex: 1;
+  align-items: center;
   justify-content: center;
+  gap: 0.375rem;
   text-align: center;
   font-size: 0.8125rem;
+  line-height: 1.45;
   color: var(--text);
+  transition: color 0.2s ease;
+}
+
+.site-header-address:hover {
+  color: var(--primary-dark);
+}
+
+.site-header-address-mobile {
+  padding-block: 0.5rem 0.625rem;
+  border-top: 1px solid rgba(216, 181, 123, 0.28);
+}
+
+.site-header-address-mobile-link {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  font-size: 0.75rem;
+  line-height: 1.5;
+  color: var(--text-muted);
+  transition: color 0.2s ease;
+}
+
+.site-header-address-mobile-link:hover {
+  color: var(--primary-dark);
 }
 
 .site-header-topbar-actions {
@@ -656,6 +690,12 @@ body {
   position: fixed;
   inset: 0;
   z-index: 1200;
+}
+
+@media (min-width: 768px) {
+  .site-mobile-nav {
+    display: none !important;
+  }
 }
 
 .site-mobile-nav-backdrop {

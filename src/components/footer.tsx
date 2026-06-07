@@ -47,7 +47,16 @@ export function Footer() {
           <div>
             <h3 className="site-footer-heading mb-4">Liên hệ</h3>
             <ul className="site-footer-text space-y-2.5">
-              <li>{siteConfig.fullAddress}</li>
+              <li>
+                <a
+                  href={siteConfig.mapsUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="site-footer-link"
+                >
+                  {siteConfig.fullAddress}
+                </a>
+              </li>
               <li>
                 <a href={`tel:${siteConfig.phoneRaw}`} className="site-footer-link">
                   {siteConfig.phone}

@@ -13,14 +13,14 @@ export function Logo({ variant = "header", className = "" }: LogoProps) {
 
   return (
     <span
-      className={`inline-flex shrink-0 items-center justify-center overflow-hidden rounded-full shadow-[var(--shadow-soft)] ${
+      className={`inline-flex shrink-0 items-center justify-center overflow-hidden rounded-full ${
         isTopbar
-          ? "h-10 w-10 sm:h-11 sm:w-11"
+          ? "logo-mark-topbar h-11 w-11 sm:h-12 sm:w-12"
           : isNav
-            ? "h-11 w-11 md:h-12 md:w-12"
+            ? "shadow-[var(--shadow-soft)] h-11 w-11 md:h-12 md:w-12"
             : isFooter
-              ? "h-14 w-14"
-              : "h-14 w-14 md:h-16 md:w-16"
+              ? "shadow-[var(--shadow-soft)] h-14 w-14"
+              : "shadow-[var(--shadow-soft)] h-14 w-14 md:h-16 md:w-16"
       } ${className}`}
     >
       <Image
