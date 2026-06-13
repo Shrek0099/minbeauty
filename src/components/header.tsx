@@ -231,7 +231,7 @@ export function Header() {
     <header ref={headerRef} className="site-header">
       <div className="site-header-topbar">
         <div className="site-container">
-          <div className="site-header-topbar-inner">
+          <div className="site-content-width site-header-topbar-inner">
             <div className="site-header-topbar-start">
               <a href="#" className="site-header-logo group shrink-0" onClick={closeMobileMenu}>
                 <Logo variant="topbar" />
@@ -275,31 +275,33 @@ export function Header() {
 
       {!isPhoneNav && (
         <div className="site-header-main">
-          <div className="site-container site-header-main-inner">
-            <nav className="site-main-nav" aria-label="Menu chính">
-              {headerNavItems.map((item) => {
-                if (hasDropdown(item)) {
-                  const menuKey: DropdownKey = item.label === "Dịch vụ" ? "dich-vu" : "tin-tuc";
-                  return (
-                    <NavDropdown
-                      key={item.label}
-                      label={item.label}
-                      items={item.dropdown}
-                      menuKey={menuKey}
-                      openMenu={openMenu}
-                      setOpenMenu={setOpenMenu}
-                      alignEnd={item.label === "Tin tức"}
-                    />
-                  );
-                }
+          <div className="site-container">
+            <div className="site-content-width site-header-main-inner">
+              <nav className="site-main-nav" aria-label="Menu chính">
+                {headerNavItems.map((item) => {
+                  if (hasDropdown(item)) {
+                    const menuKey: DropdownKey = item.label === "Dịch vụ" ? "dich-vu" : "tin-tuc";
+                    return (
+                      <NavDropdown
+                        key={item.label}
+                        label={item.label}
+                        items={item.dropdown}
+                        menuKey={menuKey}
+                        openMenu={openMenu}
+                        setOpenMenu={setOpenMenu}
+                        alignEnd={item.label === "Tin tức"}
+                      />
+                    );
+                  }
 
-                return (
-                  <a key={item.label} href={item.href} className="site-main-nav-link shrink-0">
-                    {item.label}
-                  </a>
-                );
-              })}
-            </nav>
+                  return (
+                    <a key={item.label} href={item.href} className="site-main-nav-link shrink-0">
+                      {item.label}
+                    </a>
+                  );
+                })}
+              </nav>
+            </div>
           </div>
         </div>
       )}
