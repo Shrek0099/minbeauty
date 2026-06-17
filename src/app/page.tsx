@@ -7,6 +7,7 @@ import { Process } from "@/components/process";
 import { Videos } from "@/components/videos";
 import { About } from "@/components/about";
 import { Knowledge } from "@/components/knowledge";
+import { Faq } from "@/components/faq";
 import { ConsultationForm } from "@/components/consultation-form";
 import { Footer } from "@/components/footer";
 import { FloatingContact } from "@/components/floating-contact";
@@ -26,6 +27,7 @@ export default function Home() {
           <Videos />
           <Knowledge />
           <About />
+          <Faq />
           <ConsultationForm />
         </main>
         <Footer />

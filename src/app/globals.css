@@ -1384,6 +1384,46 @@ body {
   gap: 28px;
 }
 
+.faq-section {
+  background:
+    radial-gradient(circle at 10% 20%, rgba(216, 181, 123, 0.14), transparent 28%),
+    linear-gradient(180deg, rgba(255, 249, 246, 0.94), rgba(255, 255, 255, 0.82));
+}
+
+.faq-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+
+@media (min-width: 768px) {
+  .faq-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.25rem;
+  }
+}
+
+.faq-card {
+  border: 1px solid rgba(230, 206, 196, 0.9);
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.88);
+  padding: clamp(1.2rem, 3vw, 1.6rem);
+  box-shadow: 0 12px 34px rgba(122, 75, 61, 0.08);
+}
+
+.faq-card h3 {
+  margin: 0;
+  color: var(--primary-dark);
+  font-size: clamp(1.05rem, 2vw, 1.22rem);
+  line-height: 1.35;
+}
+
+.faq-card p {
+  margin: 0.7rem 0 0;
+  color: var(--text-muted);
+  line-height: 1.7;
+}
+
 @media (min-width: 768px) {
   .knowledge-grid {
     grid-template-columns: repeat(2, 1fr);

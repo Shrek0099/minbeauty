@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { Clock, MapPin, Phone } from "lucide-react";
 import { defaultCmsServices } from "@/lib/cms-defaults";
+import { trackContactClick } from "@/lib/client-tracking";
 import type { CmsData } from "@/lib/cms-types";
 import { siteConfig } from "@/lib/site-config";
 
@@ -118,7 +119,11 @@ export function ConsultationForm() {
                   Chúng tôi sẽ liên hệ tư vấn trong thời gian sớm nhất.
                 </p>
                 <div className="mt-6 flex flex-col justify-center gap-3 sm:flex-row">
-                  <a href={`tel:${siteConfig.phoneRaw}`} className="submit-button text-center">
+                  <a
+                    href={`tel:${siteConfig.phoneRaw}`}
+                    className="submit-button text-center"
+                    onClick={() => trackContactClick("phone", "thank-you-phone")}
+                  >
                     Gọi hotline
                   </a>
                   <a
@@ -126,6 +131,7 @@ export function ConsultationForm() {
                     target="_blank"
                     rel="noopener noreferrer"
                     className="secondary-button text-center"
+                    onClick={() => trackContactClick("zalo", "thank-you-zalo")}
                   >
                     Nhắn Zalo
                   </a>

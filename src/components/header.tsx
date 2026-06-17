@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { ChevronDown, MapPin, Menu, Phone, X } from "lucide-react";
+import { trackContactClick } from "@/lib/client-tracking";
 import { headerNavItems, siteConfig, type HeaderNavItem } from "@/lib/site-config";
 import { Logo } from "@/components/logo";
 
@@ -240,11 +241,19 @@ export function Header() {
                 href={`tel:${siteConfig.phoneRaw}`}
                 className="site-header-hotline hidden md:inline-flex"
                 aria-label={`Gọi hotline ${siteConfig.phone}`}
+                onClick={() => trackContactClick("phone", "header-hotline")}
               >
                 <Phone className="h-4 w-4 shrink-0" />
                 <span>{siteConfig.phone}</span>
               </a>
-              <a href="#lien-he" className="site-header-booking" onClick={closeMobileMenu}>
+              <a
+                href="#lien-he"
+                className="site-header-booking"
+                onClick={() => {
+                  trackContactClick("booking", "header-booking");
+                  closeMobileMenu();
+                }}
+              >
                 Đặt lịch hẹn
               </a>
               {isPhoneNav && (
