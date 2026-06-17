@@ -1,15 +1,100 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Clock, MapPin, Phone } from "lucide-react";
-import { consultationServices, siteConfig } from "@/lib/site-config";
+import { defaultCmsServices } from "@/lib/cms-defaults";
+import type { CmsData } from "@/lib/cms-types";
+import { siteConfig } from "@/lib/site-config";
+
+declare global {
+  interface Window {
+    dataLayer?: Record<string, unknown>[];
+    gtag?: (...args: unknown[]) => void;
+    fbq?: (...args: unknown[]) => void;
+  }
+}
+
+const googleAdsConversionId = process.env.NEXT_PUBLIC_GOOGLE_ADS_ID;
+const googleAdsConversionLabel = process.env.NEXT_PUBLIC_GOOGLE_ADS_CONVERSION_LABEL;
+
+function trackLead(service: string) {
+  window.dataLayer?.push({
+    event: "lead_submit",
+    lead_service: service,
+  });
+
+  window.gtag?.("event", "generate_lead", {
+    event_category: "lead",
+    event_label: service,
+  });
+
+  if (googleAdsConversionId && googleAdsConversionLabel) {
+    window.gtag?.("event", "conversion", {
+      send_to: `${googleAdsConversionId}/${googleAdsConversionLabel}`,
+    });
+  }
+
+  window.fbq?.("track", "Lead", {
+    content_name: service,
+  });
+}
 
 export function ConsultationForm() {
   const [submitted, setSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState("");
+  const [serviceOptions, setServiceOptions] = useState(
+    defaultCmsServices.filter((service) => service.visible).map((service) => service.title),
+  );
 
-  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+  useEffect(() => {
+    fetch("/api/cms")
+      .then((response) => response.json())
+      .then((payload: { data?: CmsData }) => {
+        const titles =
+          payload.data?.services
+            ?.filter((service) => service.visible)
+            .sort((a, b) => a.group.localeCompare(b.group) || a.sortOrder - b.sortOrder)
+            .map((service) => service.title) || [];
+
+        if (titles.length > 0) setServiceOptions(titles);
+      })
+      .catch(() => {
+        setServiceOptions(defaultCmsServices.filter((service) => service.visible).map((service) => service.title));
+      });
+  }, []);
+
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    setSubmitted(true);
+    setError("");
+    setIsSubmitting(true);
+
+    const formData = new FormData(e.currentTarget);
+    const payload = {
+      name: String(formData.get("name") || ""),
+      phone: String(formData.get("phone") || ""),
+      service: String(formData.get("service") || ""),
+      message: String(formData.get("message") || ""),
+    };
+
+    try {
+      const response = await fetch("/api/leads", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      if (!response.ok) {
+        throw new Error("Lead submission failed");
+      }
+
+      trackLead(payload.service);
+      setSubmitted(true);
+    } catch {
+      setError("Chưa gửi được thông tin. Bạn vui lòng gọi hotline hoặc nhắn Zalo để được tư vấn ngay.");
+    } finally {
+      setIsSubmitting(false);
+    }
   }
 
   return (
@@ -32,6 +117,19 @@ export function ConsultationForm() {
                 <p className="text-muted">
                   Chúng tôi sẽ liên hệ tư vấn trong thời gian sớm nhất.
                 </p>
+                <div className="mt-6 flex flex-col justify-center gap-3 sm:flex-row">
+                  <a href={`tel:${siteConfig.phoneRaw}`} className="submit-button text-center">
+                    Gọi hotline
+                  </a>
+                  <a
+                    href={`https://zalo.me/${siteConfig.zalo}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="secondary-button text-center"
+                  >
+                    Nhắn Zalo
+                  </a>
+                </div>
               </div>
             ) : (
               <form onSubmit={handleSubmit} className="space-y-5">
@@ -66,7 +164,7 @@ export function ConsultationForm() {
                     Dịch vụ quan tâm
                   </label>
                   <select id="service" name="service" className="form-input">
-                    {consultationServices.map((s) => (
+                    {serviceOptions.map((s) => (
                       <option key={s} value={s}>
                         {s}
                       </option>
@@ -85,8 +183,9 @@ export function ConsultationForm() {
                     placeholder="Bạn có thể mô tả tình trạng hoặc mong muốn của mình..."
                   />
                 </div>
-                <button type="submit" className="submit-button">
-                  Gửi thông tin
+                {error ? <p className="text-sm font-medium text-red-700">{error}</p> : null}
+                <button type="submit" className="submit-button" disabled={isSubmitting}>
+                  {isSubmitting ? "Đang gửi..." : "Gửi thông tin"}
                 </button>
               </form>
             )}

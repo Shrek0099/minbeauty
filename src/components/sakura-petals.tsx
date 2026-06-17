@@ -130,7 +130,6 @@ const MOUSE_IDLE_MS = 700;
 
 export function SakuraPetals() {
   const [petals, setPetals] = useState<PetalConfig[]>([]);
-  const [mounted, setMounted] = useState(false);
   const [reducedMotion, setReducedMotion] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const hostRefs = useRef<(HTMLDivElement | null)[]>([]);
@@ -141,9 +140,6 @@ export function SakuraPetals() {
   const scrollEndTimerRef = useRef<number | null>(null);
 
   useEffect(() => {
-    setMounted(true);
-    setReducedMotion(window.matchMedia("(prefers-reduced-motion: reduce)").matches);
-
     const applyCount = () => {
       const width = window.innerWidth;
       hostRefs.current = [];
@@ -151,8 +147,10 @@ export function SakuraPetals() {
       setPetals(generatePetals(getPetalCount(width)));
     };
 
-    applyCount();
-
+    const initTimer = window.setTimeout(() => {
+      setReducedMotion(window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+      applyCount();
+    }, 0);
     let resizeTimer: number | undefined;
     const onResize = () => {
       window.clearTimeout(resizeTimer);
@@ -162,12 +160,13 @@ export function SakuraPetals() {
     window.addEventListener("resize", onResize);
     return () => {
       window.removeEventListener("resize", onResize);
+      window.clearTimeout(initTimer);
       window.clearTimeout(resizeTimer);
     };
   }, []);
 
   useEffect(() => {
-    if (!mounted || !isMobile || reducedMotion) return;
+    if (petals.length === 0 || !isMobile || reducedMotion) return;
 
     const layer = layerRef.current;
     if (!layer) return;
@@ -187,10 +186,10 @@ export function SakuraPetals() {
       if (scrollEndTimerRef.current) window.clearTimeout(scrollEndTimerRef.current);
       layer.classList.remove("sakura-layer--scrolling");
     };
-  }, [mounted, isMobile, reducedMotion]);
+  }, [petals.length, isMobile, reducedMotion]);
 
   useEffect(() => {
-    if (!mounted || petals.length === 0 || reducedMotion) return;
+    if (petals.length === 0 || reducedMotion) return;
 
     const clearBurst = (host: HTMLDivElement) => {
       host.style.transform = "";
@@ -266,7 +265,7 @@ export function SakuraPetals() {
       if (rafRef.current) window.cancelAnimationFrame(rafRef.current);
       if (idleTimerRef.current) window.clearTimeout(idleTimerRef.current);
     };
-  }, [mounted, petals.length, reducedMotion]);
+  }, [petals.length, reducedMotion]);
 
   const petalElements = useMemo(
     () =>
@@ -301,7 +300,7 @@ export function SakuraPetals() {
     [petals, reducedMotion],
   );
 
-  if (!mounted || petals.length === 0) return null;
+  if (petals.length === 0) return null;
 
   return (
     <div

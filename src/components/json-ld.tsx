@@ -31,7 +31,7 @@ export function JsonLd() {
       closes: "20:00",
     },
     priceRange: "$$",
-    image: `${siteConfig.url}/og-image.jpg`,
+    image: new URL(siteConfig.ogImage, siteConfig.url).toString(),
     sameAs: [siteConfig.facebook, siteConfig.instagram],
   };
 

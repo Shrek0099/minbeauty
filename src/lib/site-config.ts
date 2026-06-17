@@ -1,13 +1,24 @@
 const fullAddress =
   "61A, hẻm 24 Trịnh Phong Đáng, Trường Giang, Trường Tây, Hòa Thành, Tây Ninh";
 
+const vercelProductionUrl = process.env.VERCEL_PROJECT_PRODUCTION_URL
+  ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+  : undefined;
+
+const siteUrl = (
+  process.env.NEXT_PUBLIC_SITE_URL ||
+  vercelProductionUrl ||
+  "https://minbeauty.vercel.app"
+).replace(/\/$/, "");
+
 export const siteConfig = {
   name: "Min Beauty",
   tagline: "Làm đẹp tự nhiên, nhẹ nhàng",
   description:
     "Min Beauty tập trung vào các dịch vụ môi, filler, trẻ hóa da và chăm sóc da. Mỗi khách hàng được tư vấn theo tình trạng thực tế trước khi thực hiện.",
-  url: "https://minbeauty.vn",
+  url: siteUrl,
   logo: "/images/logo/min-beauty-logo.png",
+  ogImage: "/images/hero/min-beauty-hero.jpg",
   phone: "0971.700.952",
   phoneRaw: "+84971700952",
   email: "info@minbeauty.vn",
@@ -48,8 +59,8 @@ export const headerNavItems: HeaderNavItem[] = [
   {
     label: "Dịch vụ",
     dropdown: [
-      { href: "/dich-vu/tham-my", label: "Dịch vụ thẩm mỹ" },
-      { href: "/dich-vu/spa", label: "Dịch vụ Spa" },
+      { href: "#dich-vu", label: "Dịch vụ thẩm mỹ" },
+      { href: "#dich-vu", label: "Dịch vụ Spa" },
     ],
   },
   { href: "#hinh-anh", label: "Hình ảnh thực tế" },
@@ -58,8 +69,8 @@ export const headerNavItems: HeaderNavItem[] = [
   {
     label: "Tin tức",
     dropdown: [
-      { href: "/tin-tuc/su-kien", label: "Tin tức & Sự kiện" },
-      { href: "/tin-tuc/meo-lam-dep", label: "Mẹo làm đẹp" },
+      { href: "/blog", label: "Tất cả bài viết" },
+      { href: "/cham-soc-da", label: "Mẹo làm đẹp" },
     ],
   },
   { href: "#lien-he", label: "Liên hệ" },

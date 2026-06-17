@@ -1,6 +1,9 @@
 import type { Metadata, Viewport } from "next";
 import { Playfair_Display, Inter } from "next/font/google";
+import { AdTracking } from "@/components/ad-tracking";
 import { JsonLd } from "@/components/json-ld";
+import { VisitorTracker } from "@/components/visitor-tracker";
+import { getCmsData } from "@/lib/cms-store";
 import { siteConfig } from "@/lib/site-config";
 import "./globals.css";
 
@@ -22,67 +25,65 @@ export const viewport: Viewport = {
   viewportFit: "cover",
 };
 
-export const metadata: Metadata = {
-  metadataBase: new URL(siteConfig.url),
-  title: {
-    default: `${siteConfig.name} - ${siteConfig.tagline}`,
-    template: `%s | ${siteConfig.name}`,
-  },
-  description: siteConfig.description,
-  keywords: [
-    "Min Beauty",
-    "làm đẹp",
-    "filler",
-    "môi baby",
-    "meso",
-    "trẻ hóa da",
-    "chăm sóc da",
-    "Tây Ninh",
-    "Hòa Thành",
-  ],
-  authors: [{ name: siteConfig.name }],
-  creator: siteConfig.name,
-  openGraph: {
-    type: "website",
-    locale: "vi_VN",
-    url: siteConfig.url,
-    siteName: siteConfig.name,
-    title: `${siteConfig.name} - ${siteConfig.tagline}`,
-    description: siteConfig.description,
-    images: [
-      {
-        url: "/og-image.jpg",
-        width: 1200,
-        height: 630,
-        alt: siteConfig.name,
-      },
-    ],
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: `${siteConfig.name} - ${siteConfig.tagline}`,
-    description: siteConfig.description,
-    images: ["/og-image.jpg"],
-  },
-  robots: {
-    index: true,
-    follow: true,
-    googleBot: {
+export async function generateMetadata(): Promise<Metadata> {
+  const cms = await getCmsData();
+  const keywords = cms.seo.keywords
+    .split(",")
+    .map((keyword) => keyword.trim())
+    .filter(Boolean);
+
+  return {
+    metadataBase: new URL(siteConfig.url),
+    title: {
+      default: cms.seo.title,
+      template: `%s | ${siteConfig.name}`,
+    },
+    description: cms.seo.description,
+    keywords,
+    authors: [{ name: siteConfig.name }],
+    creator: siteConfig.name,
+    openGraph: {
+      type: "website",
+      locale: "vi_VN",
+      url: cms.seo.canonicalUrl || siteConfig.url,
+      siteName: siteConfig.name,
+      title: cms.seo.title,
+      description: cms.seo.description,
+      images: [
+        {
+          url: cms.seo.ogImage || siteConfig.ogImage,
+          width: 1024,
+          height: 576,
+          alt: siteConfig.name,
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: cms.seo.title,
+      description: cms.seo.description,
+      images: [cms.seo.ogImage || siteConfig.ogImage],
+    },
+    robots: {
       index: true,
       follow: true,
-      "max-video-preview": -1,
-      "max-image-preview": "large",
-      "max-snippet": -1,
+      googleBot: {
+        index: true,
+        follow: true,
+        "max-video-preview": -1,
+        "max-image-preview": "large",
+        "max-snippet": -1,
+      },
     },
-  },
-  alternates: {
-    canonical: siteConfig.url,
-  },
-  icons: {
-    icon: siteConfig.logo,
-    apple: siteConfig.logo,
-  },
-};
+    alternates: {
+      canonical: cms.seo.canonicalUrl || siteConfig.url,
+    },
+    icons: {
+      icon: siteConfig.logo,
+      apple: siteConfig.logo,
+    },
+  };
+}
 
 export default function RootLayout({
   children,
@@ -92,9 +93,13 @@ export default function RootLayout({
   return (
     <html lang="vi" className={`${playfair.variable} ${inter.variable} scroll-smooth`}>
       <head>
+        <AdTracking />
         <JsonLd />
       </head>
-      <body className="min-h-screen antialiased pb-[env(safe-area-inset-bottom)]">{children}</body>
+      <body className="min-h-screen antialiased pb-[env(safe-area-inset-bottom)]">
+        {children}
+        <VisitorTracker />
+      </body>
     </html>
   );
 }

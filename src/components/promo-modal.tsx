@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useCallback, useEffect, useState } from "react";
 import { X } from "lucide-react";
 import { promoModalServices, siteConfig } from "@/lib/site-config";
@@ -75,7 +76,13 @@ export function PromoModal() {
 
         <div className="promo-modal-grid">
           <div className="promo-modal-media">
-            <img src={imageSrc} alt={promoModal.title} className="promo-modal-image" />
+            <Image
+              src={imageSrc}
+              alt={promoModal.title}
+              width={720}
+              height={900}
+              className="promo-modal-image"
+            />
             <div className="promo-modal-media-overlay" aria-hidden="true" />
           </div>
 

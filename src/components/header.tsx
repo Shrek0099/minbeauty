@@ -195,10 +195,6 @@ export function Header() {
   };
 
   useEffect(() => {
-    if (!isPhoneNav) closeMobileMenu();
-  }, [isPhoneNav]);
-
-  useEffect(() => {
     if (!openMenu) return;
 
     const onPointerDown = (event: PointerEvent) => {

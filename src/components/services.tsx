@@ -1,7 +1,10 @@
 "use client";
+/* eslint-disable @next/next/no-img-element */
 
-import { useState } from "react";
-import { cosmeticServices, spaServices } from "@/lib/site-config";
+import Image from "next/image";
+import { useEffect, useState } from "react";
+import { defaultCmsServices, serviceGroupLabels } from "@/lib/cms-defaults";
+import type { CmsData, CmsService } from "@/lib/cms-types";
 
 type Tab = "cosmetic" | "spa";
 
@@ -12,7 +15,21 @@ const tabs: { id: Tab; label: string }[] = [
 
 export function Services() {
   const [activeTab, setActiveTab] = useState<Tab>("cosmetic");
-  const items = activeTab === "cosmetic" ? cosmeticServices : spaServices;
+  const [services, setServices] = useState<CmsService[]>(defaultCmsServices);
+  const items = services
+    .filter((service) => service.visible && service.group === activeTab)
+    .sort((a, b) => a.sortOrder - b.sortOrder);
+
+  useEffect(() => {
+    fetch("/api/cms")
+      .then((response) => response.json())
+      .then((payload: { data?: CmsData }) => {
+        if (payload.data?.services) setServices(payload.data.services);
+      })
+      .catch(() => {
+        setServices(defaultCmsServices);
+      });
+  }, []);
 
   return (
     <section id="dich-vu" className="site-section section-reveal services-section">
@@ -36,7 +53,7 @@ export function Services() {
                 onClick={() => setActiveTab(tab.id)}
                 className={`service-tab ${isActive ? "service-tab-active" : "service-tab-inactive"}`}
               >
-                {tab.label}
+                {serviceGroupLabels[tab.id]}
               </button>
             );
           })}
@@ -45,14 +62,25 @@ export function Services() {
         <div className="service-grid">
           {items.map((service) => (
             <article key={service.id} className="service-card">
-              <img
-                src={service.image}
-                alt={service.title}
-                className="boutique-card-image service-card-image"
-                loading="lazy"
-                decoding="async"
-              />
+              {service.image.startsWith("/") ? (
+                <Image
+                  src={service.image}
+                  alt={service.title}
+                  width={720}
+                  height={960}
+                  className="boutique-card-image service-card-image"
+                  loading="lazy"
+                />
+              ) : (
+                <img
+                  src={service.image}
+                  alt={service.title}
+                  className="boutique-card-image service-card-image"
+                  loading="lazy"
+                />
+              )}
               <h3 className="boutique-card-title service-card-title">{service.title}</h3>
+              {service.description ? <p className="service-card-description">{service.description}</p> : null}
             </article>
           ))}
         </div>

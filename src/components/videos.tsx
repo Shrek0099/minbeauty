@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { Play } from "lucide-react";
 import { videos } from "@/lib/site-config";
 
@@ -15,12 +16,13 @@ export function Videos() {
           {videos.map((video) => (
             <div key={video.id} className="video-card group">
               <div className="relative overflow-hidden">
-                <img
+                <Image
                   src={video.thumbnail}
                   alt={video.title}
+                  width={720}
+                  height={960}
                   className="boutique-card-image video-card-thumb"
                   loading="lazy"
-                  decoding="async"
                 />
                 <div className="absolute inset-0 flex items-center justify-center bg-[rgba(47,32,34,0.14)] transition-colors group-hover:bg-[rgba(47,32,34,0.22)]">
                   <div className="video-play-btn">

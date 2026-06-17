@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { galleryItems } from "@/lib/site-config";
 
 export function Gallery() {
@@ -17,12 +18,13 @@ export function Gallery() {
           {galleryItems.map((item) => (
             <article key={item.id} className="before-after-card group">
               <div className="relative overflow-hidden">
-                <img
+                <Image
                   src={item.image}
                   alt={`Kết quả ${item.service}`}
+                  width={720}
+                  height={960}
                   className="boutique-card-image aspect-[3/4]"
                   loading="lazy"
-                  decoding="async"
                 />
               </div>
               <h3 className="boutique-card-title">{item.service}</h3>

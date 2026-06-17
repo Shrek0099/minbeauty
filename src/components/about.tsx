@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { siteConfig } from "@/lib/site-config";
 
 export function About() {
@@ -18,12 +19,13 @@ export function About() {
 
           <div className="relative">
             <div className="about-image-card">
-              <img
+              <Image
                 src="/images/about/facility.jpg"
                 alt={`Không gian ${siteConfig.name}`}
+                width={1200}
+                height={900}
                 className="boutique-card-image aspect-[4/3]"
                 loading="lazy"
-                decoding="async"
               />
             </div>
           </div>

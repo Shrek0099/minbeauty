@@ -1,3 +1,5 @@
+import Image from "next/image";
+import Link from "next/link";
 import { knowledgeArticles } from "@/lib/site-config";
 
 export function Knowledge() {
@@ -17,22 +19,23 @@ export function Knowledge() {
           {knowledgeArticles.map((article) => (
             <article key={article.id} className="news-card">
               <div className="news-card-media">
-                <img
+                <Image
                   src={article.image}
                   alt={article.title}
+                  width={480}
+                  height={360}
                   className="boutique-card-image news-card-image"
                   loading="lazy"
-                  decoding="async"
                 />
                 <span className="news-category">{article.category}</span>
               </div>
               <div className="news-card-content boutique-card-body">
                 <h3 className="news-title">{article.title}</h3>
                 <p className="news-excerpt">{article.excerpt}</p>
-                <a href="#" className="news-link">
+                <Link href={`/blog/${article.slug}`} className="news-link">
                   Đọc thêm
                   <span aria-hidden="true">→</span>
-                </a>
+                </Link>
               </div>
             </article>
           ))}
