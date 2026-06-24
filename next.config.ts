@@ -9,6 +9,20 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  async redirects() {
+    return [
+      { source: "/blog", destination: "/news", permanent: true },
+      { source: "/blog/:slug", destination: "/news/:slug", permanent: true },
+      { source: "/moi-baby", destination: "/news?category=moi-baby", permanent: true },
+      { source: "/filler", destination: "/news?category=filler", permanent: true },
+      { source: "/cham-soc-da", destination: "/news?category=cham-soc-da", permanent: true },
+      {
+        source: "/cham-soc-sau-dich-vu",
+        destination: "/news?category=cham-soc-sau-dich-vu",
+        permanent: true,
+      },
+    ];
+  },
 };
 
 export default nextConfig;

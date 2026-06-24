@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { faqItems } from "@/lib/faq";
 
 export function Faq() {
@@ -21,6 +22,12 @@ export function Faq() {
             </article>
           ))}
         </div>
+        <p className="mt-8 text-center">
+          <Link href="/faq" className="news-link">
+            Xem tất cả câu hỏi
+            <span aria-hidden="true">→</span>
+          </Link>
+        </p>
       </div>
     </section>
   );

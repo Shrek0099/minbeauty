@@ -12,9 +12,8 @@ export function Footer() {
             <div className="mb-5">
               <Logo variant="footer" />
             </div>
-            <p className="site-footer-text">
-              Cơ sở làm đẹp nhỏ, tập trung vào tư vấn rõ ràng và dịch vụ phù hợp với từng
-              gương mặt.
+            <p className="site-footer-text mt-3">
+              Khu vực phục vụ: {siteConfig.serviceAreaText}
             </p>
           </div>
 
@@ -35,9 +34,9 @@ export function Footer() {
             <h3 className="site-footer-heading mb-4">Dịch vụ</h3>
             <ul className="space-y-2.5">
               {footerServiceLinks.map((link) => (
-                <li key={link}>
-                  <a href="#dich-vu" className="site-footer-link">
-                    {link}
+                <li key={link.label}>
+                  <a href={link.href} className="site-footer-link">
+                    {link.label}
                   </a>
                 </li>
               ))}

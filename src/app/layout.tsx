@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Playfair_Display, Inter } from "next/font/google";
 import { AdTracking } from "@/components/ad-tracking";
+import { GtmNoscript } from "@/components/gtm-noscript";
 import { JsonLd } from "@/components/json-ld";
 import { VisitorTracker } from "@/components/visitor-tracker";
 import { getCmsData } from "@/lib/cms-store";
@@ -53,7 +54,7 @@ export async function generateMetadata(): Promise<Metadata> {
         {
           url: cms.seo.ogImage || siteConfig.ogImage,
           width: 1024,
-          height: 576,
+          height: 512,
           alt: siteConfig.name,
         },
       ],
@@ -75,9 +76,6 @@ export async function generateMetadata(): Promise<Metadata> {
         "max-snippet": -1,
       },
     },
-    alternates: {
-      canonical: cms.seo.canonicalUrl || siteConfig.url,
-    },
     icons: {
       icon: siteConfig.logo,
       apple: siteConfig.logo,
@@ -97,6 +95,7 @@ export default function RootLayout({
         <JsonLd />
       </head>
       <body className="min-h-screen antialiased pb-[env(safe-area-inset-bottom)]">
+        <GtmNoscript />
         {children}
         <VisitorTracker />
       </body>

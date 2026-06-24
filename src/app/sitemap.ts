@@ -1,36 +1,64 @@
 import type { MetadataRoute } from "next";
-import { blogCategories, blogPosts } from "@/lib/blog";
+import { getPublishedPosts } from "@/lib/blog";
+import { getActiveServices, localPageSlug } from "@/lib/services-data";
+import { siteLastUpdated } from "@/lib/sitemap-config";
 import { siteConfig } from "@/lib/site-config";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const blogRoutes: MetadataRoute.Sitemap = [
-    {
-      url: `${siteConfig.url}/blog`,
-      lastModified: new Date(),
-      changeFrequency: "weekly",
-      priority: 0.8,
-    },
-    ...blogCategories.map((category) => ({
-      url: `${siteConfig.url}/${category.slug}`,
-      lastModified: new Date(),
-      changeFrequency: "weekly" as const,
-      priority: 0.7,
-    })),
-    ...blogPosts.map((post) => ({
-      url: `${siteConfig.url}/blog/${post.slug}`,
-      lastModified: new Date(post.date),
-      changeFrequency: "monthly" as const,
-      priority: 0.6,
-    })),
-  ];
+  const now = siteLastUpdated;
+
+  const serviceRoutes: MetadataRoute.Sitemap = getActiveServices().map((service) => ({
+    url: `${siteConfig.url}/services/${service.slug}`,
+    lastModified: now,
+    changeFrequency: "monthly",
+    priority: 0.8,
+  }));
+
+  const newsRoutes: MetadataRoute.Sitemap = getPublishedPosts().map((post) => ({
+    url: `${siteConfig.url}/news/${post.slug}`,
+    lastModified: new Date(post.date),
+    changeFrequency: "monthly",
+    priority: 0.6,
+  }));
 
   return [
     {
       url: siteConfig.url,
-      lastModified: new Date(),
+      lastModified: now,
       changeFrequency: "weekly",
       priority: 1,
     },
-    ...blogRoutes,
+    {
+      url: `${siteConfig.url}/services`,
+      lastModified: now,
+      changeFrequency: "weekly",
+      priority: 0.9,
+    },
+    ...serviceRoutes,
+    {
+      url: `${siteConfig.url}/news`,
+      lastModified: now,
+      changeFrequency: "weekly",
+      priority: 0.8,
+    },
+    ...newsRoutes,
+    {
+      url: `${siteConfig.url}/faq`,
+      lastModified: now,
+      changeFrequency: "monthly",
+      priority: 0.7,
+    },
+    {
+      url: `${siteConfig.url}/contact`,
+      lastModified: now,
+      changeFrequency: "monthly",
+      priority: 0.7,
+    },
+    {
+      url: `${siteConfig.url}/${localPageSlug}`,
+      lastModified: now,
+      changeFrequency: "monthly",
+      priority: 0.8,
+    },
   ];
 }

@@ -63,25 +63,33 @@ export function SeoSectionOverview() {
 }
 
 export function GoogleAdsManager() {
-  const campaigns = [
-    {
-      name: "Search - Môi baby Tây Ninh",
-      status: "Đang chạy",
-      budget: "350.000đ/ngày",
-      conversions: "28",
-    },
-    {
-      name: "Performance Max - Dịch vụ làm đẹp",
-      status: "Tạm dừng",
-      budget: "500.000đ/ngày",
-      conversions: "16",
-    },
-    {
-      name: "Remarketing - Khách đã xem dịch vụ",
-      status: "Nháp",
-      budget: "180.000đ/ngày",
-      conversions: "-",
-    },
+  const envVars = [
+    { name: "NEXT_PUBLIC_SITE_URL", desc: "Domain production (https://minbeauty.vn)" },
+    { name: "NEXT_PUBLIC_GSC_VERIFICATION", desc: "Mã xác minh Google Search Console" },
+    { name: "NEXT_PUBLIC_GTM_ID", desc: "Google Tag Manager container ID (GTM-XXXX)" },
+    { name: "NEXT_PUBLIC_GA_ID", desc: "Google Analytics 4 measurement ID (G-XXXX)" },
+    { name: "NEXT_PUBLIC_GOOGLE_ADS_ID", desc: "Google Ads conversion ID (AW-XXXX)" },
+    { name: "NEXT_PUBLIC_GOOGLE_ADS_CONVERSION_LABEL", desc: "Nhãn conversion cho form lead" },
+    { name: "NEXT_PUBLIC_META_PIXEL_ID", desc: "Meta Pixel ID cho Facebook/Instagram Ads" },
+    { name: "LEAD_WEBHOOK_URL", desc: "Webhook nhận lead từ form tư vấn" },
+  ];
+
+  const launchChecklist = [
+    "Xác minh domain trên Google Search Console, submit sitemap.xml",
+    "Tạo Google Business Profile, thêm link vào footer và schema sameAs",
+    "Tạo conversion action trên Google Ads, copy label vào env",
+    "Cấu hình GTM: trigger form submit (generate_lead) và click phone/Zalo",
+    "Kiểm tra Pixel trên Meta Events Manager",
+    "Đặt landing page chính: /services/moi-baby hoặc /contact",
+  ];
+
+  const landingPages = [
+    { href: "/services", label: "Danh sách dịch vụ" },
+    { href: "/services/moi-baby", label: "Môi baby" },
+    { href: "/contact", label: "Liên hệ & đặt lịch" },
+    { href: "/tham-my-vien-hoa-thanh-tay-ninh", label: "Local SEO page" },
+    { href: "/news", label: "Tin tức" },
+    { href: "/faq", label: "FAQ" },
   ];
 
   return (
@@ -89,69 +97,39 @@ export function GoogleAdsManager() {
       <section className="miju-admin-panel">
         <div className="miju-admin-panel-header">
           <div>
-            <p className="miju-admin-eyebrow">Google Ads</p>
-            <h2>Cấu hình tài khoản quảng cáo</h2>
+            <p className="miju-admin-eyebrow">Google Ads & Tracking</p>
+            <h2>Hướng dẫn cấu hình quảng cáo</h2>
           </div>
-          <span className="miju-admin-status">Chưa kết nối API</span>
+          <span className="miju-admin-status">Tracking-only (không API)</span>
         </div>
-
-        <div className="miju-admin-form-grid">
-          <label className="miju-admin-field">
-            <span>Google Ads Customer ID</span>
-            <input type="text" placeholder="123-456-7890" />
-          </label>
-          <label className="miju-admin-field">
-            <span>Tài khoản quản lý</span>
-            <input type="text" placeholder="Min Beauty Ads" />
-          </label>
-          <label className="miju-admin-field">
-            <span>Ngân sách mặc định/ngày</span>
-            <input type="text" placeholder="300.000đ" />
-          </label>
-          <label className="miju-admin-field">
-            <span>Landing page chính</span>
-            <input type="text" placeholder="https://minbeauty.vercel.app" />
-          </label>
-        </div>
-
-        <div className="miju-admin-actions">
-          <button type="button">Lưu cấu hình</button>
-          <button type="button" className="miju-admin-secondary-button">
-            Kiểm tra kết nối
-          </button>
-        </div>
+        <p>
+          Website đã tích hợp sẵn GTM, GA4, Google Ads conversion và Meta Pixel. Cấu hình các biến
+          môi trường trên Vercel để kích hoạt tracking khi chạy quảng cáo.
+        </p>
       </section>
 
       <section className="miju-admin-panel">
         <div className="miju-admin-panel-header">
           <div>
-            <p className="miju-admin-eyebrow">Chiến dịch</p>
-            <h2>Theo dõi nhanh</h2>
+            <p className="miju-admin-eyebrow">Biến môi trường</p>
+            <h2>Cần cấu hình trên Vercel</h2>
           </div>
-          <Link href="/admin/seo" className="miju-admin-inline-link">
-            Về SEO
-          </Link>
         </div>
-
         <div className="miju-admin-table-wrap">
           <table className="miju-admin-table">
             <thead>
               <tr>
-                <th>Chiến dịch</th>
-                <th>Trạng thái</th>
-                <th>Ngân sách</th>
-                <th>Chuyển đổi</th>
+                <th>Biến</th>
+                <th>Mô tả</th>
               </tr>
             </thead>
             <tbody>
-              {campaigns.map((campaign) => (
-                <tr key={campaign.name}>
-                  <td>{campaign.name}</td>
+              {envVars.map((item) => (
+                <tr key={item.name}>
                   <td>
-                    <span>{campaign.status}</span>
+                    <code>{item.name}</code>
                   </td>
-                  <td>{campaign.budget}</td>
-                  <td>{campaign.conversions}</td>
+                  <td>{item.desc}</td>
                 </tr>
               ))}
             </tbody>
@@ -159,22 +137,59 @@ export function GoogleAdsManager() {
         </div>
       </section>
 
-      <section className="miju-admin-grid">
-        <div className="miju-admin-card">
-          <span className="miju-admin-card-kicker">Tracking</span>
-          <h2>Conversion ID</h2>
-          <p>Quản lý mã chuyển đổi dùng cho form đăng ký, click gọi điện và click Zalo.</p>
+      <section className="miju-admin-panel">
+        <div className="miju-admin-panel-header">
+          <div>
+            <p className="miju-admin-eyebrow">Conversion events</p>
+            <h2>Sự kiện đã tích hợp</h2>
+          </div>
         </div>
-        <div className="miju-admin-card">
-          <span className="miju-admin-card-kicker">Landing page</span>
-          <h2>Nhóm trang đích</h2>
-          <p>Theo dõi hiệu quả các trang như môi baby, filler, meso và chăm sóc da.</p>
+        <ul className="miju-admin-checklist">
+          <li>
+            <strong>generate_lead</strong> — Form tư vấn gửi thành công (Google Ads conversion nếu có label)
+          </li>
+          <li>
+            <strong>contact_click</strong> — Click gọi điện hoặc Zalo (engagement event)
+          </li>
+          <li>
+            <strong>PageView</strong> — Meta Pixel tự động khi có NEXT_PUBLIC_META_PIXEL_ID
+          </li>
+        </ul>
+      </section>
+
+      <section className="miju-admin-panel">
+        <div className="miju-admin-panel-header">
+          <div>
+            <p className="miju-admin-eyebrow">Trang đích quảng cáo</p>
+            <h2>Landing pages đề xuất</h2>
+          </div>
+          <Link href="/admin/seo" className="miju-admin-inline-link">
+            Về SEO
+          </Link>
         </div>
-        <div className="miju-admin-card">
-          <span className="miju-admin-card-kicker">Gợi ý</span>
-          <h2>Từ khóa nên ưu tiên</h2>
-          <p>Môi baby Tây Ninh, filler Tây Ninh, meso chăm sóc da và spa Hòa Thành.</p>
+        <div className="miju-admin-grid">
+          {landingPages.map((page) => (
+            <Link key={page.href} href={page.href} className="miju-admin-card miju-admin-card-link" target="_blank">
+              <span className="miju-admin-card-kicker">Preview</span>
+              <h2>{page.label}</h2>
+              <p>{page.href}</p>
+            </Link>
+          ))}
         </div>
+      </section>
+
+      <section className="miju-admin-panel">
+        <div className="miju-admin-panel-header">
+          <div>
+            <p className="miju-admin-eyebrow">Checklist</p>
+            <h2>Trước khi chạy quảng cáo</h2>
+          </div>
+        </div>
+        <ol className="miju-admin-checklist">
+          {launchChecklist.map((item) => (
+            <li key={item}>{item}</li>
+          ))}
+        </ol>
       </section>
     </div>
   );

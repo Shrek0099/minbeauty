@@ -19,6 +19,9 @@ export type BlogPost = {
   tags: string[];
   image: string;
   sections: BlogSection[];
+  seoTitle: string;
+  seoDescription: string;
+  status: "draft" | "published";
 };
 
 export const blogCategories: BlogCategory[] = [
@@ -55,6 +58,10 @@ export const blogPosts: BlogPost[] = [
     readTime: "5 phút đọc",
     tags: ["môi baby", "dáng môi", "tư vấn thẩm mỹ"],
     image: "/images/news/moi-baby-la-gi.jpg",
+    seoTitle: "Môi Baby là gì? Những điều nên biết trước khi thực hiện",
+    seoDescription:
+      "Môi Baby hướng đến dáng môi mềm mại, tự nhiên. Tìm hiểu trước khi thực hiện tại Min Beauty, Tây Ninh.",
+    status: "published",
     sections: [
       {
         heading: "Môi Baby tập trung vào sự hài hòa",
@@ -88,6 +95,9 @@ export const blogPosts: BlogPost[] = [
     readTime: "4 phút đọc",
     tags: ["filler", "tầng mặt giữa", "cân đối gương mặt"],
     image: "/images/news/lam-day-tang-mat-giua.jpg",
+    seoTitle: "Khi nào nên làm đầy tầng mặt giữa?",
+    seoDescription: "Tư vấn làm đầy tầng mặt giữa tự nhiên tại Min Beauty, Tây Ninh.",
+    status: "published",
     sections: [
       {
         heading: "Dấu hiệu vùng mặt giữa thiếu đầy đặn",
@@ -115,6 +125,9 @@ export const blogPosts: BlogPost[] = [
     readTime: "4 phút đọc",
     tags: ["meso", "chăm sóc da", "cấp ẩm"],
     image: "/images/news/meso-cham-soc-da.jpg",
+    seoTitle: "Meso hỗ trợ chăm sóc da như thế nào?",
+    seoDescription: "Tìm hiểu liệu trình meso chăm sóc da tại Min Beauty, Hòa Thành, Tây Ninh.",
+    status: "published",
     sections: [
       {
         heading: "Meso thường được chọn khi nào",
@@ -142,6 +155,9 @@ export const blogPosts: BlogPost[] = [
     readTime: "4 phút đọc",
     tags: ["chăm sóc sau filler", "filler", "lưu ý sau dịch vụ"],
     image: "/images/news/cham-soc-sau-filler.jpg",
+    seoTitle: "Chăm sóc sau filler: những điều nên lưu ý",
+    seoDescription: "Hướng dẫn chăm sóc sau filler tại Min Beauty. Lưu ý quan trọng sau dịch vụ.",
+    status: "published",
     sections: [
       {
         heading: "Những việc nên tránh trong thời gian đầu",
@@ -168,6 +184,9 @@ export const blogPosts: BlogPost[] = [
     readTime: "4 phút đọc",
     tags: ["filler", "làm đẹp tự nhiên", "tư vấn filler"],
     image: "/images/news/hieu-lam-ve-filler.jpg",
+    seoTitle: "Những hiểu lầm thường gặp về filler",
+    seoDescription: "Giải đáp hiểu lầm về filler — tư vấn tự nhiên tại Min Beauty, Tây Ninh.",
+    status: "published",
     sections: [
       {
         heading: "Không phải cứ nhiều là đẹp",
@@ -194,6 +213,9 @@ export const blogPosts: BlogPost[] = [
     readTime: "5 phút đọc",
     tags: ["chăm sóc da", "da khỏe", "routine skincare"],
     image: "/images/news/duy-tri-lan-da-khoe.jpg",
+    seoTitle: "Làm sao để duy trì làn da khỏe mạnh mỗi ngày?",
+    seoDescription: "Bí quyết duy trì da khỏe mỗi ngày — gợi ý từ Min Beauty, Tây Ninh.",
+    status: "published",
     sections: [
       {
         heading: "Nền tảng bắt đầu từ thói quen hằng ngày",
@@ -212,18 +234,24 @@ export const blogPosts: BlogPost[] = [
   },
 ];
 
+export function getPublishedPosts() {
+  return blogPosts.filter((post) => post.status === "published");
+}
+
 export function getCategory(slug: string) {
   return blogCategories.find((category) => category.slug === slug);
 }
 
 export function getCategoryPosts(slug: string) {
-  return blogPosts.filter((post) => post.category === slug);
+  return getPublishedPosts().filter((post) => post.category === slug);
 }
 
 export function getPost(slug: string) {
-  return blogPosts.find((post) => post.slug === slug);
+  return getPublishedPosts().find((post) => post.slug === slug);
 }
 
 export function getRelatedPosts(post: BlogPost) {
-  return blogPosts.filter((item) => item.category === post.category && item.slug !== post.slug).slice(0, 3);
+  return getPublishedPosts()
+    .filter((item) => item.category === post.category && item.slug !== post.slug)
+    .slice(0, 3);
 }

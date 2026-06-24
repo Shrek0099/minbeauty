@@ -10,9 +10,9 @@ export function Hero() {
       <div className="hero-banner">
         <Image
           src="/images/hero/min-beauty-hero.jpg"
-          alt="Min Beauty — Reveal Your Natural Beauty"
+          alt="Min Beauty — Nâng tầm nhan sắc, tỏa sáng tự tin. Chuyên H.A, Filler, Botox, Meso, BAP"
           width={1024}
-          height={576}
+          height={512}
           priority
           unoptimized
           sizes="100vw"

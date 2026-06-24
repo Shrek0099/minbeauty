@@ -1,21 +1,38 @@
 import Link from "next/link";
-import { blogCategories, blogPosts, getCategory, getRelatedPosts, type BlogPost } from "@/lib/blog";
+import { blogCategories, getCategoryPosts, getPublishedPosts, getCategory, getRelatedPosts, type BlogPost } from "@/lib/blog";
+import { Logo } from "@/components/logo";
 
 function BlogHeader() {
   return (
     <header className="miju-blog-header">
       <div className="site-container">
         <div className="miju-blog-nav">
-          <Link href="/blog" className="miju-blog-brand" aria-label="Min Beauty Blog">
-            Min Beauty <span>Blog</span>
-          </Link>
-          <nav className="miju-blog-nav-links" aria-label="Chuyên mục blog">
+          <div className="miju-blog-nav-brand">
+            <Link href="/" className="miju-blog-home-link" aria-label="Về trang chủ Min Beauty">
+              <Logo variant="nav" />
+            </Link>
+            <div className="miju-blog-brand-wrap">
+              <Link href="/" className="miju-blog-brand" aria-label="Về trang chủ Min Beauty">
+                Min Beauty
+              </Link>
+              <Link href="/news" className="miju-blog-brand-section" aria-label="Min Beauty Tin tức">
+                <span>Tin tức</span>
+              </Link>
+            </div>
+          </div>
+          <nav className="miju-blog-nav-links" aria-label="Chuyên mục tin tức">
             {blogCategories.map((category) => (
-              <Link key={category.slug} href={`/${category.slug}`}>
+              <Link key={category.slug} href={`/news?category=${category.slug}`}>
                 {category.title}
               </Link>
             ))}
+            <Link href="/" className="miju-blog-home-text">
+              Trang chủ
+            </Link>
           </nav>
+          <Link href="/" className="miju-blog-home-mobile">
+            Trang chủ
+          </Link>
         </div>
       </div>
     </header>
@@ -40,7 +57,7 @@ function CategoryPills() {
   return (
     <div className="miju-category-pills" aria-label="Danh sách chuyên mục">
       {blogCategories.map((category) => (
-        <Link key={category.slug} href={`/${category.slug}`}>
+        <Link key={category.slug} href={`/news?category=${category.slug}`}>
           {category.title}
         </Link>
       ))}
@@ -59,7 +76,7 @@ function PostCard({ post }: { post: BlogPost }) {
         <span>{post.readTime}</span>
       </div>
       <h2>
-        <Link href={`/blog/${post.slug}`}>{post.title}</Link>
+        <Link href={`/news/${post.slug}`}>{post.title}</Link>
       </h2>
       <p>{post.excerpt}</p>
       <div className="miju-post-tags">
@@ -67,7 +84,7 @@ function PostCard({ post }: { post: BlogPost }) {
           <span key={tag}>{tag}</span>
         ))}
       </div>
-      <Link href={`/blog/${post.slug}`} className="miju-read-link">
+      <Link href={`/news/${post.slug}`} className="miju-read-link">
         Đọc bài viết
         <span aria-hidden="true">→</span>
       </Link>
@@ -75,15 +92,21 @@ function PostCard({ post }: { post: BlogPost }) {
   );
 }
 
-export function MijuBlogIndex() {
+export function MijuBlogIndex({ categorySlug }: { categorySlug?: string }) {
+  const posts = categorySlug ? getCategoryPosts(categorySlug) : getPublishedPosts();
+  const activeCategory = categorySlug ? getCategory(categorySlug) : undefined;
+
   return (
     <div className="miju-blog-page">
       <BlogHeader />
       <main>
         <BlogHero
-          eyebrow="Min Beauty Blog"
-          title="Kiến thức làm đẹp trước khi chọn dịch vụ"
-          description="Tổng hợp các bài viết về môi baby, filler, meso, chăm sóc da và chăm sóc sau dịch vụ tại Min Beauty."
+          eyebrow={activeCategory ? "Chuyên mục" : "Min Beauty Tin tức"}
+          title={activeCategory?.title ?? "Kiến thức làm đẹp trước khi chọn dịch vụ"}
+          description={
+            activeCategory?.description ??
+            "Tổng hợp các bài viết về môi baby, filler, meso, chăm sóc da và chăm sóc sau dịch vụ tại Min Beauty."
+          }
         />
 
         <section className="miju-blog-section">
@@ -91,10 +114,10 @@ export function MijuBlogIndex() {
             <CategoryPills />
             <div className="miju-blog-section-heading">
               <p className="miju-blog-eyebrow">Bài viết mới</p>
-              <h2>Nên đọc trước khi tư vấn</h2>
+              <h2>{activeCategory ? `Bài viết: ${activeCategory.title}` : "Nên đọc trước khi tư vấn"}</h2>
             </div>
             <div className="miju-post-grid">
-              {blogPosts.map((post) => (
+              {posts.map((post) => (
                 <PostCard key={post.slug} post={post} />
               ))}
             </div>
@@ -106,30 +129,7 @@ export function MijuBlogIndex() {
 }
 
 export function MijuCategoryPage({ categorySlug }: { categorySlug: string }) {
-  const category = getCategory(categorySlug);
-  const posts = blogPosts.filter((post) => post.category === categorySlug);
-
-  if (!category) return null;
-
-  return (
-    <div className="miju-blog-page">
-      <BlogHeader />
-      <main>
-        <BlogHero eyebrow="Chuyên mục" title={category.title} description={category.description} />
-
-        <section className="miju-blog-section">
-          <div className="site-container">
-            <CategoryPills />
-            <div className="miju-post-grid">
-              {posts.map((post) => (
-                <PostCard key={post.slug} post={post} />
-              ))}
-            </div>
-          </div>
-        </section>
-      </main>
-    </div>
-  );
+  return <MijuBlogIndex categorySlug={categorySlug} />;
 }
 
 export function MijuArticlePage({ post }: { post: BlogPost }) {
@@ -143,8 +143,8 @@ export function MijuArticlePage({ post }: { post: BlogPost }) {
         <article className="miju-article">
           <div className="site-container">
             <div className="miju-article-shell">
-              <Link href={category ? `/${category.slug}` : "/blog"} className="miju-back-link">
-                ← {category?.title ?? "Blog"}
+              <Link href={category ? `/news?category=${category.slug}` : "/news"} className="miju-back-link">
+                ← {category?.title ?? "Tin tức"}
               </Link>
               <div className="miju-post-meta">
                 <span>{category?.title}</span>

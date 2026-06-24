@@ -21,6 +21,15 @@ export function trackContactClick(channel: ContactChannel, label: string) {
     contact_channel: channel,
   });
 
+  const adsId = process.env.NEXT_PUBLIC_GOOGLE_ADS_ID;
+  const contactLabel = process.env.NEXT_PUBLIC_GOOGLE_ADS_CONTACT_LABEL;
+  if (adsId && contactLabel && window.gtag) {
+    window.gtag("event", "conversion", {
+      send_to: `${adsId}/${contactLabel}`,
+      event_callback: () => undefined,
+    });
+  }
+
   window.fbq?.("trackCustom", "ContactClick", {
     channel,
     label,

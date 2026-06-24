@@ -2,6 +2,7 @@
 /* eslint-disable @next/next/no-img-element */
 
 import Image from "next/image";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import { defaultCmsServices, serviceGroupLabels } from "@/lib/cms-defaults";
 import type { CmsData, CmsService } from "@/lib/cms-types";
@@ -61,7 +62,7 @@ export function Services() {
 
         <div className="service-grid">
           {items.map((service) => (
-            <article key={service.id} className="service-card">
+            <Link key={service.id} href={`/services/${service.id}`} className="service-card service-card-link">
               {service.image.startsWith("/") ? (
                 <Image
                   src={service.image}
@@ -81,9 +82,15 @@ export function Services() {
               )}
               <h3 className="boutique-card-title service-card-title">{service.title}</h3>
               {service.description ? <p className="service-card-description">{service.description}</p> : null}
-            </article>
+            </Link>
           ))}
         </div>
+        <p className="mt-8 text-center">
+          <Link href="/services" className="news-link">
+            Xem tất cả dịch vụ
+            <span aria-hidden="true">→</span>
+          </Link>
+        </p>
       </div>
     </section>
   );

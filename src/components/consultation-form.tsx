@@ -40,7 +40,7 @@ function trackLead(service: string) {
   });
 }
 
-export function ConsultationForm() {
+export function ConsultationForm({ variant = "full" }: { variant?: "full" | "embedded" }) {
   const [submitted, setSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState("");
@@ -98,6 +98,98 @@ export function ConsultationForm() {
     }
   }
 
+  const formCard = (
+    <div className="luxury-card p-6 md:p-8">
+      {submitted ? (
+        <div className="py-8 text-center">
+          <p className="section-heading mb-2 text-2xl">Cảm ơn bạn!</p>
+          <p className="text-muted">
+            Chúng tôi sẽ liên hệ tư vấn trong thời gian sớm nhất.
+          </p>
+          <div className="mt-6 flex flex-col justify-center gap-3 sm:flex-row">
+            <a
+              href={`tel:${siteConfig.phoneRaw}`}
+              className="submit-button text-center"
+              onClick={() => trackContactClick("phone", "thank-you-phone")}
+            >
+              Gọi hotline
+            </a>
+            <a
+              href={`https://zalo.me/${siteConfig.zalo}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="secondary-button text-center"
+              onClick={() => trackContactClick("zalo", "thank-you-zalo")}
+            >
+              Nhắn Zalo
+            </a>
+          </div>
+        </div>
+      ) : (
+        <form onSubmit={handleSubmit} className="space-y-5">
+          <div>
+            <label htmlFor="name" className="mb-2 block text-sm font-semibold text-foreground">
+              Họ và tên
+            </label>
+            <input
+              id="name"
+              name="name"
+              type="text"
+              required
+              className="form-input"
+              placeholder="Nguyễn Thị A"
+            />
+          </div>
+          <div>
+            <label htmlFor="phone" className="mb-2 block text-sm font-semibold text-foreground">
+              Số điện thoại
+            </label>
+            <input
+              id="phone"
+              name="phone"
+              type="tel"
+              required
+              className="form-input"
+              placeholder="0971.700.952"
+            />
+          </div>
+          <div>
+            <label htmlFor="service" className="mb-2 block text-sm font-semibold text-foreground">
+              Dịch vụ quan tâm
+            </label>
+            <select id="service" name="service" className="form-input">
+              {serviceOptions.map((s) => (
+                <option key={s} value={s}>
+                  {s}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div>
+            <label htmlFor="message" className="mb-2 block text-sm font-semibold text-foreground">
+              Lời nhắn
+            </label>
+            <textarea
+              id="message"
+              name="message"
+              rows={4}
+              className="form-input resize-none"
+              placeholder="Bạn có thể mô tả tình trạng hoặc mong muốn của mình..."
+            />
+          </div>
+          {error ? <p className="text-sm font-medium text-red-700">{error}</p> : null}
+          <button type="submit" className="submit-button" disabled={isSubmitting}>
+            {isSubmitting ? "Đang gửi..." : "Gửi thông tin"}
+          </button>
+        </form>
+      )}
+    </div>
+  );
+
+  if (variant === "embedded") {
+    return formCard;
+  }
+
   return (
     <section id="lien-he" className="site-section section-reveal contact-section">
       <div className="site-container">
@@ -111,91 +203,7 @@ export function ConsultationForm() {
         </div>
 
         <div className="grid gap-8 lg:grid-cols-5 lg:gap-10">
-          <div className="luxury-card p-6 md:p-8 lg:col-span-3">
-            {submitted ? (
-              <div className="py-8 text-center">
-                <p className="section-heading mb-2 text-2xl">Cảm ơn bạn!</p>
-                <p className="text-muted">
-                  Chúng tôi sẽ liên hệ tư vấn trong thời gian sớm nhất.
-                </p>
-                <div className="mt-6 flex flex-col justify-center gap-3 sm:flex-row">
-                  <a
-                    href={`tel:${siteConfig.phoneRaw}`}
-                    className="submit-button text-center"
-                    onClick={() => trackContactClick("phone", "thank-you-phone")}
-                  >
-                    Gọi hotline
-                  </a>
-                  <a
-                    href={`https://zalo.me/${siteConfig.zalo}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="secondary-button text-center"
-                    onClick={() => trackContactClick("zalo", "thank-you-zalo")}
-                  >
-                    Nhắn Zalo
-                  </a>
-                </div>
-              </div>
-            ) : (
-              <form onSubmit={handleSubmit} className="space-y-5">
-                <div>
-                  <label htmlFor="name" className="mb-2 block text-sm font-semibold text-foreground">
-                    Họ và tên
-                  </label>
-                  <input
-                    id="name"
-                    name="name"
-                    type="text"
-                    required
-                    className="form-input"
-                    placeholder="Nguyễn Thị A"
-                  />
-                </div>
-                <div>
-                  <label htmlFor="phone" className="mb-2 block text-sm font-semibold text-foreground">
-                    Số điện thoại
-                  </label>
-                  <input
-                    id="phone"
-                    name="phone"
-                    type="tel"
-                    required
-                    className="form-input"
-                    placeholder="0971.700.952"
-                  />
-                </div>
-                <div>
-                  <label htmlFor="service" className="mb-2 block text-sm font-semibold text-foreground">
-                    Dịch vụ quan tâm
-                  </label>
-                  <select id="service" name="service" className="form-input">
-                    {serviceOptions.map((s) => (
-                      <option key={s} value={s}>
-                        {s}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-                <div>
-                  <label htmlFor="message" className="mb-2 block text-sm font-semibold text-foreground">
-                    Lời nhắn
-                  </label>
-                  <textarea
-                    id="message"
-                    name="message"
-                    rows={4}
-                    className="form-input resize-none"
-                    placeholder="Bạn có thể mô tả tình trạng hoặc mong muốn của mình..."
-                  />
-                </div>
-                {error ? <p className="text-sm font-medium text-red-700">{error}</p> : null}
-                <button type="submit" className="submit-button" disabled={isSubmitting}>
-                  {isSubmitting ? "Đang gửi..." : "Gửi thông tin"}
-                </button>
-              </form>
-            )}
-          </div>
+          <div className="lg:col-span-3">{formCard}</div>
 
           <div className="luxury-card flex flex-col justify-center p-6 md:p-8 lg:col-span-2">
             <h3 className="mb-6 text-lg font-semibold text-foreground">Thông tin liên hệ</h3>

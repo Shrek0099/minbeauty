@@ -4,16 +4,20 @@ Website thẩm mỹ viện **Min Beauty** — trang landing page chuẩn SEO, th
 
 ## Tính năng
 
-- Trang chủ đầy đủ: Hero, Dịch vụ, Cam kết, Gallery trước/sau, Thống kê, Giới thiệu, Tin tức, Form tư vấn
-- SEO: metadata, Open Graph, JSON-LD (Schema.org BeautySalon), sitemap.xml, robots.txt
+- Trang chủ: Hero, Trust strip, Dịch vụ, Gallery, Quy trình, Video, Kiến thức, FAQ, Form tư vấn
+- SEO: metadata per-page, canonical, Open Graph, JSON-LD (LocalBusiness, Service, FAQPage, BlogPosting, BreadcrumbList), sitemap.xml, robots.txt
+- Trang dịch vụ: `/services`, `/services/[slug]` (8 landing pages)
+- Tin tức: `/news`, `/news/[slug]` (redirect 301 từ `/blog`)
+- FAQ: `/faq` | Liên hệ: `/contact`
+- Local SEO: `/tham-my-vien-hoa-thanh-tay-ninh`
+- Tracking: GTM, GA4, Google Ads conversion, Meta Pixel
 - Responsive mobile-first
-- Nút liên hệ nổi (Hotline + Zalo)
 
 ## Công nghệ
 
 - Next.js 16 (App Router)
 - TypeScript
-- Tailwind CSS
+- Tailwind CSS + CSS custom properties
 - Lucide React (icons)
 
 ## Chạy dự án
@@ -34,38 +38,62 @@ npm start
 
 ## Tùy chỉnh
 
-Chỉnh thông tin viện (số điện thoại, địa chỉ, dịch vụ...) tại `src/lib/site-config.ts`.
+Chỉnh thông tin viện tại `src/lib/site-config.ts` và nội dung dịch vụ tại `src/lib/services-data.ts`.
 
 ## Biến môi trường khi deploy
 
-Các biến dưới đây giúp SEO, form khách hàng và quảng cáo hoạt động đúng trên production:
-
 ```bash
-NEXT_PUBLIC_SITE_URL=https://minbeauty.vercel.app
-LEAD_WEBHOOK_URL=
+NEXT_PUBLIC_SITE_URL=https://minbeauty.vn
+NEXT_PUBLIC_GSC_VERIFICATION=
 NEXT_PUBLIC_GTM_ID=
 NEXT_PUBLIC_GA_ID=
 NEXT_PUBLIC_GOOGLE_ADS_ID=
 NEXT_PUBLIC_GOOGLE_ADS_CONVERSION_LABEL=
+NEXT_PUBLIC_GOOGLE_ADS_CONTACT_LABEL=
 NEXT_PUBLIC_META_PIXEL_ID=
+LEAD_WEBHOOK_URL=
 CMS_ALLOW_FILE_WRITES=false
 ```
 
-- Đổi `NEXT_PUBLIC_SITE_URL` sang `https://minbeauty.vn` sau khi domain đã trỏ DNS thành công.
-- Cấu hình `LEAD_WEBHOOK_URL` tới webhook/CRM/Zapier/Make để lưu lead từ form tư vấn.
-- Điền các mã tracking sau khi tạo Google Tag Manager, Google Ads conversion hoặc Meta Pixel.
-- CMS hiện dùng JSON storage cục bộ cho development. Trên production, nên nối database hoặc Vercel Blob/Marketplace storage trước khi dùng chỉnh sửa nội dung lâu dài.
-- `CMS_ALLOW_FILE_WRITES=true` chỉ nên dùng trong môi trường server có filesystem ghi bền vững, không nên bật mặc định trên Vercel serverless.
+- Đổi `NEXT_PUBLIC_SITE_URL` sang domain production sau khi DNS trỏ xong.
+- `NEXT_PUBLIC_GSC_VERIFICATION`: mã xác minh Google Search Console.
+- `NEXT_PUBLIC_GOOGLE_ADS_CONVERSION_LABEL`: conversion cho form lead (`generate_lead`).
+- `NEXT_PUBLIC_GOOGLE_ADS_CONTACT_LABEL`: conversion tùy chọn cho click phone/Zalo.
+- Cấu hình `LEAD_WEBHOOK_URL` tới webhook/CRM để lưu lead.
+
+## Checklist sau deploy (indexing & quảng cáo)
+
+1. **Google Search Console**: xác minh domain, submit `https://minbeauty.vn/sitemap.xml`
+2. **Google Business Profile**: tạo/cập nhật hồ sơ, thêm link website
+3. **Google Ads**: tạo conversion action, copy ID + label vào env
+4. **GTM**: container + trigger `generate_lead` (form) và `contact_click` (phone/Zalo)
+5. **Meta Events Manager**: verify Pixel hoạt động
+6. **Landing pages đề xuất**: `/services/moi-baby`, `/contact`, `/tham-my-vien-hoa-thanh-tay-ninh`
 
 ## CMS
 
-Admin CMS nằm tại `/admin`, với các nhóm menu rõ ràng:
+Admin CMS tại `/admin`:
 
-- Nội dung: tổng quan, quản lý dịch vụ, tạo/sửa/ẩn dịch vụ và đổi hình.
-- Tăng trưởng: SEO metadata, Google Ads notes và visitor analytics.
+- Nội dung: quản lý dịch vụ
+- Tăng trưởng: SEO metadata, hướng dẫn Google Ads/tracking, visitor analytics
 
-Visitor tracker nội bộ ghi nhận page view qua `/api/analytics/track`; xem số liệu tại `/admin/analytics`.
+Visitor tracker ghi page view qua `/api/analytics/track`; xem tại `/admin/analytics`.
+
+## Cấu trúc URL
+
+| Route | Mô tả |
+|-------|-------|
+| `/` | Trang chủ |
+| `/services` | Danh sách dịch vụ |
+| `/services/[slug]` | Landing page dịch vụ |
+| `/news` | Tin tức |
+| `/news/[slug]` | Bài viết |
+| `/faq` | Câu hỏi thường gặp |
+| `/contact` | Liên hệ & đặt lịch |
+| `/tham-my-vien-hoa-thanh-tay-ninh` | Local SEO page |
+
+Redirect 301: `/blog` → `/news`, `/blog/:slug` → `/news/:slug`
 
 ## Deploy
 
-Deploy lên [Vercel](https://vercel.com) hoặc bất kỳ nền tảng hỗ trợ Next.js.
+Deploy lên [Vercel](https://vercel.com) hoặc nền tảng hỗ trợ Next.js.

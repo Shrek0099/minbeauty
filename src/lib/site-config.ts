@@ -30,6 +30,14 @@ export const siteConfig = {
   zalo: "0971700952",
   facebook: "https://facebook.com/minbeauty",
   instagram: "https://instagram.com/minbeauty",
+  serviceAreaText: "Hòa Thành, Tây Ninh và khu vực lân cận",
+  postalCode: "80000",
+  geo: {
+    latitude: 11.3105,
+    longitude: 106.0973,
+  },
+  googleSiteVerification: process.env.NEXT_PUBLIC_GSC_VERIFICATION || "",
+  localPageSlug: "tham-my-vien-hoa-thanh-tay-ninh",
   promoModal: {
     enabled: false,
     showOncePerSession: true,
@@ -55,34 +63,32 @@ type HeaderNavDropdown = { label: string; dropdown: HeaderNavLink[] };
 export type HeaderNavItem = HeaderNavLink | HeaderNavDropdown;
 
 export const headerNavItems: HeaderNavItem[] = [
-  { href: "#", label: "Trang chủ" },
+  { href: "/", label: "Trang chủ" },
   {
     label: "Dịch vụ",
     dropdown: [
-      { href: "#dich-vu", label: "Dịch vụ thẩm mỹ" },
-      { href: "#dich-vu", label: "Dịch vụ Spa" },
+      { href: "/services", label: "Tất cả dịch vụ" },
+      { href: "/services/moi-baby", label: "Môi baby" },
+      { href: "/services/nang-tang-mat-giua", label: "Nâng tầng mặt giữa" },
+      { href: "/services/meso", label: "Meso" },
+      { href: "/services/cham-soc-da", label: "Chăm sóc da" },
     ],
   },
-  { href: "#hinh-anh", label: "Hình ảnh thực tế" },
-  { href: "#video", label: "Video" },
-  { href: "#kien-thuc", label: "Kiến thức" },
-  {
-    label: "Tin tức",
-    dropdown: [
-      { href: "/blog", label: "Tất cả bài viết" },
-      { href: "/cham-soc-da", label: "Mẹo làm đẹp" },
-    ],
-  },
-  { href: "#lien-he", label: "Liên hệ" },
+  { href: "/#hinh-anh", label: "Hình ảnh thực tế" },
+  { href: "/#video", label: "Video" },
+  { href: "/news", label: "Tin tức" },
+  { href: "/faq", label: "FAQ" },
+  { href: "/contact", label: "Liên hệ" },
 ];
 
 export const navLinks = [
-  { href: "#", label: "Trang chủ" },
-  { href: "#dich-vu", label: "Dịch vụ" },
-  { href: "#hinh-anh", label: "Hình ảnh thực tế" },
-  { href: "#video", label: "Video" },
-  { href: "#kien-thuc", label: "Kiến thức" },
-  { href: "#lien-he", label: "Liên hệ" },
+  { href: "/", label: "Trang chủ" },
+  { href: "/services", label: "Dịch vụ" },
+  { href: "/#hinh-anh", label: "Hình ảnh thực tế" },
+  { href: "/#video", label: "Video" },
+  { href: "/news", label: "Tin tức" },
+  { href: "/faq", label: "FAQ" },
+  { href: "/contact", label: "Liên hệ" },
 ];
 
 export const cosmeticServices = [
@@ -254,13 +260,16 @@ export const videos = [
 
 export const consultationServices = services.map((s) => s.title);
 
-export const footerServiceLinks = services.map((s) => s.title);
+export const footerServiceLinks = services.map((s) => ({
+  href: `/services/${s.id}`,
+  label: s.title,
+}));
 
 export const footerNavLinks = [
-  { href: "#", label: "Trang chủ" },
-  { href: "#dich-vu", label: "Dịch vụ" },
-  { href: "#hinh-anh", label: "Hình ảnh thực tế" },
-  { href: "#video", label: "Video" },
-  { href: "#kien-thuc", label: "Kiến thức" },
-  { href: "#lien-he", label: "Liên hệ" },
+  { href: "/", label: "Trang chủ" },
+  { href: "/services", label: "Dịch vụ" },
+  { href: "/news", label: "Tin tức" },
+  { href: "/faq", label: "FAQ" },
+  { href: "/contact", label: "Liên hệ" },
+  { href: `/${siteConfig.localPageSlug}`, label: "Thẩm mỹ viện Tây Ninh" },
 ];

@@ -32,7 +32,7 @@ export function Knowledge() {
               <div className="news-card-content boutique-card-body">
                 <h3 className="news-title">{article.title}</h3>
                 <p className="news-excerpt">{article.excerpt}</p>
-                <Link href={`/blog/${article.slug}`} className="news-link">
+                <Link href={`/news/${article.slug}`} className="news-link">
                   Đọc thêm
                   <span aria-hidden="true">→</span>
                 </Link>
