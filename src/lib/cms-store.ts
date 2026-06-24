@@ -6,6 +6,9 @@ import type {
   AnalyticsPageView,
   AnalyticsSummary,
   CmsData,
+  CmsFaqItem,
+  CmsPage,
+  CmsPost,
   CmsService,
 } from "@/lib/cms-types";
 
@@ -44,7 +47,7 @@ function normalizeService(service: CmsService): CmsService {
   return {
     id: service.id || crypto.randomUUID(),
     title: service.title.trim(),
-    group: service.group === "spa" ? "spa" : "cosmetic",
+    group: "cosmetic",
     image: service.image.trim(),
     description: service.description.trim(),
     visible: Boolean(service.visible),
@@ -53,8 +56,74 @@ function normalizeService(service: CmsService): CmsService {
   };
 }
 
+function normalizePost(post: CmsPost): CmsPost {
+  const now = new Date().toISOString();
+
+  return {
+    id: post.id || crypto.randomUUID(),
+    slug: post.slug.trim().toLowerCase().replace(/\s+/g, "-"),
+    title: post.title.trim(),
+    excerpt: post.excerpt.trim(),
+    category: post.category.trim(),
+    date: post.date.trim(),
+    readTime: post.readTime.trim(),
+    tags: (post.tags || []).map((tag) => tag.trim()).filter(Boolean),
+    image: post.image.trim(),
+    sections: (post.sections || []).map((section) => ({
+      heading: section.heading.trim(),
+      body: (section.body || []).map((line) => line.trim()).filter(Boolean),
+    })),
+    seoTitle: post.seoTitle.trim(),
+    seoDescription: post.seoDescription.trim(),
+    status: post.status === "draft" ? "draft" : "published",
+    updatedAt: post.updatedAt || now,
+  };
+}
+
+function normalizePage(page: CmsPage): CmsPage {
+  const now = new Date().toISOString();
+  const defaults = defaultCmsData.pages.find((item) => item.key === page.key);
+
+  return {
+    key: page.key,
+    label: (page.label || defaults?.label || page.key).trim(),
+    path: (page.path || defaults?.path || "/").trim(),
+    seoTitle: page.seoTitle.trim(),
+    seoDescription: page.seoDescription.trim(),
+    h1: page.h1.trim(),
+    intro: page.intro.trim(),
+    sections: (page.sections || []).map((section) => ({
+      heading: section.heading.trim(),
+      paragraphs: (section.paragraphs || []).map((line) => line.trim()).filter(Boolean),
+    })),
+    updatedAt: page.updatedAt || now,
+  };
+}
+
+function normalizeFaq(item: CmsFaqItem): CmsFaqItem {
+  const now = new Date().toISOString();
+
+  return {
+    id: item.id || crypto.randomUUID(),
+    question: item.question.trim(),
+    answer: item.answer.trim(),
+    order: Number.isFinite(item.order) ? Number(item.order) : 999,
+    isActive: item.isActive !== false,
+    updatedAt: item.updatedAt || now,
+  };
+}
+
+function mergePages(stored: CmsPage[] | undefined): CmsPage[] {
+  const storedMap = new Map((stored || []).map((page) => [page.key, page]));
+
+  return defaultCmsData.pages.map((defaultPage) => {
+    const saved = storedMap.get(defaultPage.key);
+    return normalizePage(saved ? { ...defaultPage, ...saved } : defaultPage);
+  });
+}
+
 export async function getCmsData(): Promise<CmsData> {
-  const stored = await readJson<CmsData>(cmsPath, defaultCmsData);
+  const stored = await readJson<Partial<CmsData>>(cmsPath, defaultCmsData);
 
   return {
     ...defaultCmsData,
@@ -65,7 +134,14 @@ export async function getCmsData(): Promise<CmsData> {
     },
     services: (stored.services?.length ? stored.services : defaultCmsData.services)
       .map(normalizeService)
-      .sort((a, b) => a.group.localeCompare(b.group) || a.sortOrder - b.sortOrder),
+      .sort((a, b) => a.sortOrder - b.sortOrder),
+    posts: (stored.posts?.length ? stored.posts : defaultCmsData.posts)
+      .map(normalizePost)
+      .sort((a, b) => b.date.localeCompare(a.date)),
+    pages: mergePages(stored.pages),
+    faqs: (stored.faqs?.length ? stored.faqs : defaultCmsData.faqs)
+      .map(normalizeFaq)
+      .sort((a, b) => a.order - b.order),
   };
 }
 
@@ -86,6 +162,18 @@ export async function saveCmsData(data: CmsData): Promise<CmsData> {
       canonicalUrl: data.seo.canonicalUrl.trim(),
       updatedAt: now,
     },
+    posts: data.posts.map((post) => ({
+      ...normalizePost(post),
+      updatedAt: post.updatedAt || now,
+    })),
+    pages: mergePages(data.pages).map((page) => ({
+      ...page,
+      updatedAt: page.updatedAt || now,
+    })),
+    faqs: data.faqs.map((item) => ({
+      ...normalizeFaq(item),
+      updatedAt: item.updatedAt || now,
+    })),
     updatedAt: now,
   };
 

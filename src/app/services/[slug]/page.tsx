@@ -4,6 +4,7 @@ import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import { PageSchema } from "@/components/page-schema";
 import { ServicePageContent } from "@/components/service-page";
+import { getBlogPost } from "@/lib/cms-content";
 import { buildPageMetadata } from "@/lib/seo";
 import { buildServicePageSchema } from "@/lib/schema";
 import { getActiveServices, getService } from "@/lib/services-data";
@@ -32,12 +33,16 @@ export default async function ServiceDetailPage({ params }: PageProps) {
   const service = getService(slug);
   if (!service) notFound();
 
+  const relatedPosts = (
+    await Promise.all(service.relatedPostSlugs.map((postSlug) => getBlogPost(postSlug)))
+  ).filter((post): post is NonNullable<typeof post> => Boolean(post));
+
   return (
     <>
       <PageSchema data={buildServicePageSchema(service)} />
       <Header />
       <main>
-        <ServicePageContent service={service} />
+        <ServicePageContent service={service} relatedPosts={relatedPosts} />
       </main>
       <Footer />
     </>

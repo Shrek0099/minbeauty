@@ -22,9 +22,9 @@ export function About() {
               <Image
                 src="/images/about/facility.jpg"
                 alt={`Không gian ${siteConfig.name}`}
-                width={1200}
-                height={900}
-                className="boutique-card-image aspect-[4/3]"
+                width={768}
+                height={1024}
+                className="boutique-card-image aspect-[3/4]"
                 loading="lazy"
               />
             </div>

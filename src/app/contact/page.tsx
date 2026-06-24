@@ -2,16 +2,22 @@ import type { Metadata } from "next";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import { ConsultationForm } from "@/components/consultation-form";
+import { getCmsPage } from "@/lib/cms-content";
 import { buildPageMetadata } from "@/lib/seo";
 import { siteConfig } from "@/lib/site-config";
 
-export const metadata: Metadata = buildPageMetadata({
-  path: "/contact",
-  title: "Liên hệ & đặt lịch — Min Beauty",
-  description: `Liên hệ Min Beauty tại ${siteConfig.fullAddress}. Hotline ${siteConfig.phone}. Tư vấn môi baby, filler, meso, chăm sóc da.`,
-});
+export async function generateMetadata(): Promise<Metadata> {
+  const page = await getCmsPage("contact");
+  return buildPageMetadata({
+    path: "/contact",
+    title: page.seoTitle,
+    description: page.seoDescription,
+  });
+}
 
-export default function ContactPage() {
+export default async function ContactPage() {
+  const page = await getCmsPage("contact");
+
   return (
     <>
       <Header />
@@ -20,7 +26,7 @@ export default function ContactPage() {
           <div className="site-container">
             <div className="section-header-center mb-10 text-center">
               <p className="section-label mb-3">Liên hệ</p>
-              <h1 className="section-heading">Đặt lịch tư vấn</h1>
+              <h1 className="section-heading">{page.h1}</h1>
               <div className="section-heading-accent" />
             </div>
             <div className="contact-page-grid">
@@ -66,9 +72,7 @@ export default function ContactPage() {
               </div>
               <div className="contact-page-form">
                 <h2 className="contact-page-form-title">Gửi yêu cầu tư vấn</h2>
-                <p className="contact-page-form-subtitle">
-                  Gửi hình hoặc nhắn Zalo để Min Beauty tư vấn trước khi đặt lịch.
-                </p>
+                <p className="contact-page-form-subtitle">{page.intro}</p>
                 <ConsultationForm variant="embedded" />
               </div>
             </div>

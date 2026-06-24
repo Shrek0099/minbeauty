@@ -32,6 +32,10 @@ export async function generateMetadata(): Promise<Metadata> {
     .split(",")
     .map((keyword) => keyword.trim())
     .filter(Boolean);
+  const canonicalUrl =
+    cms.seo.canonicalUrl && cms.seo.canonicalUrl !== "NEXT_PUBLIC_SITE_URL"
+      ? cms.seo.canonicalUrl.replace(/\/$/, "")
+      : siteConfig.url;
 
   return {
     metadataBase: new URL(siteConfig.url),
@@ -46,7 +50,7 @@ export async function generateMetadata(): Promise<Metadata> {
     openGraph: {
       type: "website",
       locale: "vi_VN",
-      url: cms.seo.canonicalUrl || siteConfig.url,
+      url: canonicalUrl,
       siteName: siteConfig.name,
       title: cms.seo.title,
       description: cms.seo.description,
@@ -77,8 +81,14 @@ export async function generateMetadata(): Promise<Metadata> {
       },
     },
     icons: {
-      icon: siteConfig.logo,
-      apple: siteConfig.logo,
+      icon: [
+        { url: siteConfig.favicon, sizes: "48x48", type: "image/png" },
+        { url: "/images/logo/min-beauty-icon-96.png", sizes: "96x96", type: "image/png" },
+        { url: "/images/logo/min-beauty-icon-192.png", sizes: "192x192", type: "image/png" },
+        { url: siteConfig.logoSquare, sizes: "512x512", type: "image/png" },
+      ],
+      apple: [{ url: "/images/logo/min-beauty-icon-192.png", sizes: "192x192", type: "image/png" }],
+      shortcut: siteConfig.favicon,
     },
   };
 }

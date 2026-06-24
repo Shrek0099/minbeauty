@@ -14,6 +14,7 @@ import { ConsultationForm } from "@/components/consultation-form";
 import { Footer } from "@/components/footer";
 import { FloatingContact } from "@/components/floating-contact";
 import { PromoModal } from "@/components/promo-modal";
+import { getCmsFaqs } from "@/lib/cms-content";
 import { getCmsData } from "@/lib/cms-store";
 import { buildHomeMetadata } from "@/lib/seo";
 
@@ -27,7 +28,9 @@ export async function generateMetadata(): Promise<Metadata> {
   return buildHomeMetadata(cms.seo.title, cms.seo.description, keywords);
 }
 
-export default function Home() {
+export default async function Home() {
+  const faqs = await getCmsFaqs();
+
   return (
     <>
       <SakuraPetals />
@@ -42,7 +45,7 @@ export default function Home() {
           <Videos />
           <Knowledge />
           <About />
-          <Faq />
+          <Faq items={faqs} />
           <ConsultationForm />
         </main>
         <Footer />

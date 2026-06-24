@@ -4,21 +4,13 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { defaultCmsServices, serviceGroupLabels } from "@/lib/cms-defaults";
+import { defaultCmsServices } from "@/lib/cms-defaults";
 import type { CmsData, CmsService } from "@/lib/cms-types";
 
-type Tab = "cosmetic" | "spa";
-
-const tabs: { id: Tab; label: string }[] = [
-  { id: "cosmetic", label: "Dịch vụ thẩm mỹ" },
-  { id: "spa", label: "Dịch vụ Spa" },
-];
-
 export function Services() {
-  const [activeTab, setActiveTab] = useState<Tab>("cosmetic");
   const [services, setServices] = useState<CmsService[]>(defaultCmsServices);
   const items = services
-    .filter((service) => service.visible && service.group === activeTab)
+    .filter((service) => service.visible)
     .sort((a, b) => a.sortOrder - b.sortOrder);
 
   useEffect(() => {
@@ -42,22 +34,6 @@ export function Services() {
           <p className="section-subtitle mx-auto max-w-xl">
             Các dịch vụ được nhiều khách hàng quan tâm
           </p>
-        </div>
-
-        <div className="mb-10 flex flex-wrap justify-center gap-3">
-          {tabs.map((tab) => {
-            const isActive = activeTab === tab.id;
-            return (
-              <button
-                key={tab.id}
-                type="button"
-                onClick={() => setActiveTab(tab.id)}
-                className={`service-tab ${isActive ? "service-tab-active" : "service-tab-inactive"}`}
-              >
-                {serviceGroupLabels[tab.id]}
-              </button>
-            );
-          })}
         </div>
 
         <div className="service-grid">

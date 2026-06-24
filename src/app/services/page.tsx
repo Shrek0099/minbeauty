@@ -3,19 +3,22 @@ import Link from "next/link";
 import Image from "next/image";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
+import { getCmsPage } from "@/lib/cms-content";
 import { buildPageMetadata } from "@/lib/seo";
 import { getActiveServices } from "@/lib/services-data";
-import { siteConfig } from "@/lib/site-config";
 
-export const metadata: Metadata = buildPageMetadata({
-  path: "/services",
-  title: "Dịch vụ làm đẹp tại Min Beauty, Tây Ninh",
-  description:
-    "Dịch vụ môi baby, filler, meso, chăm sóc da tại Min Beauty, Hòa Thành, Tây Ninh. Tư vấn miễn phí theo từng gương mặt.",
-  keywords: ["dịch vụ làm đẹp Tây Ninh", "môi baby", "filler", "meso", "spa Hòa Thành"],
-});
+export async function generateMetadata(): Promise<Metadata> {
+  const page = await getCmsPage("services");
+  return buildPageMetadata({
+    path: "/services",
+    title: page.seoTitle,
+    description: page.seoDescription,
+    keywords: ["dịch vụ làm đẹp Tây Ninh", "môi baby", "filler", "meso", "thẩm mỹ Hòa Thành"],
+  });
+}
 
-export default function ServicesIndexPage() {
+export default async function ServicesIndexPage() {
+  const page = await getCmsPage("services");
   const services = getActiveServices();
 
   return (
@@ -26,11 +29,9 @@ export default function ServicesIndexPage() {
           <div className="site-container">
             <div className="section-header-center mb-10 text-center">
               <p className="section-label mb-3">Dịch vụ</p>
-              <h1 className="section-heading">Dịch vụ tại Min Beauty</h1>
+              <h1 className="section-heading">{page.h1}</h1>
               <div className="section-heading-accent" />
-              <p className="section-subtitle mx-auto max-w-xl">
-                Các dịch vụ được tư vấn theo tình trạng thực tế tại {siteConfig.serviceAreaText}.
-              </p>
+              <p className="section-subtitle mx-auto max-w-xl">{page.intro}</p>
             </div>
             <div className="service-grid">
               {services.map((service) => (

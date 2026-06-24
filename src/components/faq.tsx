@@ -1,7 +1,12 @@
 import Link from "next/link";
-import { faqItems } from "@/lib/faq";
 
-export function Faq() {
+type FaqItem = {
+  id: string;
+  question: string;
+  answer: string;
+};
+
+export function Faq({ items }: { items: FaqItem[] }) {
   return (
     <section id="faq" className="site-section section-reveal faq-section">
       <div className="site-container">
@@ -15,8 +20,8 @@ export function Faq() {
         </div>
 
         <div className="faq-grid">
-          {faqItems.map((item) => (
-            <article key={item.question} className="faq-card">
+          {items.map((item) => (
+            <article key={item.id} className="faq-card">
               <h3>{item.question}</h3>
               <p>{item.answer}</p>
             </article>

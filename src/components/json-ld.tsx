@@ -11,7 +11,11 @@ export async function JsonLd() {
     slug: service.slug,
   }));
 
-  const schema = buildGlobalSchemaGraph(cms.seo.description, services);
+  const faqs = cms.faqs
+    .filter((item) => item.isActive)
+    .map((item) => ({ question: item.question, answer: item.answer }));
+
+  const schema = buildGlobalSchemaGraph(cms.seo.description, services, faqs);
 
   return (
     <script

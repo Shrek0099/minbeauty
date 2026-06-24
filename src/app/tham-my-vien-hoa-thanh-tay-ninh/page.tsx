@@ -2,25 +2,29 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
+import { getCmsPage } from "@/lib/cms-content";
 import { buildPageMetadata } from "@/lib/seo";
-import { localPageData } from "@/lib/services-data";
 import { getActiveServices } from "@/lib/services-data";
 import { siteConfig } from "@/lib/site-config";
 
-export const metadata: Metadata = buildPageMetadata({
-  path: `/${localPageData.slug}`,
-  title: localPageData.seoTitle,
-  description: localPageData.seoDescription,
-  keywords: [
-    "thẩm mỹ viện Hòa Thành",
-    "thẩm mỹ viện Tây Ninh",
-    "Min Beauty",
-    "môi baby Tây Ninh",
-    "filler Tây Ninh",
-  ],
-});
+export async function generateMetadata(): Promise<Metadata> {
+  const page = await getCmsPage("local-seo");
+  return buildPageMetadata({
+    path: page.path,
+    title: page.seoTitle,
+    description: page.seoDescription,
+    keywords: [
+      "thẩm mỹ viện Hòa Thành",
+      "thẩm mỹ viện Tây Ninh",
+      "Min Beauty",
+      "môi baby Tây Ninh",
+      "filler Tây Ninh",
+    ],
+  });
+}
 
-export default function LocalSeoPage() {
+export default async function LocalSeoPage() {
+  const page = await getCmsPage("local-seo");
   const services = getActiveServices();
 
   return (
@@ -34,10 +38,10 @@ export default function LocalSeoPage() {
               <span aria-hidden="true">/</span>
               <span>Thẩm mỹ viện Tây Ninh</span>
             </nav>
-            <h1>{localPageData.h1}</h1>
-            <p className="service-lp-intro">{localPageData.intro}</p>
+            <h1>{page.h1}</h1>
+            <p className="service-lp-intro">{page.intro}</p>
 
-            {localPageData.sections.map((section) => (
+            {page.sections.map((section) => (
               <section key={section.heading}>
                 <h2>{section.heading}</h2>
                 {section.paragraphs.map((p) => (
@@ -59,7 +63,9 @@ export default function LocalSeoPage() {
 
             <section className="service-lp-bottom-cta">
               <h2>Đặt lịch tư vấn</h2>
-              <p>{siteConfig.fullAddress} — {siteConfig.phone}</p>
+              <p>
+                {siteConfig.fullAddress} — {siteConfig.phone}
+              </p>
               <Link href="/contact" className="service-lp-cta-primary">
                 Liên hệ ngay
               </Link>

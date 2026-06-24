@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { blogCategories, getCategoryPosts, getPublishedPosts, getCategory, getRelatedPosts, type BlogPost } from "@/lib/blog";
+import { blogCategories, getCategory, type BlogPost } from "@/lib/blog";
 import { Logo } from "@/components/logo";
 
 function BlogHeader() {
@@ -92,8 +92,17 @@ function PostCard({ post }: { post: BlogPost }) {
   );
 }
 
-export function MijuBlogIndex({ categorySlug }: { categorySlug?: string }) {
-  const posts = categorySlug ? getCategoryPosts(categorySlug) : getPublishedPosts();
+export function MijuBlogIndex({
+  categorySlug,
+  posts,
+  heroTitle,
+  heroDescription,
+}: {
+  categorySlug?: string;
+  posts: BlogPost[];
+  heroTitle?: string;
+  heroDescription?: string;
+}) {
   const activeCategory = categorySlug ? getCategory(categorySlug) : undefined;
 
   return (
@@ -102,9 +111,10 @@ export function MijuBlogIndex({ categorySlug }: { categorySlug?: string }) {
       <main>
         <BlogHero
           eyebrow={activeCategory ? "Chuyên mục" : "Min Beauty Tin tức"}
-          title={activeCategory?.title ?? "Kiến thức làm đẹp trước khi chọn dịch vụ"}
+          title={activeCategory?.title ?? heroTitle ?? "Kiến thức làm đẹp trước khi chọn dịch vụ"}
           description={
             activeCategory?.description ??
+            heroDescription ??
             "Tổng hợp các bài viết về môi baby, filler, meso, chăm sóc da và chăm sóc sau dịch vụ tại Min Beauty."
           }
         />
@@ -128,13 +138,24 @@ export function MijuBlogIndex({ categorySlug }: { categorySlug?: string }) {
   );
 }
 
-export function MijuCategoryPage({ categorySlug }: { categorySlug: string }) {
-  return <MijuBlogIndex categorySlug={categorySlug} />;
+export function MijuCategoryPage({
+  categorySlug,
+  posts,
+}: {
+  categorySlug: string;
+  posts: BlogPost[];
+}) {
+  return <MijuBlogIndex categorySlug={categorySlug} posts={posts} />;
 }
 
-export function MijuArticlePage({ post }: { post: BlogPost }) {
+export function MijuArticlePage({
+  post,
+  relatedPosts,
+}: {
+  post: BlogPost;
+  relatedPosts: BlogPost[];
+}) {
   const category = getCategory(post.category);
-  const relatedPosts = getRelatedPosts(post);
 
   return (
     <div className="miju-blog-page">

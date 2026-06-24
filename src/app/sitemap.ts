@@ -1,11 +1,12 @@
 import type { MetadataRoute } from "next";
-import { getPublishedPosts } from "@/lib/blog";
+import { getPublishedBlogPosts } from "@/lib/cms-content";
 import { getActiveServices, localPageSlug } from "@/lib/services-data";
 import { siteLastUpdated } from "@/lib/sitemap-config";
 import { siteConfig } from "@/lib/site-config";
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const now = siteLastUpdated;
+  const publishedPosts = await getPublishedBlogPosts();
 
   const serviceRoutes: MetadataRoute.Sitemap = getActiveServices().map((service) => ({
     url: `${siteConfig.url}/services/${service.slug}`,
@@ -14,7 +15,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.8,
   }));
 
-  const newsRoutes: MetadataRoute.Sitemap = getPublishedPosts().map((post) => ({
+  const newsRoutes: MetadataRoute.Sitemap = publishedPosts.map((post) => ({
     url: `${siteConfig.url}/news/${post.slug}`,
     lastModified: new Date(post.date),
     changeFrequency: "monthly",

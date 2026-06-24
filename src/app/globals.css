@@ -2015,6 +2015,27 @@ body {
   transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease;
 }
 
+.miju-admin-nav a.is-active,
+.miju-admin-nav a[aria-current="page"] {
+  border-color: var(--primary);
+  background: #ffffff;
+  color: var(--primary-dark);
+  box-shadow: 0 10px 24px rgba(122, 75, 61, 0.12);
+}
+
+.miju-admin-thumb-placeholder {
+  width: 72px;
+  height: 72px;
+  border-radius: 12px;
+  background: rgba(216, 181, 123, 0.2);
+  flex-shrink: 0;
+}
+
+.miju-admin-panel-nested {
+  margin-top: 0.75rem;
+  background: rgba(255, 255, 255, 0.55);
+}
+
 .miju-admin-nav a:hover {
   transform: translateY(-2px);
   border-color: var(--primary);

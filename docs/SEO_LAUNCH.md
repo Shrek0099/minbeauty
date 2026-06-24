@@ -38,7 +38,7 @@ Chạy checklist này sau khi deploy production.
 |------------|-----|
 | Môi baby | `/services/moi-baby` |
 | Filler | `/services/nang-tang-mat-giua` |
-| Meso / Spa | `/services/meso` |
+| Meso | `/services/meso` |
 | Tổng quát | `/contact` |
 | Local | `/tham-my-vien-hoa-thanh-tay-ninh` |
 

@@ -2,16 +2,14 @@ import Link from "next/link";
 import Image from "next/image";
 import { siteConfig } from "@/lib/site-config";
 import type { ServiceData } from "@/lib/services-data";
-import { getPost } from "@/lib/blog";
+import type { BlogPost } from "@/lib/blog";
 
 type ServicePageContentProps = {
   service: ServiceData;
+  relatedPosts: BlogPost[];
 };
 
-export function ServicePageContent({ service }: ServicePageContentProps) {
-  const relatedPosts = service.relatedPostSlugs
-    .map((slug) => getPost(slug))
-    .filter(Boolean);
+export function ServicePageContent({ service, relatedPosts }: ServicePageContentProps) {
 
   return (
     <article className="service-lp">

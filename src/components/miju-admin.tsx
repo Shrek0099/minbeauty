@@ -1,4 +1,7 @@
+"use client";
+
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { cmsMenuGroups } from "@/lib/cms-defaults";
 
 type AdminShellProps = {
@@ -6,6 +9,36 @@ type AdminShellProps = {
   description: string;
   children: React.ReactNode;
 };
+
+function MijuAdminNav() {
+  const pathname = usePathname();
+
+  return (
+    <nav className="miju-admin-nav">
+      {cmsMenuGroups.map((group) => (
+        <div key={group.title} className="miju-admin-nav-group">
+          <p>{group.title}</p>
+          {group.items.map((item) => {
+            const isActive =
+              pathname === item.href ||
+              (item.href !== "/admin" && pathname.startsWith(`${item.href}/`));
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                title={item.description}
+                className={isActive ? "is-active" : undefined}
+                aria-current={isActive ? "page" : undefined}
+              >
+                {item.label}
+              </Link>
+            );
+          })}
+        </div>
+      ))}
+    </nav>
+  );
+}
 
 export function MijuAdminShell({ title, description, children }: AdminShellProps) {
   return (
@@ -15,18 +48,7 @@ export function MijuAdminShell({ title, description, children }: AdminShellProps
           Min Beauty <span>Admin</span>
         </Link>
 
-        <nav className="miju-admin-nav">
-          {cmsMenuGroups.map((group) => (
-            <div key={group.title} className="miju-admin-nav-group">
-              <p>{group.title}</p>
-              {group.items.map((item) => (
-                <Link key={item.href} href={item.href} title={item.description}>
-                  {item.label}
-                </Link>
-              ))}
-            </div>
-          ))}
-        </nav>
+        <MijuAdminNav />
       </aside>
 
       <main className="miju-admin-main">

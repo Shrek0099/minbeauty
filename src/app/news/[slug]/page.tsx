@@ -2,19 +2,21 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { MijuArticlePage } from "@/components/miju-blog";
 import { PageSchema } from "@/components/page-schema";
-import { getCategory, getPost, getPublishedPosts } from "@/lib/blog";
+import { getBlogPost, getPublishedBlogPosts, getRelatedBlogPosts } from "@/lib/cms-content";
+import { getCategory } from "@/lib/blog";
 import { buildPageMetadata } from "@/lib/seo";
 import { buildBlogPostSchema } from "@/lib/schema";
 
 type PageProps = { params: Promise<{ slug: string }> };
 
-export function generateStaticParams() {
-  return getPublishedPosts().map((post) => ({ slug: post.slug }));
+export async function generateStaticParams() {
+  const posts = await getPublishedBlogPosts();
+  return posts.map((post) => ({ slug: post.slug }));
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params;
-  const post = getPost(slug);
+  const post = await getBlogPost(slug);
   if (!post) return { title: "Bài viết không tồn tại" };
 
   return buildPageMetadata({
@@ -29,15 +31,16 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 export default async function NewsPostPage({ params }: PageProps) {
   const { slug } = await params;
-  const post = getPost(slug);
+  const post = await getBlogPost(slug);
   if (!post) notFound();
 
   const category = getCategory(post.category);
+  const relatedPosts = await getRelatedBlogPosts(post);
 
   return (
     <>
       <PageSchema data={buildBlogPostSchema(post, category?.title ?? "Tin tức")} />
-      <MijuArticlePage post={post} />
+      <MijuArticlePage post={post} relatedPosts={relatedPosts} />
     </>
   );
 }

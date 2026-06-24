@@ -7,7 +7,11 @@ export function getBusinessId() {
   return `${siteConfig.url}/#business`;
 }
 
-export function buildGlobalSchemaGraph(cmsDescription: string, services: { title: string; description: string; image: string; slug: string }[]) {
+export function buildGlobalSchemaGraph(
+  cmsDescription: string,
+  services: { title: string; description: string; image: string; slug: string }[],
+  faqs: { question: string; answer: string }[] = faqItems,
+) {
   const businessId = getBusinessId();
   const websiteId = `${siteConfig.url}/#website`;
   const servicesId = `${siteConfig.url}/#services`;
@@ -24,8 +28,16 @@ export function buildGlobalSchemaGraph(cmsDescription: string, services: { title
         url: siteConfig.url,
         telephone: siteConfig.phoneRaw,
         email: siteConfig.email,
-        logo: new URL(siteConfig.logo, siteConfig.url).toString(),
-        image: new URL(siteConfig.ogImage, siteConfig.url).toString(),
+        logo: {
+          "@type": "ImageObject",
+          url: new URL(siteConfig.logoSquare, siteConfig.url).toString(),
+          width: 512,
+          height: 512,
+        },
+        image: [
+          new URL(siteConfig.logoSquare, siteConfig.url).toString(),
+          new URL(siteConfig.ogImage, siteConfig.url).toString(),
+        ],
         address: {
           "@type": "PostalAddress",
           streetAddress: siteConfig.address,
@@ -57,6 +69,7 @@ export function buildGlobalSchemaGraph(cmsDescription: string, services: { title
         name: siteConfig.name,
         publisher: { "@id": businessId },
         inLanguage: "vi-VN",
+        image: new URL(siteConfig.logoSquare, siteConfig.url).toString(),
       },
       {
         "@type": "ItemList",
@@ -79,7 +92,7 @@ export function buildGlobalSchemaGraph(cmsDescription: string, services: { title
       {
         "@type": "FAQPage",
         "@id": faqId,
-        mainEntity: faqItems.map((item) => ({
+        mainEntity: faqs.map((item) => ({
           "@type": "Question",
           name: item.question,
           acceptedAnswer: { "@type": "Answer", text: item.answer },
@@ -175,11 +188,11 @@ export function buildBlogPostSchema(post: BlogPost, categoryTitle: string) {
   };
 }
 
-export function buildFaqPageSchema() {
+export function buildFaqPageSchema(faqs: { question: string; answer: string }[] = faqItems) {
   return {
     "@context": "https://schema.org",
     "@type": "FAQPage",
-    mainEntity: faqItems.map((item) => ({
+    mainEntity: faqs.map((item) => ({
       "@type": "Question",
       name: item.question,
       acceptedAnswer: { "@type": "Answer", text: item.answer },

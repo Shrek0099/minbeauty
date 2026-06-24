@@ -5,7 +5,7 @@ export type ServiceData = {
   id: string;
   slug: string;
   title: string;
-  category: "cosmetic" | "spa";
+  category: "cosmetic";
   shortDescription: string;
   seoTitle: string;
   seoDescription: string;
@@ -237,7 +237,7 @@ export const servicesData: ServiceData[] = [
     id: "meso",
     slug: "meso",
     title: "Meso",
-    category: "spa",
+    category: "cosmetic",
     shortDescription: "Liệu trình meso hỗ trợ cấp ẩm, làm sáng và chăm sóc bề mặt da tại Min Beauty, Tây Ninh.",
     seoTitle: "Meso Tây Ninh — Liệu trình chăm sóc da tại Min Beauty",
     seoDescription:
@@ -282,7 +282,7 @@ export const servicesData: ServiceData[] = [
     id: "tre-hoa-vung-mat",
     slug: "tre-hoa-vung-mat",
     title: "Trẻ hóa vùng mắt",
-    category: "spa",
+    category: "cosmetic",
     shortDescription: "Chăm sóc và trẻ hóa vùng mắt theo tình trạng thực tế tại Min Beauty, Tây Ninh.",
     seoTitle: "Trẻ hóa vùng mắt Tây Ninh — Chăm sóc mắt tại Min Beauty",
     seoDescription:
@@ -327,9 +327,9 @@ export const servicesData: ServiceData[] = [
     id: "cham-soc-da",
     slug: "cham-soc-da",
     title: "Chăm sóc da",
-    category: "spa",
+    category: "cosmetic",
     shortDescription: "Chăm sóc và phục hồi da theo nền da và nhu cầu tại Min Beauty, Hòa Thành, Tây Ninh.",
-    seoTitle: "Chăm sóc da Tây Ninh — Spa da tại Min Beauty",
+    seoTitle: "Chăm sóc da Tây Ninh — Liệu trình tại Min Beauty",
     seoDescription:
       "Dịch vụ chăm sóc da tại Min Beauty, Hòa Thành, Tây Ninh. Chăm sóc da theo tình trạng thực tế, tư vấn miễn phí. 0971.700.952.",
     heroImage: "/images/services/cham-soc-da.jpg",
@@ -340,7 +340,7 @@ export const servicesData: ServiceData[] = [
         heading: "Nền tảng của làn da khỏe",
         paragraphs: [
           "Làm sạch nhẹ nhàng, dưỡng ẩm đủ và chống nắng đều đặn là ba bước cơ bản giúp da ổn định theo thời gian.",
-          "Liệu trình tại spa bổ sung cho routine tại nhà, không thay thế hoàn toàn thói quen chăm sóc hằng ngày.",
+          "Liệu trình tại cơ sở bổ sung cho routine tại nhà, không thay thế hoàn toàn thói quen chăm sóc hằng ngày.",
         ],
       },
     ],
@@ -372,7 +372,7 @@ export const servicesData: ServiceData[] = [
     id: "phuc-hoi-da",
     slug: "phuc-hoi-da",
     title: "Phục hồi da",
-    category: "spa",
+    category: "cosmetic",
     shortDescription: "Hỗ trợ da nhạy cảm, thiếu ẩm hoặc cần phục hồi hàng rào bảo vệ tại Min Beauty, Tây Ninh.",
     seoTitle: "Phục hồi da Tây Ninh — Liệu trình phục hồi tại Min Beauty",
     seoDescription:
@@ -445,8 +445,7 @@ export const localPageData = {
     {
       heading: "Dịch vụ chính tại Min Beauty",
       paragraphs: [
-        "Dịch vụ thẩm mỹ: môi baby, nâng tầng mặt giữa, bọng mắt cười, làm đầy trán hóm.",
-        "Dịch vụ spa: meso, trẻ hóa vùng mắt, chăm sóc da, phục hồi da.",
+        "Dịch vụ làm đẹp: môi baby, nâng tầng mặt giữa, bọng mắt cười, làm đầy trán hóm, meso, trẻ hóa vùng mắt, chăm sóc da và phục hồi da.",
       ],
     },
     {

@@ -16,7 +16,7 @@ export async function PUT(request: Request) {
     return NextResponse.json({ ok: false, error: "INVALID_JSON" }, { status: 400 });
   }
 
-  if (!Array.isArray(data.services) || !data.seo) {
+  if (!Array.isArray(data.services) || !data.seo || !Array.isArray(data.posts) || !Array.isArray(data.pages) || !Array.isArray(data.faqs)) {
     return NextResponse.json({ ok: false, error: "INVALID_CMS_DATA" }, { status: 400 });
   }
 

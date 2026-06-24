@@ -1,15 +1,41 @@
 const fullAddress =
   "61A, hẻm 24 Trịnh Phong Đáng, Trường Giang, Trường Tây, Hòa Thành, Tây Ninh";
 
-const vercelProductionUrl = process.env.VERCEL_PROJECT_PRODUCTION_URL
-  ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
-  : undefined;
+const defaultSiteUrl = "https://minbeauty.vercel.app";
 
-const siteUrl = (
-  process.env.NEXT_PUBLIC_SITE_URL ||
-  vercelProductionUrl ||
-  "https://minbeauty.vercel.app"
-).replace(/\/$/, "");
+function isValidSiteUrl(value: string | undefined): value is string {
+  if (!value?.trim()) return false;
+
+  const normalized = value.trim().replace(/\/$/, "");
+  if (normalized === "NEXT_PUBLIC_SITE_URL" || normalized.includes("${")) return false;
+
+  try {
+    const url = new URL(normalized);
+    return url.protocol === "http:" || url.protocol === "https:";
+  } catch {
+    return false;
+  }
+}
+
+function resolveSiteUrl() {
+  const candidates = [
+    process.env.NEXT_PUBLIC_SITE_URL,
+    process.env.VERCEL_PROJECT_PRODUCTION_URL
+      ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+      : undefined,
+    defaultSiteUrl,
+  ];
+
+  for (const candidate of candidates) {
+    if (isValidSiteUrl(candidate)) {
+      return candidate.replace(/\/$/, "");
+    }
+  }
+
+  return defaultSiteUrl;
+}
+
+const siteUrl = resolveSiteUrl();
 
 export const siteConfig = {
   name: "Min Beauty",
@@ -18,6 +44,8 @@ export const siteConfig = {
     "Min Beauty tập trung vào các dịch vụ môi, filler, trẻ hóa da và chăm sóc da. Mỗi khách hàng được tư vấn theo tình trạng thực tế trước khi thực hiện.",
   url: siteUrl,
   logo: "/images/logo/min-beauty-logo.png",
+  logoSquare: "/images/logo/min-beauty-icon-512.png",
+  favicon: "/images/logo/min-beauty-icon-48.png",
   ogImage: "/images/hero/min-beauty-hero.jpg",
   phone: "0971.700.952",
   phoneRaw: "+84971700952",
@@ -112,9 +140,6 @@ export const cosmeticServices = [
     title: "Làm đầy trán hóm",
     image: "/images/services/lam-day-tran-hom.jpg",
   },
-];
-
-export const spaServices = [
   {
     id: "meso",
     title: "Meso",
@@ -137,7 +162,7 @@ export const spaServices = [
   },
 ];
 
-export const services = [...cosmeticServices, ...spaServices];
+export const services = cosmeticServices;
 
 export const galleryItems = [
   {

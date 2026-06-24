@@ -1,4 +1,4 @@
-export type CmsServiceGroup = "cosmetic" | "spa";
+export type CmsServiceGroup = "cosmetic";
 
 export type CmsService = {
   id: string;
@@ -20,6 +20,56 @@ export type CmsSeoSettings = {
   updatedAt: string;
 };
 
+export type CmsPostSection = {
+  heading: string;
+  body: string[];
+};
+
+export type CmsPost = {
+  id: string;
+  slug: string;
+  title: string;
+  excerpt: string;
+  category: string;
+  date: string;
+  readTime: string;
+  tags: string[];
+  image: string;
+  sections: CmsPostSection[];
+  seoTitle: string;
+  seoDescription: string;
+  status: "draft" | "published";
+  updatedAt: string;
+};
+
+export type CmsPageSection = {
+  heading: string;
+  paragraphs: string[];
+};
+
+export type CmsPageKey = "home" | "contact" | "faq" | "news" | "services" | "local-seo";
+
+export type CmsPage = {
+  key: CmsPageKey;
+  label: string;
+  path: string;
+  seoTitle: string;
+  seoDescription: string;
+  h1: string;
+  intro: string;
+  sections: CmsPageSection[];
+  updatedAt: string;
+};
+
+export type CmsFaqItem = {
+  id: string;
+  question: string;
+  answer: string;
+  order: number;
+  isActive: boolean;
+  updatedAt: string;
+};
+
 export type CmsMenuGroup = {
   title: string;
   items: {
@@ -32,6 +82,9 @@ export type CmsMenuGroup = {
 export type CmsData = {
   services: CmsService[];
   seo: CmsSeoSettings;
+  posts: CmsPost[];
+  pages: CmsPage[];
+  faqs: CmsFaqItem[];
   updatedAt: string;
 };
 

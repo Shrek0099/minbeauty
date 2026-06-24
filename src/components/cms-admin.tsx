@@ -2,18 +2,18 @@
 /* eslint-disable @next/next/no-img-element */
 
 import { useEffect, useMemo, useState } from "react";
-import { defaultCmsData, serviceGroupLabels } from "@/lib/cms-defaults";
-import type { AnalyticsSummary, CmsData, CmsSeoSettings, CmsService, CmsServiceGroup } from "@/lib/cms-types";
+import { defaultCmsData } from "@/lib/cms-defaults";
+import type { AnalyticsSummary, CmsData, CmsSeoSettings, CmsService } from "@/lib/cms-types";
 
 type CmsResponse = {
   data: CmsData;
   canPersist: boolean;
 };
 
-const emptyService = (group: CmsServiceGroup): CmsService => ({
+const emptyService = (): CmsService => ({
   id: crypto.randomUUID(),
   title: "",
-  group,
+  group: "cosmetic",
   image: "/images/services/moi-baby.jpg",
   description: "",
   visible: true,
@@ -49,7 +49,7 @@ async function saveCms(data: CmsData): Promise<CmsResponse> {
 }
 
 function sortServices(services: CmsService[]) {
-  return [...services].sort((a, b) => a.group.localeCompare(b.group) || a.sortOrder - b.sortOrder);
+  return [...services].sort((a, b) => a.sortOrder - b.sortOrder);
 }
 
 export function AdminDashboard() {
@@ -72,25 +72,64 @@ export function AdminDashboard() {
   }, []);
 
   const visibleServices = cms.services.filter((service) => service.visible).length;
+  const publishedPosts = cms.posts.filter((post) => post.status === "published").length;
+  const draftPosts = cms.posts.filter((post) => post.status === "draft").length;
 
   return (
     <div className="miju-admin-stack">
       <StatusNote canPersist={canPersist} />
-      <section className="miju-admin-grid">
-        <div className="miju-admin-card">
-          <span className="miju-admin-card-kicker">Dịch vụ</span>
-          <h2>{visibleServices} đang hiển thị</h2>
-          <p>Quản lý tên dịch vụ, nhóm menu, thứ tự và hình ảnh trên landing page.</p>
+
+      <section className="miju-admin-panel">
+        <div className="miju-admin-panel-header">
+          <div>
+            <p className="miju-admin-eyebrow">Tổng quan</p>
+            <h2>Thống kê nội dung</h2>
+          </div>
         </div>
-        <div className="miju-admin-card">
-          <span className="miju-admin-card-kicker">SEO</span>
-          <h2>{cms.seo.title.length} ký tự title</h2>
-          <p>{cms.seo.description.length} ký tự description. Nên giữ title dưới 60 và description 120-160 ký tự.</p>
+        <div className="miju-admin-grid">
+          <div className="miju-admin-card">
+            <span className="miju-admin-card-kicker">Trang tĩnh</span>
+            <h2>{cms.pages.length} trang</h2>
+            <p>Chỉnh SEO, tiêu đề và nội dung các trang chính tại mục Trang tĩnh.</p>
+          </div>
+          <div className="miju-admin-card">
+            <span className="miju-admin-card-kicker">Tin tức</span>
+            <h2>
+              {publishedPosts} xuất bản · {draftPosts} nháp
+            </h2>
+            <p>Quản lý bài viết tin tức, thêm/sửa/xóa và trạng thái xuất bản.</p>
+          </div>
+          <div className="miju-admin-card">
+            <span className="miju-admin-card-kicker">Dịch vụ</span>
+            <h2>{visibleServices} đang hiển thị</h2>
+            <p>Quản lý tên dịch vụ, nhóm menu, thứ tự và hình ảnh trên landing page.</p>
+          </div>
+          <div className="miju-admin-card">
+            <span className="miju-admin-card-kicker">FAQ</span>
+            <h2>{cms.faqs.filter((item) => item.isActive).length} câu hỏi</h2>
+            <p>Chỉnh sửa FAQ tại trang FAQ trong mục Trang tĩnh.</p>
+          </div>
         </div>
-        <div className="miju-admin-card">
-          <span className="miju-admin-card-kicker">Visitor</span>
-          <h2>{analytics?.totalViews ?? 0} lượt xem</h2>
-          <p>{analytics?.uniqueVisitors ?? 0} khách truy cập đã được ghi nhận bởi tracker nội bộ.</p>
+      </section>
+
+      <section className="miju-admin-panel">
+        <div className="miju-admin-panel-header">
+          <div>
+            <p className="miju-admin-eyebrow">SEO & Phân tích</p>
+            <h2>Tăng trưởng</h2>
+          </div>
+        </div>
+        <div className="miju-admin-grid">
+          <div className="miju-admin-card">
+            <span className="miju-admin-card-kicker">SEO</span>
+            <h2>{cms.seo.title.length} ký tự title</h2>
+            <p>{cms.seo.description.length} ký tự description. Nên giữ title dưới 60 và description 120-160 ký tự.</p>
+          </div>
+          <div className="miju-admin-card">
+            <span className="miju-admin-card-kicker">Visitor</span>
+            <h2>{analytics?.totalViews ?? 0} lượt xem</h2>
+            <p>{analytics?.uniqueVisitors ?? 0} khách truy cập đã được ghi nhận bởi tracker nội bộ.</p>
+          </div>
         </div>
       </section>
     </div>
@@ -99,7 +138,7 @@ export function AdminDashboard() {
 
 export function ServiceManager() {
   const [cms, setCms] = useState<CmsData>(defaultCmsData);
-  const [draft, setDraft] = useState<CmsService>(emptyService("cosmetic"));
+  const [draft, setDraft] = useState<CmsService>(emptyService());
   const [canPersist, setCanPersist] = useState(false);
   const [message, setMessage] = useState("");
   const [saving, setSaving] = useState(false);
@@ -113,20 +152,14 @@ export function ServiceManager() {
       .catch(() => setMessage("Không tải được CMS, đang dùng dữ liệu mặc định."));
   }, []);
 
-  const groupedServices = useMemo(
-    () => ({
-      cosmetic: sortServices(cms.services.filter((service) => service.group === "cosmetic")),
-      spa: sortServices(cms.services.filter((service) => service.group === "spa")),
-    }),
-    [cms.services],
-  );
+  const sortedServices = useMemo(() => sortServices(cms.services), [cms.services]);
 
   function updateDraft<K extends keyof CmsService>(key: K, value: CmsService[K]) {
     setDraft((current) => ({ ...current, [key]: value }));
   }
 
-  function resetForm(group: CmsServiceGroup = "cosmetic") {
-    setDraft(emptyService(group));
+  function resetForm() {
+    setDraft(emptyService());
   }
 
   async function uploadPhoto(file: File) {
@@ -152,6 +185,7 @@ export function ServiceManager() {
     const now = new Date().toISOString();
     const nextService = {
       ...draft,
+      group: "cosmetic" as const,
       title: draft.title.trim(),
       description: draft.description.trim(),
       image: draft.image.trim(),
@@ -171,7 +205,7 @@ export function ServiceManager() {
       setCms(payload.data);
       setCanPersist(payload.canPersist);
       setMessage("Đã lưu dịch vụ.");
-      resetForm(draft.group);
+      resetForm();
     } catch {
       setMessage("Chưa lưu được dịch vụ. Vui lòng thử lại.");
     } finally {
@@ -202,7 +236,7 @@ export function ServiceManager() {
             <p className="miju-admin-eyebrow">Service CMS</p>
             <h2>{cms.services.some((service) => service.id === draft.id) ? "Sửa dịch vụ" : "Tạo dịch vụ mới"}</h2>
           </div>
-          <button type="button" className="miju-admin-plain-button" onClick={() => resetForm(draft.group)}>
+          <button type="button" className="miju-admin-plain-button" onClick={resetForm}>
             Tạo mới
           </button>
         </div>
@@ -212,16 +246,6 @@ export function ServiceManager() {
             <label className="miju-admin-field">
               <span>Tên dịch vụ</span>
               <input value={draft.title} onChange={(event) => updateDraft("title", event.target.value)} />
-            </label>
-            <label className="miju-admin-field">
-              <span>Nhóm menu</span>
-              <select
-                value={draft.group}
-                onChange={(event) => updateDraft("group", event.target.value as CmsServiceGroup)}
-              >
-                <option value="cosmetic">{serviceGroupLabels.cosmetic}</option>
-                <option value="spa">{serviceGroupLabels.spa}</option>
-              </select>
             </label>
             <label className="miju-admin-field">
               <span>Thứ tự</span>
@@ -279,36 +303,34 @@ export function ServiceManager() {
         </div>
       </section>
 
-      {(["cosmetic", "spa"] as CmsServiceGroup[]).map((group) => (
-        <section key={group} className="miju-admin-panel">
-          <div className="miju-admin-panel-header">
-            <div>
-              <p className="miju-admin-eyebrow">{serviceGroupLabels[group]}</p>
-              <h2>{groupedServices[group].length} dịch vụ</h2>
-            </div>
+      <section className="miju-admin-panel">
+        <div className="miju-admin-panel-header">
+          <div>
+            <p className="miju-admin-eyebrow">Dịch vụ thẩm mỹ</p>
+            <h2>{sortedServices.length} dịch vụ</h2>
           </div>
-          <div className="miju-admin-service-list">
-            {groupedServices[group].map((service) => (
-              <article key={service.id} className="miju-admin-service-row">
-                <img src={service.image} alt={service.title} />
-                <div>
-                  <h3>{service.title}</h3>
-                  <p>{service.description}</p>
-                  <span>{service.visible ? "Đang hiển thị" : "Đang ẩn"}</span>
-                </div>
-                <div className="miju-admin-row-actions">
-                  <button type="button" onClick={() => setDraft(service)}>
-                    Sửa
-                  </button>
-                  <button type="button" className="miju-admin-secondary-button" onClick={() => deleteService(service.id)}>
-                    Xóa
-                  </button>
-                </div>
-              </article>
-            ))}
-          </div>
-        </section>
-      ))}
+        </div>
+        <div className="miju-admin-service-list">
+          {sortedServices.map((service) => (
+            <article key={service.id} className="miju-admin-service-row">
+              <img src={service.image} alt={service.title} />
+              <div>
+                <h3>{service.title}</h3>
+                <p>{service.description}</p>
+                <span>{service.visible ? "Đang hiển thị" : "Đang ẩn"}</span>
+              </div>
+              <div className="miju-admin-row-actions">
+                <button type="button" onClick={() => setDraft(service)}>
+                  Sửa
+                </button>
+                <button type="button" className="miju-admin-secondary-button" onClick={() => deleteService(service.id)}>
+                  Xóa
+                </button>
+              </div>
+            </article>
+          ))}
+        </div>
+      </section>
     </div>
   );
 }
