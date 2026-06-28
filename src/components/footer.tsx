@@ -10,7 +10,9 @@ export function Footer() {
         <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-4">
           <div className="lg:col-span-1">
             <div className="mb-5">
-              <Logo variant="footer" />
+              <a href="/" className="group inline-flex" aria-label="Về trang chủ Min Beauty">
+                <Logo variant="footer" />
+              </a>
             </div>
             <p className="site-footer-text mt-3">
               Khu vực phục vụ: {siteConfig.serviceAreaText}

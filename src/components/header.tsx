@@ -230,7 +230,12 @@ export function Header() {
         <div className="site-container">
           <div className="site-content-width site-header-topbar-inner">
             <div className="site-header-topbar-start">
-              <a href="#" className="site-header-logo group shrink-0" onClick={closeMobileMenu}>
+              <a
+                href="/"
+                className="site-header-logo group shrink-0"
+                aria-label="Về trang chủ Min Beauty"
+                onClick={closeMobileMenu}
+              >
                 <Logo variant="topbar" />
               </a>
               <AddressLink className="site-header-address hidden lg:inline-flex" />
