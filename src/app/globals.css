@@ -1205,6 +1205,16 @@ body {
   aspect-ratio: 1 / 1;
 }
 
+.service-card-image--empty {
+  background: linear-gradient(145deg, #f8ece8 0%, #efe0da 100%);
+  border: 1px dashed rgba(165, 107, 90, 0.35);
+}
+
+.service-lp-hero-grid--no-image {
+  grid-template-columns: 1fr !important;
+  max-width: 48rem;
+}
+
 .service-grid {
   display: grid;
   grid-template-columns: 1fr;

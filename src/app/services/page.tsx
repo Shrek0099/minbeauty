@@ -5,7 +5,7 @@ import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import { getCmsPage } from "@/lib/cms-content";
 import { buildPageMetadata } from "@/lib/seo";
-import { getActiveServices } from "@/lib/services-data";
+import { getActiveServices, serviceHasHeroImage } from "@/lib/services-data";
 
 export async function generateMetadata(): Promise<Metadata> {
   const page = await getCmsPage("services");
@@ -36,14 +36,18 @@ export default async function ServicesIndexPage() {
             <div className="service-grid">
               {services.map((service) => (
                 <Link key={service.slug} href={`/services/${service.slug}`} className="service-card service-card-link">
-                  <Image
-                    src={service.heroImage}
-                    alt={service.title}
-                    width={720}
-                    height={960}
-                    className="boutique-card-image service-card-image"
-                    loading="lazy"
-                  />
+                  {serviceHasHeroImage(service.heroImage) ? (
+                    <Image
+                      src={service.heroImage}
+                      alt={service.title}
+                      width={720}
+                      height={960}
+                      className="boutique-card-image service-card-image"
+                      loading="lazy"
+                    />
+                  ) : (
+                    <div className="service-card-image service-card-image--empty" aria-hidden="true" />
+                  )}
                   <h2 className="boutique-card-title service-card-title">{service.title}</h2>
                   <p className="service-card-description">{service.shortDescription}</p>
                 </Link>

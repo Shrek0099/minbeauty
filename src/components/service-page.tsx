@@ -1,7 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { siteConfig } from "@/lib/site-config";
-import type { ServiceData } from "@/lib/services-data";
+import { serviceHasHeroImage, type ServiceData } from "@/lib/services-data";
 import type { BlogPost } from "@/lib/blog";
 
 type ServicePageContentProps = {
@@ -22,7 +22,9 @@ export function ServicePageContent({ service, relatedPosts }: ServicePageContent
             <span aria-hidden="true">/</span>
             <span>{service.title}</span>
           </nav>
-          <div className="service-lp-hero-grid">
+          <div
+            className={`service-lp-hero-grid${serviceHasHeroImage(service.heroImage) ? "" : " service-lp-hero-grid--no-image"}`}
+          >
             <div>
               <p className="section-label mb-3">Dịch vụ tại {siteConfig.city}</p>
               <h1>{service.title}</h1>
@@ -41,16 +43,18 @@ export function ServicePageContent({ service, relatedPosts }: ServicePageContent
                 </a>
               </div>
             </div>
-            <div className="service-lp-hero-image">
-              <Image
-                src={service.heroImage}
-                alt={service.title}
-                width={720}
-                height={960}
-                className="boutique-card-image"
-                priority
-              />
-            </div>
+            {serviceHasHeroImage(service.heroImage) ? (
+              <div className="service-lp-hero-image">
+                <Image
+                  src={service.heroImage}
+                  alt={service.title}
+                  width={720}
+                  height={960}
+                  className="boutique-card-image"
+                  priority
+                />
+              </div>
+            ) : null}
           </div>
         </div>
       </section>

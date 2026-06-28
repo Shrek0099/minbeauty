@@ -10,16 +10,21 @@ export const serviceGroupLabels = {
   cosmetic: "Dịch vụ thẩm mỹ",
 } as const;
 
-export const defaultCmsServices: CmsService[] = getActiveServices().map((service) => ({
-  id: service.id,
-  title: service.title,
-  group: "cosmetic",
-  image: service.heroImage,
-  description: service.shortDescription,
-  visible: true,
-  sortOrder: service.order,
-  updatedAt: now,
-}));
+export function buildCatalogCmsServices(): CmsService[] {
+  const now = new Date().toISOString();
+  return getActiveServices().map((service) => ({
+    id: service.id,
+    title: service.title,
+    group: "cosmetic",
+    image: service.heroImage,
+    description: service.shortDescription,
+    visible: true,
+    sortOrder: service.order,
+    updatedAt: now,
+  }));
+}
+
+export const defaultCmsServices: CmsService[] = buildCatalogCmsServices();
 
 export const defaultCmsPosts: CmsPost[] = blogPosts.map((post) => ({
   id: `post-${post.slug}`,

@@ -1,6 +1,6 @@
 import { promises as fs } from "node:fs";
 import path from "node:path";
-import { defaultCmsData } from "@/lib/cms-defaults";
+import { defaultCmsData, buildCatalogCmsServices } from "@/lib/cms-defaults";
 import type {
   AnalyticsData,
   AnalyticsPageView,
@@ -132,9 +132,7 @@ export async function getCmsData(): Promise<CmsData> {
       ...defaultCmsData.seo,
       ...stored.seo,
     },
-    services: (stored.services?.length ? stored.services : defaultCmsData.services)
-      .map(normalizeService)
-      .sort((a, b) => a.sortOrder - b.sortOrder),
+    services: buildCatalogCmsServices(),
     posts: (stored.posts?.length ? stored.posts : defaultCmsData.posts)
       .map(normalizePost)
       .sort((a, b) => b.date.localeCompare(a.date)),

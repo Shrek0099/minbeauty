@@ -21,6 +21,10 @@ export type ServiceData = {
   order: number;
 };
 
+export function serviceHasHeroImage(heroImage: string) {
+  return Boolean(heroImage.trim());
+}
+
 const sharedProcess = [
   "Gửi hình qua Zalo hoặc đến trực tiếp cơ sở tại Hòa Thành, Tây Ninh.",
   "Trao đổi mong muốn và xem tình trạng thực tế trước khi đề xuất phương án.",
@@ -335,7 +339,7 @@ export const servicesData: ServiceData[] = [
     seoTitle: "Thon gọn hàm, viền hàm Tây Ninh — Tư vấn tại Min Beauty",
     seoDescription:
       "Dịch vụ thon gọn hàm, viền hàm tại Min Beauty, Hòa Thành, Tây Ninh. Tư vấn cân đối gương mặt tự nhiên. Gọi 0971.700.952.",
-    heroImage: "/images/hero/min-beauty-hero.jpg",
+    heroImage: "",
     intro:
       "Hàm to hoặc viền hàm thiếu cân đối có thể làm gương mặt trông nặng hoặc vuông hơn mong muốn. Dịch vụ thon gọn hàm, viền hàm tại Min Beauty tập trung vào tư vấn phương án phù hợp với cấu trúc gương mặt — ưu tiên kết quả tự nhiên, hài hòa.",
     sections: [
@@ -381,7 +385,7 @@ export const servicesData: ServiceData[] = [
     seoTitle: "Thon gọn bắp tay (tan mỡ) Tây Ninh — Min Beauty",
     seoDescription:
       "Dịch vụ thon gọn bắp tay, tan mỡ tại Min Beauty, Hòa Thành, Tây Ninh. Tư vấn liệu trình phù hợp. Gọi 0971.700.952.",
-    heroImage: "/images/hero/min-beauty-hero.jpg",
+    heroImage: "",
     intro:
       "Bắp tay chảy xệ hoặc tích mỡ là mối quan tâm của nhiều khách hàng, đặc biệt khi mặc áo ngắn tay. Liệu trình thon gọn bắp tay (tan mỡ) tại Min Beauty được tư vấn theo tình trạng thực tế — kết hợp hướng dẫn chăm sóc và sinh hoạt phù hợp.",
     sections: [
@@ -474,7 +478,7 @@ export const servicesData: ServiceData[] = [
     seoTitle: "Tai tài lộc Tây Ninh — Tư vấn tại Min Beauty",
     seoDescription:
       "Dịch vụ tai tài lộc tại Min Beauty, Hòa Thành, Tây Ninh. Tư vấn dáng tai hài hòa gương mặt. Đặt lịch 0971.700.952.",
-    heroImage: "/images/hero/min-beauty-hero.jpg",
+    heroImage: "",
     intro:
       "Tai tài lộc là dịch vụ được nhiều khách hàng quan tâm khi muốn điều chỉnh hình dáng tai cho hài hòa hơn với gương mặt. Tại Min Beauty, mỗi trường hợp được tư vấn dựa trên tỷ lệ tai-mặt và mong muốn thực tế.",
     sections: [

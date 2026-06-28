@@ -1,11 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Clock, MapPin, Phone } from "lucide-react";
-import { defaultCmsServices } from "@/lib/cms-defaults";
 import { trackContactClick } from "@/lib/client-tracking";
-import type { CmsData } from "@/lib/cms-types";
-import { siteConfig } from "@/lib/site-config";
+import { promoModalServices, siteConfig } from "@/lib/site-config";
 
 declare global {
   interface Window {
@@ -44,26 +42,7 @@ export function ConsultationForm({ variant = "full" }: { variant?: "full" | "emb
   const [submitted, setSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState("");
-  const [serviceOptions, setServiceOptions] = useState(
-    defaultCmsServices.filter((service) => service.visible).map((service) => service.title),
-  );
-
-  useEffect(() => {
-    fetch("/api/cms")
-      .then((response) => response.json())
-      .then((payload: { data?: CmsData }) => {
-        const titles =
-          payload.data?.services
-            ?.filter((service) => service.visible)
-            .sort((a, b) => a.group.localeCompare(b.group) || a.sortOrder - b.sortOrder)
-            .map((service) => service.title) || [];
-
-        if (titles.length > 0) setServiceOptions(titles);
-      })
-      .catch(() => {
-        setServiceOptions(defaultCmsServices.filter((service) => service.visible).map((service) => service.title));
-      });
-  }, []);
+  const [serviceOptions] = useState(promoModalServices);
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
