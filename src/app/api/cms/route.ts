@@ -1,13 +1,33 @@
 import { NextResponse } from "next/server";
+import { verifySessionFromRequest } from "@/lib/admin-auth";
+import { isBlobStorageConfigured } from "@/lib/blob-storage";
 import { canPersistCmsData, getCmsData, saveCmsData } from "@/lib/cms-store";
 import type { CmsData } from "@/lib/cms-types";
 
 export async function GET() {
   const data = await getCmsData();
-  return NextResponse.json({ data, canPersist: canPersistCmsData() });
+  return NextResponse.json({
+    data,
+    canPersist: canPersistCmsData(),
+    blobUploadEnabled: isBlobStorageConfigured(),
+  });
 }
 
 export async function PUT(request: Request) {
+  if (!(await verifySessionFromRequest(request))) {
+    return NextResponse.json({ ok: false, error: "UNAUTHORIZED" }, { status: 401 });
+  }
+
+  if (!canPersistCmsData()) {
+    return NextResponse.json(
+      {
+        ok: false,
+        error: "READ_ONLY",
+        message: "Production chỉ xem được CMS. Sửa trên máy local rồi commit và deploy.",
+      },
+      { status: 503 },
+    );
+  }
   let data: CmsData;
 
   try {

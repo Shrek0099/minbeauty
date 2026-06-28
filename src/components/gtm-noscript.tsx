@@ -1,4 +1,4 @@
-const gtmId = process.env.NEXT_PUBLIC_GTM_ID;
+const gtmId = process.env.NEXT_PUBLIC_GTM_ID || "GTM-TCWB7KQ2";
 
 export function GtmNoscript() {
   if (!gtmId) return null;

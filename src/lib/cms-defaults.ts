@@ -1,6 +1,6 @@
 import { blogPosts } from "@/lib/blog";
 import { faqItems as defaultFaqItems } from "@/lib/faq";
-import { localPageData } from "@/lib/services-data";
+import { getActiveServices, localPageData } from "@/lib/services-data";
 import { siteConfig } from "@/lib/site-config";
 import type { CmsData, CmsFaqItem, CmsPage, CmsPost, CmsService } from "@/lib/cms-types";
 
@@ -10,88 +10,16 @@ export const serviceGroupLabels = {
   cosmetic: "Dịch vụ thẩm mỹ",
 } as const;
 
-export const defaultCmsServices: CmsService[] = [
-  {
-    id: "moi-baby",
-    title: "Môi baby",
-    group: "cosmetic",
-    image: "/images/services/moi-baby.jpg",
-    description: "Tư vấn dáng môi mềm mại, tự nhiên và hài hòa với gương mặt.",
-    visible: true,
-    sortOrder: 1,
-    updatedAt: now,
-  },
-  {
-    id: "nang-tang-mat-giua",
-    title: "Nâng tầng mặt giữa",
-    group: "cosmetic",
-    image: "/images/services/nang-tang-mat-giua.jpg",
-    description: "Hỗ trợ gương mặt đầy đặn và cân đối hơn theo tình trạng thực tế.",
-    visible: true,
-    sortOrder: 2,
-    updatedAt: now,
-  },
-  {
-    id: "bong-mat-cuoi",
-    title: "Bọng mắt cười",
-    group: "cosmetic",
-    image: "/images/services/bong-mat-cuoi.jpg",
-    description: "Tạo điểm nhấn vùng mắt trẻ trung, phù hợp với nét mặt tự nhiên.",
-    visible: true,
-    sortOrder: 3,
-    updatedAt: now,
-  },
-  {
-    id: "lam-day-tran-hom",
-    title: "Làm đầy trán hóm",
-    group: "cosmetic",
-    image: "/images/services/lam-day-tran-hom.jpg",
-    description: "Tư vấn cải thiện vùng trán thiếu đầy để tổng thể gương mặt mềm hơn.",
-    visible: true,
-    sortOrder: 4,
-    updatedAt: now,
-  },
-  {
-    id: "meso",
-    title: "Meso",
-    group: "cosmetic",
-    image: "/images/services/meso.jpg",
-    description: "Liệu trình hỗ trợ cấp ẩm, làm sáng và chăm sóc bề mặt da.",
-    visible: true,
-    sortOrder: 5,
-    updatedAt: now,
-  },
-  {
-    id: "tre-hoa-vung-mat",
-    title: "Trẻ hóa vùng mắt",
-    group: "cosmetic",
-    image: "/images/services/tre-hoa-vung-mat.jpg",
-    description: "Chăm sóc vùng mắt theo tình trạng thực tế, ưu tiên vẻ tự nhiên.",
-    visible: true,
-    sortOrder: 6,
-    updatedAt: now,
-  },
-  {
-    id: "cham-soc-da",
-    title: "Chăm sóc da",
-    group: "cosmetic",
-    image: "/images/services/cham-soc-da.jpg",
-    description: "Chăm sóc và phục hồi da theo nền da, thói quen và nhu cầu hiện tại.",
-    visible: true,
-    sortOrder: 7,
-    updatedAt: now,
-  },
-  {
-    id: "phuc-hoi-da",
-    title: "Phục hồi da",
-    group: "cosmetic",
-    image: "/images/services/phuc-hoi-da.jpg",
-    description: "Hỗ trợ da nhạy cảm, thiếu ẩm hoặc cần phục hồi hàng rào bảo vệ.",
-    visible: true,
-    sortOrder: 8,
-    updatedAt: now,
-  },
-];
+export const defaultCmsServices: CmsService[] = getActiveServices().map((service) => ({
+  id: service.id,
+  title: service.title,
+  group: "cosmetic",
+  image: service.heroImage,
+  description: service.shortDescription,
+  visible: true,
+  sortOrder: service.order,
+  updatedAt: now,
+}));
 
 export const defaultCmsPosts: CmsPost[] = blogPosts.map((post) => ({
   id: `post-${post.slug}`,

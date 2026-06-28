@@ -6,7 +6,7 @@ Website thẩm mỹ viện **Min Beauty** — trang landing page chuẩn SEO, th
 
 - Trang chủ: Hero, Trust strip, Dịch vụ, Gallery, Quy trình, Video, Kiến thức, FAQ, Form tư vấn
 - SEO: metadata per-page, canonical, Open Graph, JSON-LD (LocalBusiness, Service, FAQPage, BlogPosting, BreadcrumbList), sitemap.xml, robots.txt
-- Trang dịch vụ: `/services`, `/services/[slug]` (8 landing pages)
+- Trang dịch vụ: `/services`, `/services/[slug]` (10 landing pages)
 - Tin tức: `/news`, `/news/[slug]` (redirect 301 từ `/blog`)
 - FAQ: `/faq` | Liên hệ: `/contact`
 - Local SEO: `/tham-my-vien-hoa-thanh-tay-ninh`
@@ -43,7 +43,7 @@ Chỉnh thông tin viện tại `src/lib/site-config.ts` và nội dung dịch v
 ## Biến môi trường khi deploy
 
 ```bash
-NEXT_PUBLIC_SITE_URL=https://minbeauty.vn
+NEXT_PUBLIC_SITE_URL=https://www.minbeauty.com.vn
 NEXT_PUBLIC_GSC_VERIFICATION=
 NEXT_PUBLIC_GTM_ID=
 NEXT_PUBLIC_GA_ID=
@@ -53,9 +53,24 @@ NEXT_PUBLIC_GOOGLE_ADS_CONTACT_LABEL=
 NEXT_PUBLIC_META_PIXEL_ID=
 LEAD_WEBHOOK_URL=
 CMS_ALLOW_FILE_WRITES=false
+ADMIN_USER=
+ADMIN_PASSWORD=
+ADMIN_SESSION_SECRET=
+BLOB_STORE_ID=
+BLOB_READ_WRITE_TOKEN=
+BLOB_MAX_TOTAL_MB=800
+BLOB_MAX_FILE_MB=2
+BLOB_MAX_FILES=150
 ```
 
+- `BLOB_MAX_TOTAL_MB=800`: chặn upload trước khi đạt ~800MB (buffer dưới free tier 1GB).
+- `BLOB_MAX_FILE_MB=2`: tối đa 2MB/ảnh (JPG, PNG, WebP).
+- `BLOB_MAX_FILES=150`: tối đa 150 ảnh CMS trên Blob.
+
 - Đổi `NEXT_PUBLIC_SITE_URL` sang domain production sau khi DNS trỏ xong.
+- `ADMIN_USER` + `ADMIN_PASSWORD` + `ADMIN_SESSION_SECRET`: bắt buộc trên Vercel để bảo vệ `/admin`.
+- `BLOB_READ_WRITE_TOKEN`: upload ảnh CMS trên production qua Vercel Blob (free tier ~1GB).
+- `CMS_ALLOW_FILE_WRITES=true` chỉ trên local. Production: sửa nội dung trang dịch vụ trong code rồi deploy.
 - `NEXT_PUBLIC_GSC_VERIFICATION`: mã xác minh Google Search Console.
 - `NEXT_PUBLIC_GOOGLE_ADS_CONVERSION_LABEL`: conversion cho form lead (`generate_lead`).
 - `NEXT_PUBLIC_GOOGLE_ADS_CONTACT_LABEL`: conversion tùy chọn cho click phone/Zalo.
@@ -63,7 +78,7 @@ CMS_ALLOW_FILE_WRITES=false
 
 ## Checklist sau deploy (indexing & quảng cáo)
 
-1. **Google Search Console**: xác minh domain, submit `https://minbeauty.vn/sitemap.xml`
+1. **Google Search Console**: xác minh domain, submit `https://www.minbeauty.com.vn/sitemap.xml`
 2. **Google Business Profile**: tạo/cập nhật hồ sơ, thêm link website
 3. **Google Ads**: tạo conversion action, copy ID + label vào env
 4. **GTM**: container + trigger `generate_lead` (form) và `contact_click` (phone/Zalo)
@@ -72,10 +87,12 @@ CMS_ALLOW_FILE_WRITES=false
 
 ## CMS
 
-Admin CMS tại `/admin`:
+Admin CMS tại `/admin` (yêu cầu đăng nhập):
 
 - Nội dung: quản lý dịch vụ
 - Tăng trưởng: SEO metadata, hướng dẫn Google Ads/tracking, visitor analytics
+
+**Workflow production:** upload ảnh dịch vụ qua CMS (Vercel Blob). Nội dung trang `/services/[slug]` vẫn sửa trong `services-data.ts` rồi deploy.
 
 Visitor tracker ghi page view qua `/api/analytics/track`; xem tại `/admin/analytics`.
 

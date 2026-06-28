@@ -32,12 +32,12 @@ export const servicesData: ServiceData[] = [
   {
     id: "moi-baby",
     slug: "moi-baby",
-    title: "Môi baby",
+    title: "Tiêm môi baby",
     category: "cosmetic",
     shortDescription: "Tư vấn dáng môi mềm mại, tự nhiên và hài hòa với gương mặt tại Min Beauty, Hòa Thành, Tây Ninh.",
-    seoTitle: "Môi baby Tây Ninh — Tư vấn dáng môi tự nhiên tại Min Beauty",
+    seoTitle: "Tiêm môi baby Tây Ninh — Tư vấn dáng môi tự nhiên tại Min Beauty",
     seoDescription:
-      "Dịch vụ môi baby tại Min Beauty, Hòa Thành, Tây Ninh. Tư vấn dáng môi mềm, tự nhiên theo từng gương mặt. Đặt lịch 0971.700.952.",
+      "Dịch vụ tiêm môi baby tại Min Beauty, Hòa Thành, Tây Ninh. Tư vấn dáng môi mềm, tự nhiên theo từng gương mặt. Đặt lịch 0971.700.952.",
     heroImage: "/images/services/moi-baby.jpg",
     intro:
       "Môi baby hướng đến cảm giác môi căng nhẹ, mềm và hài hòa với tổng thể gương mặt. Tại Min Beauty, mỗi khách hàng được tư vấn dựa trên nền môi, độ dày môi, nhân trung và mong muốn thực tế — không áp dụng một dáng môi cố định cho tất cả.",
@@ -191,18 +191,18 @@ export const servicesData: ServiceData[] = [
   {
     id: "lam-day-tran-hom",
     slug: "lam-day-tran-hom",
-    title: "Làm đầy trán hóm",
+    title: "Làm đầy trán hỏm, trán baby",
     category: "cosmetic",
     shortDescription: "Tư vấn cải thiện vùng trán thiếu đầy, cân đối gương mặt tại Min Beauty, Tây Ninh.",
-    seoTitle: "Làm đầy trán hóm Tây Ninh — Filler trán tự nhiên",
+    seoTitle: "Làm đầy trán hỏm, trán baby Tây Ninh — Filler trán tự nhiên",
     seoDescription:
-      "Dịch vụ làm đầy trán hóm tại Min Beauty, Hòa Thành, Tây Ninh. Tư vấn cải thiện vùng trán tự nhiên. Đặt lịch 0971.700.952.",
+      "Dịch vụ làm đầy trán hỏm, trán baby tại Min Beauty, Hòa Thành, Tây Ninh. Tư vấn cải thiện vùng trán tự nhiên. Đặt lịch 0971.700.952.",
     heroImage: "/images/services/lam-day-tran-hom.jpg",
     intro:
-      "Trán hóm có thể làm tổng thể gương mặt trông thiếu cân đối. Dịch vụ làm đầy trán tại Min Beauty tập trung vào việc tạo độ mềm mại cho vùng trán mà vẫn giữ được tỷ lệ tự nhiên giữa trán, mũi và vùng mắt.",
+      "Trán hỏm hoặc trán thiếu đầy có thể làm tổng thể gương mặt trông thiếu cân đối. Dịch vụ làm đầy trán hỏm, trán baby tại Min Beauty tập trung vào việc tạo độ mềm mại cho vùng trán mà vẫn giữ được tỷ lệ tự nhiên giữa trán, mũi và vùng mắt.",
     sections: [
       {
-        heading: "Trán hóm ảnh hưởng đến tổng thể gương mặt",
+        heading: "Trán hỏm ảnh hưởng đến tổng thể gương mặt",
         paragraphs: [
           "Vùng trán là một phần quan trọng trong tỷ lệ gương mặt. Khi trán thiếu đầy, gương mặt có thể trông cứng hoặc thiếu hài hòa.",
           "Tư vấn trực tiếp giúp xác định mức độ cần cải thiện và tránh làm trán trông quá cao hoặc không tự nhiên.",
@@ -236,15 +236,16 @@ export const servicesData: ServiceData[] = [
   {
     id: "meso",
     slug: "meso",
-    title: "Meso",
+    title: "Meso căng bóng",
     category: "cosmetic",
-    shortDescription: "Liệu trình meso hỗ trợ cấp ẩm, làm sáng và chăm sóc bề mặt da tại Min Beauty, Tây Ninh.",
-    seoTitle: "Meso Tây Ninh — Liệu trình chăm sóc da tại Min Beauty",
+    shortDescription:
+      "Liệu trình meso căng bóng hỗ trợ cấp ẩm, làm sáng và cải thiện bề mặt da tại Min Beauty, Tây Ninh.",
+    seoTitle: "Meso căng bóng Tây Ninh — Liệu trình chăm sóc da tại Min Beauty",
     seoDescription:
-      "Dịch vụ meso tại Min Beauty, Hòa Thành, Tây Ninh. Hỗ trợ cấp ẩm, làm sáng và cải thiện bề mặt da. Tư vấn 0971.700.952.",
+      "Dịch vụ meso căng bóng tại Min Beauty, Hòa Thành, Tây Ninh. Hỗ trợ cấp ẩm, làm sáng và cải thiện bề mặt da. Tư vấn 0971.700.952.",
     heroImage: "/images/services/meso.jpg",
     intro:
-      "Meso thường được chọn khi da thiếu ẩm, bề mặt kém mịn hoặc cần liệu trình chăm sóc chuyên sâu hơn routine tại nhà. Tại Min Beauty, liệu trình meso được tư vấn theo tình trạng da thực tế — không áp dụng một phác đồ chung cho mọi người.",
+      "Meso căng bóng thường được chọn khi da thiếu ẩm, bề mặt kém mịn hoặc cần liệu trình chăm sóc chuyên sâu hơn routine tại nhà. Tại Min Beauty, liệu trình được tư vấn theo tình trạng da thực tế — không áp dụng một phác đồ chung cho mọi người.",
     sections: [
       {
         heading: "Meso hỗ trợ da như thế nào",
@@ -281,15 +282,16 @@ export const servicesData: ServiceData[] = [
   {
     id: "tre-hoa-vung-mat",
     slug: "tre-hoa-vung-mat",
-    title: "Trẻ hóa vùng mắt",
+    title: "Xóa thâm quầng mắt + trẻ hóa vùng mắt (H.A)",
     category: "cosmetic",
-    shortDescription: "Chăm sóc và trẻ hóa vùng mắt theo tình trạng thực tế tại Min Beauty, Tây Ninh.",
-    seoTitle: "Trẻ hóa vùng mắt Tây Ninh — Chăm sóc mắt tại Min Beauty",
+    shortDescription:
+      "Xóa thâm quầng mắt và trẻ hóa vùng mắt với HA tại Min Beauty, Hòa Thành, Tây Ninh.",
+    seoTitle: "Xóa thâm quầng mắt + trẻ hóa vùng mắt (H.A) Tây Ninh",
     seoDescription:
-      "Dịch vụ trẻ hóa vùng mắt tại Min Beauty, Hòa Thành, Tây Ninh. Chăm sóc vùng mắt tự nhiên, theo tình trạng thực tế. Gọi 0971.700.952.",
+      "Dịch vụ xóa thâm quầng mắt và trẻ hóa vùng mắt (H.A) tại Min Beauty, Hòa Thành, Tây Ninh. Chăm sóc vùng mắt tự nhiên. Gọi 0971.700.952.",
     heroImage: "/images/services/tre-hoa-vung-mat.jpg",
     intro:
-      "Vùng mắt là khu vực nhạy cảm và dễ lộ dấu hiệu mệt mỏi. Liệu trình trẻ hóa vùng mắt tại Min Beauty được thiết kế theo tình trạng thực tế — ưu tiên sự tự nhiên và an toàn cho da mỏng quanh mắt.",
+      "Vùng mắt là khu vực nhạy cảm, dễ lộ thâm quầng và dấu hiệu mệt mỏi. Liệu trình xóa thâm quầng mắt kết hợp trẻ hóa vùng mắt (H.A) tại Min Beauty được thiết kế theo tình trạng thực tế — ưu tiên sự tự nhiên và an toàn cho da mỏng quanh mắt.",
     sections: [
       {
         heading: "Vì sao vùng mắt cần chăm sóc riêng",
@@ -324,100 +326,212 @@ export const servicesData: ServiceData[] = [
     order: 6,
   },
   {
-    id: "cham-soc-da",
-    slug: "cham-soc-da",
-    title: "Chăm sóc da",
+    id: "thon-gon-ham",
+    slug: "thon-gon-ham",
+    title: "Thon gọn hàm, viền hàm",
     category: "cosmetic",
-    shortDescription: "Chăm sóc và phục hồi da theo nền da và nhu cầu tại Min Beauty, Hòa Thành, Tây Ninh.",
-    seoTitle: "Chăm sóc da Tây Ninh — Liệu trình tại Min Beauty",
+    shortDescription:
+      "Tư vấn thon gọn hàm và viền hàm cân đối gương mặt tại Min Beauty, Hòa Thành, Tây Ninh.",
+    seoTitle: "Thon gọn hàm, viền hàm Tây Ninh — Tư vấn tại Min Beauty",
     seoDescription:
-      "Dịch vụ chăm sóc da tại Min Beauty, Hòa Thành, Tây Ninh. Chăm sóc da theo tình trạng thực tế, tư vấn miễn phí. 0971.700.952.",
-    heroImage: "/images/services/cham-soc-da.jpg",
+      "Dịch vụ thon gọn hàm, viền hàm tại Min Beauty, Hòa Thành, Tây Ninh. Tư vấn cân đối gương mặt tự nhiên. Gọi 0971.700.952.",
+    heroImage: "/images/hero/min-beauty-hero.jpg",
     intro:
-      "Chăm sóc da tại Min Beauty bắt đầu từ việc hiểu nền da, thói quen sinh hoạt và mục tiêu của bạn. Chúng tôi không áp dụng một liệu trình chung — mỗi khách hàng được tư vấn phương án phù hợp với tình trạng da hiện tại.",
+      "Hàm to hoặc viền hàm thiếu cân đối có thể làm gương mặt trông nặng hoặc vuông hơn mong muốn. Dịch vụ thon gọn hàm, viền hàm tại Min Beauty tập trung vào tư vấn phương án phù hợp với cấu trúc gương mặt — ưu tiên kết quả tự nhiên, hài hòa.",
     sections: [
       {
-        heading: "Nền tảng của làn da khỏe",
+        heading: "Khi nào nên xem xét thon gọn hàm",
         paragraphs: [
-          "Làm sạch nhẹ nhàng, dưỡng ẩm đủ và chống nắng đều đặn là ba bước cơ bản giúp da ổn định theo thời gian.",
-          "Liệu trình tại cơ sở bổ sung cho routine tại nhà, không thay thế hoàn toàn thói quen chăm sóc hằng ngày.",
+          "Một số khách hàng muốn viền hàm trông mềm hơn, gương mặt cân đối hơn khi nhìn nghiêng hoặc chụp hình.",
+          "Tư vấn trực tiếp giúp xác định nguyên nhân (cơ địa, cơ nhai, tỷ lệ xương hàm) và phương án phù hợp.",
         ],
       },
     ],
     whoFor: [
-      "Da thiếu ẩm, xỉn màu hoặc cần phục hồi sau stress.",
-      "Người muốn được tư vấn routine chăm sóc phù hợp với nền da.",
+      "Người muốn viền hàm trông thon gọn, mềm mại hơn.",
+      "Khách hàng cần tư vấn cân đối tổng thể gương mặt trước khi quyết định.",
     ],
     process: sharedProcess,
     aftercare: [
-      "Tiếp tục chống nắng và dưỡng ẩm theo hướng dẫn.",
-      "Tránh thử quá nhiều sản phẩm mới cùng lúc.",
-      "Theo dõi phản ứng da sau liệu trình.",
+      "Tránh nhai cứng, nhai kẹo cao su liên tục trong thời gian đầu nếu được khuyên.",
+      "Massage nhẹ theo hướng dẫn nếu có.",
+      "Liên hệ cơ sở nếu có dấu hiệu bất thường.",
     ],
     faqs: [
       {
-        question: "Bao lâu nên chăm sóc da một lần?",
-        answer: "Tùy tình trạng da và liệu trình. Được tư vấn sau khi xem da trực tiếp.",
+        question: "Thon gọn hàm có phù hợp mọi gương mặt không?",
+        answer: "Cần tư vấn dựa trên cấu trúc hàm và mong muốn thực tế. Không phải ai cũng cần cùng một phương án.",
       },
       {
-        question: "Có cần ngừng makeup trước khi đến không?",
-        answer: "Nên làm sạch da trước khi đến. Chúng tôi sẽ hướng dẫn cụ thể khi đặt lịch.",
+        question: "Cần bao lâu để thấy thay đổi?",
+        answer: "Thời gian khác nhau tùy phương án và cơ địa. Bạn sẽ được hướng dẫn theo dõi sau dịch vụ.",
       },
     ],
-    relatedPostSlugs: ["duy-tri-da-khoe-manh", "meso-ho-tro-cham-soc-da"],
+    relatedPostSlugs: ["hieu-lam-ve-filler"],
     isActive: true,
     order: 7,
   },
   {
-    id: "phuc-hoi-da",
-    slug: "phuc-hoi-da",
-    title: "Phục hồi da",
+    id: "thon-gon-bap-tay",
+    slug: "thon-gon-bap-tay",
+    title: "Thon gọn bắp tay (tan mỡ)",
     category: "cosmetic",
-    shortDescription: "Hỗ trợ da nhạy cảm, thiếu ẩm hoặc cần phục hồi hàng rào bảo vệ tại Min Beauty, Tây Ninh.",
-    seoTitle: "Phục hồi da Tây Ninh — Liệu trình phục hồi tại Min Beauty",
+    shortDescription:
+      "Liệu trình thon gọn bắp tay, hỗ trợ tan mỡ tại Min Beauty, Hòa Thành, Tây Ninh.",
+    seoTitle: "Thon gọn bắp tay (tan mỡ) Tây Ninh — Min Beauty",
     seoDescription:
-      "Dịch vụ phục hồi da tại Min Beauty, Hòa Thành, Tây Ninh. Hỗ trợ da nhạy cảm, thiếu ẩm. Tư vấn 0971.700.952.",
-    heroImage: "/images/services/phuc-hoi-da.jpg",
+      "Dịch vụ thon gọn bắp tay, tan mỡ tại Min Beauty, Hòa Thành, Tây Ninh. Tư vấn liệu trình phù hợp. Gọi 0971.700.952.",
+    heroImage: "/images/hero/min-beauty-hero.jpg",
     intro:
-      "Da nhạy cảm, thiếu ẩm hoặc mất cân bằng hàng rào bảo vệ cần phương án phục hồi nhẹ nhàng và kiên nhẫn. Min Beauty tư vấn liệu trình phục hồi phù hợp — tránh dùng quá nhiều hoạt chất mạnh khi da chưa sẵn sàng.",
+      "Bắp tay chảy xệ hoặc tích mỡ là mối quan tâm của nhiều khách hàng, đặc biệt khi mặc áo ngắn tay. Liệu trình thon gọn bắp tay (tan mỡ) tại Min Beauty được tư vấn theo tình trạng thực tế — kết hợp hướng dẫn chăm sóc và sinh hoạt phù hợp.",
     sections: [
       {
-        heading: "Khi nào da cần phục hồi",
+        heading: "Thon gọn bắp tay cần tư vấn cá nhân hóa",
         paragraphs: [
-          "Da có thể cần phục hồi sau khi dùng hoạt chất mạnh, thay đổi thời tiết, stress hoặc skincare không phù hợp.",
-          "Liệu trình phục hồi tập trung vào cấp ẩm, làm dịu và hỗ trợ hàng rào bảo vệ da.",
+          "Mức độ tích mỡ, độ đàn hồi da và thói quen sinh hoạt ảnh hưởng đến phương án phù hợp.",
+          "Tư vấn trực tiếp giúp đặt kỳ vọng đúng và chọn liệu trình phù hợp với cơ địa.",
         ],
       },
     ],
     whoFor: [
-      "Da nhạy cảm, dễ đỏ hoặc kích ứng.",
-      "Người vừa dùng hoạt chất mạnh và cần phục hồi.",
-      "Da thiếu ẩm, bong tróc hoặc căng rát.",
+      "Người muốn bắp tay trông gọn hơn, săn chắc hơn.",
+      "Khách hàng quan tâm liệu trình tan mỡ vùng cánh tay.",
     ],
     process: sharedProcess,
     aftercare: [
-      "Dùng sản phẩm dịu nhẹ, tránh hoạt chất mạnh.",
-      "Chống nắng kỹ và giữ routine đơn giản.",
-      "Kiên nhẫn — da phục hồi cần thời gian.",
+      "Uống đủ nước và vận động nhẹ theo hướng dẫn.",
+      "Tránh nhiệt cao, xông hơi nếu chưa được cho phép.",
+      "Theo dõi vùng bắp tay và liên hệ cơ sở khi cần.",
     ],
     faqs: [
       {
-        question: "Phục hồi da mất bao lâu?",
-        answer: "Tùy mức độ tổn thương và cách chăm sóc. Được tư vấn cụ thể sau khi xem da.",
+        question: "Tan mỡ bắp tay có đau không?",
+        answer: "Mức độ cảm giác khác nhau tùy liệu trình và cơ địa. Chúng tôi sẽ trao đổi kỹ trước khi thực hiện.",
       },
       {
-        question: "Có thể kết hợp meso khi da đang nhạy cảm không?",
-        answer: "Cần xem da trước. Một số trường hợp nên phục hồi trước khi làm liệu trình khác.",
+        question: "Cần bao nhiêu buổi?",
+        answer: "Số buổi phụ thuộc tình trạng và mục tiêu. Được tư vấn sau khi thăm khám trực tiếp.",
       },
     ],
-    relatedPostSlugs: ["duy-tri-da-khoe-manh"],
+    relatedPostSlugs: [],
     isActive: true,
     order: 8,
+  },
+  {
+    id: "bap",
+    slug: "bap",
+    title: "BAP",
+    category: "cosmetic",
+    shortDescription:
+      "Liệu trình BAP (Bio Aesthetic Points) với collagen Karisma L-ACE tại Min Beauty, Hòa Thành, Tây Ninh.",
+    seoTitle: "BAP Tây Ninh — Liệu trình tại Min Beauty",
+    seoDescription:
+      "Dịch vụ BAP tại Min Beauty, Hòa Thành, Tây Ninh. Tư vấn liệu trình phù hợp từng khách hàng. Gọi 0971.700.952.",
+    heroImage: "/images/services/bap.jpg",
+    intro:
+      "BAP (Bio Aesthetic Points) là kỹ thuật tiêm các điểm làm đẹp sinh học, thường kết hợp collagen và các hoạt chất như Karisma L-ACE để hỗ trợ căng bóng, trẻ hóa và tái tạo da từ bên trong. Tại Min Beauty, mỗi liệu trình được tư vấn theo tình trạng da và mục tiêu thực tế.",
+    sections: [
+      {
+        heading: "BAP và collagen Karisma L-ACE",
+        paragraphs: [
+          "Liệu trình BAP có thể hỗ trợ da căng bóng, mịn màng hơn, kích thích sinh collagen tự nhiên và phục hồi da theo từng vùng được tư vấn.",
+          "Buổi tư vấn giúp làm rõ số buổi, cách chăm sóc sau liệu trình và kỳ vọng phù hợp với tình trạng da hiện tại.",
+        ],
+      },
+    ],
+    whoFor: [
+      "Khách hàng được giới thiệu hoặc quan tâm liệu trình BAP.",
+      "Người muốn được tư vấn trực tiếp trước khi thực hiện.",
+    ],
+    process: sharedProcess,
+    aftercare: [
+      "Tuân thủ hướng dẫn chăm sóc sau liệu trình.",
+      "Tránh tác động mạnh vào vùng vừa thực hiện.",
+      "Liên hệ cơ sở nếu có dấu hiệu bất thường.",
+    ],
+    faqs: [
+      {
+        question: "BAP là gì?",
+        answer:
+          "BAP (Bio Aesthetic Points) là kỹ thuật tiêm các điểm làm đẹp sinh học, thường dùng collagen như Karisma L-ACE để hỗ trợ căng bóng và trẻ hóa da. Chi tiết liệu trình sẽ được trao đổi trong buổi tư vấn trực tiếp.",
+      },
+      {
+        question: "Có cần đặt lịch trước không?",
+        answer: "Nên đặt lịch để được tư vấn và sắp xếp thời gian phù hợp. Gọi 0971.700.952 hoặc nhắn Zalo.",
+      },
+    ],
+    relatedPostSlugs: [],
+    isActive: true,
+    order: 9,
+  },
+  {
+    id: "tai-tai-loc",
+    slug: "tai-tai-loc",
+    title: "Tai tài lộc",
+    category: "cosmetic",
+    shortDescription:
+      "Tư vấn tai tài lộc cân đối, hài hòa gương mặt tại Min Beauty, Hòa Thành, Tây Ninh.",
+    seoTitle: "Tai tài lộc Tây Ninh — Tư vấn tại Min Beauty",
+    seoDescription:
+      "Dịch vụ tai tài lộc tại Min Beauty, Hòa Thành, Tây Ninh. Tư vấn dáng tai hài hòa gương mặt. Đặt lịch 0971.700.952.",
+    heroImage: "/images/hero/min-beauty-hero.jpg",
+    intro:
+      "Tai tài lộc là dịch vụ được nhiều khách hàng quan tâm khi muốn điều chỉnh hình dáng tai cho hài hòa hơn với gương mặt. Tại Min Beauty, mỗi trường hợp được tư vấn dựa trên tỷ lệ tai-mặt và mong muốn thực tế.",
+    sections: [
+      {
+        heading: "Tai tài lộc và tỷ lệ gương mặt",
+        paragraphs: [
+          "Hình dáng tai ảnh hưởng đến cảm nhận tổng thể khi nhìn nghiêng và chụp hình.",
+          "Tư vấn trực tiếp giúp xác định phương án phù hợp, tránh thay đổi quá mức so với nét tự nhiên.",
+        ],
+      },
+    ],
+    whoFor: [
+      "Người muốn điều chỉnh hình dáng tai cho hài hòa hơn.",
+      "Khách hàng cần tư vấn trực tiếp trước khi quyết định.",
+    ],
+    process: sharedProcess,
+    aftercare: [
+      "Tránh tác động mạnh vào vùng tai trong thời gian đầu.",
+      "Ngủ tránh nghiêng về phía vừa thực hiện nếu được khuyên.",
+      "Theo dõi và liên hệ cơ sở nếu có dấu hiệu bất thường.",
+    ],
+    faqs: [
+      {
+        question: "Tai tài lộc có phù hợp mọi người không?",
+        answer: "Cần tư vấn dựa trên hình dáng tai và tỷ lệ gương mặt. Không phải ai cũng cần cùng một phương án.",
+      },
+      {
+        question: "Cần chuẩn bị gì trước khi đến?",
+        answer: "Bạn có thể gửi hình qua Zalo hoặc đến trực tiếp. Nên trao đổi tiền sử dị ứng nếu có.",
+      },
+    ],
+    relatedPostSlugs: [],
+    isActive: true,
+    order: 10,
   },
 ];
 
 export function getActiveServices() {
   return servicesData.filter((s) => s.isActive).sort((a, b) => a.order - b.order);
+}
+
+export function getServiceNavDropdown() {
+  return [
+    { href: "/services", label: "Tất cả dịch vụ" },
+    ...getActiveServices().map((service) => ({
+      href: `/services/${service.slug}`,
+      label: service.title,
+    })),
+  ];
+}
+
+export function getServiceCards() {
+  return getActiveServices().map((service) => ({
+    id: service.id,
+    title: service.title,
+    image: service.heroImage,
+  }));
 }
 
 export function getService(slug: string) {
@@ -430,10 +544,10 @@ export const localPageData = {
   slug: localPageSlug,
   seoTitle: "Thẩm mỹ viện Hòa Thành Tây Ninh — Min Beauty",
   seoDescription:
-    "Min Beauty — thẩm mỹ viện tại Hòa Thành, Tây Ninh. Dịch vụ môi baby, filler, meso, chăm sóc da. Tư vấn miễn phí. Gọi 0971.700.952.",
+    "Min Beauty — thẩm mỹ viện tại Hòa Thành, Tây Ninh. Tiêm môi baby, filler, meso căng bóng và các dịch vụ làm đẹp. Tư vấn miễn phí. Gọi 0971.700.952.",
   h1: "Thẩm mỹ viện Min Beauty tại Hòa Thành, Tây Ninh",
   intro:
-    "Min Beauty là cơ sở làm đẹp tại 61A, hẻm 24 Trịnh Phong Đáng, Trường Giang, Trường Tây, Hòa Thành, Tây Ninh. Chúng tôi tập trung vào các dịch vụ môi baby, filler, meso và chăm sóc da — mỗi khách hàng được tư vấn theo tình trạng thực tế trước khi thực hiện.",
+    "Min Beauty là cơ sở làm đẹp tại 61A, hẻm 24 Trịnh Phong Đáng, Trường Giang, Trường Tây, Hòa Thành, Tây Ninh. Chúng tôi tập trung vào tiêm môi baby, filler, meso và các dịch vụ thẩm mỹ — mỗi khách hàng được tư vấn theo tình trạng thực tế trước khi thực hiện.",
   sections: [
     {
       heading: "Khu vực phục vụ",
@@ -445,7 +559,7 @@ export const localPageData = {
     {
       heading: "Dịch vụ chính tại Min Beauty",
       paragraphs: [
-        "Dịch vụ làm đẹp: môi baby, nâng tầng mặt giữa, bọng mắt cười, làm đầy trán hóm, meso, trẻ hóa vùng mắt, chăm sóc da và phục hồi da.",
+        "Dịch vụ làm đẹp: tiêm môi baby, nâng tầng mặt giữa, bọng mắt cười, làm đầy trán hỏm trán baby, meso căng bóng, xóa thâm quầng mắt + trẻ hóa vùng mắt (H.A), thon gọn hàm viền hàm, thon gọn bắp tay, BAP và tai tài lộc.",
       ],
     },
     {

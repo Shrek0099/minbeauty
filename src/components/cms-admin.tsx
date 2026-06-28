@@ -8,6 +8,7 @@ import type { AnalyticsSummary, CmsData, CmsSeoSettings, CmsService } from "@/li
 type CmsResponse = {
   data: CmsData;
   canPersist: boolean;
+  blobUploadEnabled: boolean;
 };
 
 const emptyService = (): CmsService => ({
@@ -21,12 +22,20 @@ const emptyService = (): CmsService => ({
   updatedAt: new Date().toISOString(),
 });
 
-function StatusNote({ canPersist }: { canPersist: boolean }) {
+function StatusNote({
+  canPersist,
+  blobUploadEnabled,
+}: {
+  canPersist: boolean;
+  blobUploadEnabled: boolean;
+}) {
   return (
-    <p className={`miju-admin-note${canPersist ? "" : " miju-admin-note-warning"}`}>
+    <p className={`miju-admin-note${canPersist || blobUploadEnabled ? "" : " miju-admin-note-warning"}`}>
       {canPersist
-        ? "CMS đang lưu được dữ liệu trên server hiện tại."
-        : "CMS đang ở chế độ demo trên production. Dùng database/Blob storage để lưu bền vững sau deploy."}
+        ? "CMS đang lưu được trên máy local. Commit thay đổi rồi deploy lên Vercel."
+        : blobUploadEnabled
+          ? "Production: upload ảnh qua Vercel Blob đã bật. Dữ liệu CMS vẫn chỉ xem — sửa code rồi deploy để đổi nội dung trang dịch vụ."
+          : "Production: chỉ xem CMS. Cấu hình BLOB_READ_WRITE_TOKEN để upload ảnh; nội dung trang dịch vụ sửa trong code rồi deploy."}
     </p>
   );
 }
@@ -48,6 +57,35 @@ async function saveCms(data: CmsData): Promise<CmsResponse> {
   return response.json();
 }
 
+function formatBytes(bytes: number) {
+  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
+  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+}
+
+type BlobUsageState =
+  | { enabled: false }
+  | {
+      enabled: true;
+      usedBytes: number;
+      maxBytes: number;
+      fileCount: number;
+      maxFiles: number;
+      percentUsed: number;
+    };
+
+function BlobUsageNote({ usage }: { usage: BlobUsageState | null }) {
+  if (!usage?.enabled) return null;
+
+  const warn = usage.percentUsed >= 80 || usage.fileCount >= usage.maxFiles * 0.8;
+
+  return (
+    <p className={`miju-admin-note${warn ? " miju-admin-note-warning" : ""}`}>
+      Blob CMS: {formatBytes(usage.usedBytes)} / {formatBytes(usage.maxBytes)} ({usage.percentUsed}%) ·{" "}
+      {usage.fileCount}/{usage.maxFiles} ảnh. Upload bị chặn tự động trước khi vượt free tier.
+    </p>
+  );
+}
+
 function sortServices(services: CmsService[]) {
   return [...services].sort((a, b) => a.sortOrder - b.sortOrder);
 }
@@ -56,12 +94,14 @@ export function AdminDashboard() {
   const [cms, setCms] = useState<CmsData>(defaultCmsData);
   const [analytics, setAnalytics] = useState<AnalyticsSummary | null>(null);
   const [canPersist, setCanPersist] = useState(false);
+  const [blobUploadEnabled, setBlobUploadEnabled] = useState(false);
 
   useEffect(() => {
     loadCms()
       .then((payload) => {
         setCms(payload.data);
         setCanPersist(payload.canPersist);
+        setBlobUploadEnabled(payload.blobUploadEnabled);
       })
       .catch(() => setCms(defaultCmsData));
 
@@ -77,7 +117,7 @@ export function AdminDashboard() {
 
   return (
     <div className="miju-admin-stack">
-      <StatusNote canPersist={canPersist} />
+      <StatusNote canPersist={canPersist} blobUploadEnabled={blobUploadEnabled} />
 
       <section className="miju-admin-panel">
         <div className="miju-admin-panel-header">
@@ -140,6 +180,8 @@ export function ServiceManager() {
   const [cms, setCms] = useState<CmsData>(defaultCmsData);
   const [draft, setDraft] = useState<CmsService>(emptyService());
   const [canPersist, setCanPersist] = useState(false);
+  const [blobUploadEnabled, setBlobUploadEnabled] = useState(false);
+  const [blobUsage, setBlobUsage] = useState<BlobUsageState | null>(null);
   const [message, setMessage] = useState("");
   const [saving, setSaving] = useState(false);
 
@@ -148,8 +190,16 @@ export function ServiceManager() {
       .then((payload) => {
         setCms(payload.data);
         setCanPersist(payload.canPersist);
+        setBlobUploadEnabled(payload.blobUploadEnabled);
       })
       .catch(() => setMessage("Không tải được CMS, đang dùng dữ liệu mặc định."));
+
+    fetch("/api/cms/blob-usage", { cache: "no-store" })
+      .then((response) => response.json())
+      .then((payload: { usage?: BlobUsageState }) => {
+        if (payload.usage) setBlobUsage(payload.usage);
+      })
+      .catch(() => setBlobUsage(null));
   }, []);
 
   const sortedServices = useMemo(() => sortServices(cms.services), [cms.services]);
@@ -166,11 +216,29 @@ export function ServiceManager() {
     const formData = new FormData();
     formData.set("file", file);
     const response = await fetch("/api/cms/upload", { method: "POST", body: formData });
-    const payload = await response.json();
+    const payload = (await response.json()) as {
+      url?: string;
+      persisted?: boolean;
+      error?: string;
+      message?: string;
+    };
 
-    if (!response.ok || !payload.url) throw new Error("Upload failed");
+    if (!response.ok || !payload.url) {
+      throw new Error(payload.message || "Upload thất bại.");
+    }
     updateDraft("image", payload.url);
-    if (!payload.persisted) setMessage("Ảnh đã được nhúng tạm thời. Nên dùng Blob/storage để lưu ảnh bền vững.");
+    if (!payload.persisted) {
+      setMessage("Ảnh đã được nhúng tạm thời trên máy local.");
+      return;
+    }
+    if (blobUploadEnabled) {
+      fetch("/api/cms/blob-usage", { cache: "no-store" })
+        .then((res) => res.json())
+        .then((data: { usage?: BlobUsageState }) => {
+          if (data.usage) setBlobUsage(data.usage);
+        })
+        .catch(() => undefined);
+    }
   }
 
   async function saveService() {
@@ -204,6 +272,7 @@ export function ServiceManager() {
       const payload = await saveCms(nextCms);
       setCms(payload.data);
       setCanPersist(payload.canPersist);
+      setBlobUploadEnabled(payload.blobUploadEnabled);
       setMessage("Đã lưu dịch vụ.");
       resetForm();
     } catch {
@@ -227,7 +296,8 @@ export function ServiceManager() {
 
   return (
     <div className="miju-admin-stack">
-      <StatusNote canPersist={canPersist} />
+      <StatusNote canPersist={canPersist} blobUploadEnabled={blobUploadEnabled} />
+      <BlobUsageNote usage={blobUsage} />
       {message ? <p className="miju-admin-note">{message}</p> : null}
 
       <section className="miju-admin-panel">
@@ -339,6 +409,7 @@ export function SeoManager() {
   const [cms, setCms] = useState<CmsData>(defaultCmsData);
   const [draft, setDraft] = useState<CmsSeoSettings>(defaultCmsData.seo);
   const [canPersist, setCanPersist] = useState(false);
+  const [blobUploadEnabled, setBlobUploadEnabled] = useState(false);
   const [message, setMessage] = useState("");
   const titleOk = draft.title.length > 0 && draft.title.length <= 60;
   const descriptionOk = draft.description.length >= 120 && draft.description.length <= 160;
@@ -349,6 +420,7 @@ export function SeoManager() {
         setCms(payload.data);
         setDraft(payload.data.seo);
         setCanPersist(payload.canPersist);
+        setBlobUploadEnabled(payload.blobUploadEnabled);
       })
       .catch(() => setMessage("Không tải được SEO CMS, đang dùng dữ liệu mặc định."));
   }, []);
@@ -381,7 +453,7 @@ export function SeoManager() {
 
   return (
     <div className="miju-admin-stack">
-      <StatusNote canPersist={canPersist} />
+      <StatusNote canPersist={canPersist} blobUploadEnabled={blobUploadEnabled} />
       {message ? <p className="miju-admin-note">{message}</p> : null}
 
       <section className="miju-admin-panel">
@@ -458,20 +530,26 @@ export function SeoManager() {
 export function AnalyticsDashboard() {
   const [summary, setSummary] = useState<AnalyticsSummary | null>(null);
   const [canPersist, setCanPersist] = useState(false);
+  const [blobUploadEnabled, setBlobUploadEnabled] = useState(false);
 
   useEffect(() => {
     fetch("/api/analytics", { cache: "no-store" })
       .then((response) => response.json())
-      .then((payload: { summary?: AnalyticsSummary; canPersist?: boolean }) => {
+      .then((payload: {
+        summary?: AnalyticsSummary;
+        canPersist?: boolean;
+        blobUploadEnabled?: boolean;
+      }) => {
         setSummary(payload.summary || null);
         setCanPersist(Boolean(payload.canPersist));
+        setBlobUploadEnabled(Boolean(payload.blobUploadEnabled));
       })
       .catch(() => setSummary(null));
   }, []);
 
   return (
     <div className="miju-admin-stack">
-      <StatusNote canPersist={canPersist} />
+      <StatusNote canPersist={canPersist} blobUploadEnabled={blobUploadEnabled} />
       <section className="miju-admin-grid">
         <div className="miju-admin-card">
           <span className="miju-admin-card-kicker">Total</span>

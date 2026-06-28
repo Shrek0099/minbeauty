@@ -825,8 +825,10 @@ body {
   top: 100%;
   left: 0;
   z-index: 1100;
-  min-width: 220px;
-  overflow: hidden;
+  min-width: 280px;
+  max-height: min(70vh, 480px);
+  overflow-x: hidden;
+  overflow-y: auto;
   background: #fff9f6;
   border: 1px solid rgba(216, 181, 123, 0.45);
   border-top: none;
@@ -2062,6 +2064,10 @@ body {
 }
 
 .miju-admin-topbar {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
   margin-bottom: 1.5rem;
   border: 1px solid rgba(230, 206, 196, 0.9);
   border-radius: 30px;
@@ -2771,4 +2777,41 @@ body {
 
 .miju-admin-checklist li + li {
   margin-top: 0.5rem;
+}
+
+.miju-admin-login-page {
+  display: grid;
+  min-height: 100vh;
+  place-items: center;
+  padding: 1.5rem;
+  background:
+    radial-gradient(circle at top, rgba(255, 244, 216, 0.8), transparent 42%),
+    linear-gradient(180deg, #fff9f6 0%, #f6ece7 100%);
+}
+
+.miju-admin-login-card {
+  width: min(100%, 28rem);
+  border: 1px solid rgba(230, 206, 196, 0.9);
+  border-radius: 28px;
+  background: rgba(255, 255, 255, 0.94);
+  padding: clamp(1.5rem, 4vw, 2.25rem);
+  box-shadow: var(--shadow-card);
+}
+
+.miju-admin-login-card h1 {
+  margin: 0 0 0.75rem;
+  font-family: var(--font-playfair), Georgia, serif;
+  font-size: clamp(1.8rem, 4vw, 2.4rem);
+  color: var(--primary-dark);
+}
+
+.miju-admin-login-lead {
+  margin: 0 0 1.25rem;
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+
+.miju-admin-login-form {
+  display: grid;
+  gap: 1rem;
 }

@@ -7,6 +7,10 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "images.unsplash.com",
       },
+      {
+        protocol: "https",
+        hostname: "*.public.blob.vercel-storage.com",
+      },
     ],
   },
   async redirects() {
@@ -16,6 +20,8 @@ const nextConfig: NextConfig = {
       { source: "/moi-baby", destination: "/news?category=moi-baby", permanent: true },
       { source: "/filler", destination: "/news?category=filler", permanent: true },
       { source: "/cham-soc-da", destination: "/news?category=cham-soc-da", permanent: true },
+      { source: "/services/cham-soc-da", destination: "/services", permanent: true },
+      { source: "/services/phuc-hoi-da", destination: "/services", permanent: true },
       {
         source: "/cham-soc-sau-dich-vu",
         destination: "/news?category=cham-soc-sau-dich-vu",

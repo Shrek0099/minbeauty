@@ -29,7 +29,7 @@ export function Logo({ variant = "header", className = "" }: LogoProps) {
         width={512}
         height={512}
         priority={variant === "header" || variant === "nav" || variant === "topbar"}
-        className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.03]"
+        className="h-full w-full object-contain transition-transform duration-300 group-hover:scale-[1.03]"
       />
     </span>
   );

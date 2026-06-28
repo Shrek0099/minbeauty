@@ -5,7 +5,7 @@ import { GtmNoscript } from "@/components/gtm-noscript";
 import { JsonLd } from "@/components/json-ld";
 import { VisitorTracker } from "@/components/visitor-tracker";
 import { getCmsData } from "@/lib/cms-store";
-import { siteConfig } from "@/lib/site-config";
+import { normalizeSiteUrl, siteConfig } from "@/lib/site-config";
 import "./globals.css";
 
 const playfair = Playfair_Display({
@@ -34,7 +34,7 @@ export async function generateMetadata(): Promise<Metadata> {
     .filter(Boolean);
   const canonicalUrl =
     cms.seo.canonicalUrl && cms.seo.canonicalUrl !== "NEXT_PUBLIC_SITE_URL"
-      ? cms.seo.canonicalUrl.replace(/\/$/, "")
+      ? normalizeSiteUrl(cms.seo.canonicalUrl)
       : siteConfig.url;
 
   return {
@@ -82,6 +82,7 @@ export async function generateMetadata(): Promise<Metadata> {
     },
     icons: {
       icon: [
+        { url: "/images/logo/min-beauty-icon-32.png", sizes: "32x32", type: "image/png" },
         { url: siteConfig.favicon, sizes: "48x48", type: "image/png" },
         { url: "/images/logo/min-beauty-icon-96.png", sizes: "96x96", type: "image/png" },
         { url: "/images/logo/min-beauty-icon-192.png", sizes: "192x192", type: "image/png" },

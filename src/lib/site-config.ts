@@ -1,7 +1,17 @@
 const fullAddress =
   "61A, hẻm 24 Trịnh Phong Đáng, Trường Giang, Trường Tây, Hòa Thành, Tây Ninh";
 
-const defaultSiteUrl = "https://minbeauty.vercel.app";
+import { getServiceCards, getServiceNavDropdown } from "./services-data";
+
+const productionSiteUrl = "https://www.minbeauty.com.vn";
+const defaultSiteUrl = productionSiteUrl;
+
+const productionHosts = new Set([
+  "minbeauty.vn",
+  "www.minbeauty.vn",
+  "minbeauty.com.vn",
+  "www.minbeauty.com.vn",
+]);
 
 function isValidSiteUrl(value: string | undefined): value is string {
   if (!value?.trim()) return false;
@@ -17,6 +27,21 @@ function isValidSiteUrl(value: string | undefined): value is string {
   }
 }
 
+export function normalizeSiteUrl(value: string): string {
+  const trimmed = value.trim().replace(/\/$/, "");
+
+  try {
+    const { hostname } = new URL(trimmed);
+    if (productionHosts.has(hostname.toLowerCase())) {
+      return productionSiteUrl;
+    }
+  } catch {
+    return trimmed;
+  }
+
+  return trimmed;
+}
+
 function resolveSiteUrl() {
   const candidates = [
     process.env.NEXT_PUBLIC_SITE_URL,
@@ -28,7 +53,7 @@ function resolveSiteUrl() {
 
   for (const candidate of candidates) {
     if (isValidSiteUrl(candidate)) {
-      return candidate.replace(/\/$/, "");
+      return normalizeSiteUrl(candidate);
     }
   }
 
@@ -76,15 +101,7 @@ export const siteConfig = {
   },
 };
 
-export const promoModalServices = [
-  "Môi baby",
-  "Nâng tầng mặt giữa",
-  "Bọng mắt cười",
-  "Làm đầy trán hóm",
-  "Meso",
-  "Trẻ hóa vùng mắt",
-  "Chăm sóc da",
-];
+export const promoModalServices = getServiceCards().map((service) => service.title);
 
 type HeaderNavLink = { href: string; label: string };
 type HeaderNavDropdown = { label: string; dropdown: HeaderNavLink[] };
@@ -94,13 +111,7 @@ export const headerNavItems: HeaderNavItem[] = [
   { href: "/", label: "Trang chủ" },
   {
     label: "Dịch vụ",
-    dropdown: [
-      { href: "/services", label: "Tất cả dịch vụ" },
-      { href: "/services/moi-baby", label: "Môi baby" },
-      { href: "/services/nang-tang-mat-giua", label: "Nâng tầng mặt giữa" },
-      { href: "/services/meso", label: "Meso" },
-      { href: "/services/cham-soc-da", label: "Chăm sóc da" },
-    ],
+    dropdown: getServiceNavDropdown(),
   },
   { href: "/#hinh-anh", label: "Hình ảnh thực tế" },
   { href: "/#video", label: "Video" },
@@ -119,48 +130,7 @@ export const navLinks = [
   { href: "/contact", label: "Liên hệ" },
 ];
 
-export const cosmeticServices = [
-  {
-    id: "moi-baby",
-    title: "Môi baby",
-    image: "/images/services/moi-baby.jpg",
-  },
-  {
-    id: "nang-tang-mat-giua",
-    title: "Nâng tầng mặt giữa",
-    image: "/images/services/nang-tang-mat-giua.jpg",
-  },
-  {
-    id: "bong-mat-cuoi",
-    title: "Bọng mắt cười",
-    image: "/images/services/bong-mat-cuoi.jpg",
-  },
-  {
-    id: "lam-day-tran-hom",
-    title: "Làm đầy trán hóm",
-    image: "/images/services/lam-day-tran-hom.jpg",
-  },
-  {
-    id: "meso",
-    title: "Meso",
-    image: "/images/services/meso.jpg",
-  },
-  {
-    id: "tre-hoa-vung-mat",
-    title: "Trẻ hóa vùng mắt",
-    image: "/images/services/tre-hoa-vung-mat.jpg",
-  },
-  {
-    id: "cham-soc-da",
-    title: "Chăm sóc da",
-    image: "/images/services/cham-soc-da.jpg",
-  },
-  {
-    id: "phuc-hoi-da",
-    title: "Phục hồi da",
-    image: "/images/services/phuc-hoi-da.jpg",
-  },
-];
+export const cosmeticServices = getServiceCards();
 
 export const services = cosmeticServices;
 

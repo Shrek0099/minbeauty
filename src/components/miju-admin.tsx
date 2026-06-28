@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { cmsMenuGroups } from "@/lib/cms-defaults";
 
 type AdminShellProps = {
@@ -9,6 +9,22 @@ type AdminShellProps = {
   description: string;
   children: React.ReactNode;
 };
+
+function AdminLogoutButton() {
+  const router = useRouter();
+
+  async function logout() {
+    await fetch("/api/admin/logout", { method: "POST" });
+    router.replace("/admin/login");
+    router.refresh();
+  }
+
+  return (
+    <button type="button" className="miju-admin-plain-button" onClick={logout}>
+      Đăng xuất
+    </button>
+  );
+}
 
 function MijuAdminNav() {
   const pathname = usePathname();
@@ -58,6 +74,7 @@ export function MijuAdminShell({ title, description, children }: AdminShellProps
             <h1>{title}</h1>
             <p>{description}</p>
           </div>
+          <AdminLogoutButton />
         </header>
 
         {children}
@@ -86,7 +103,15 @@ export function SeoSectionOverview() {
 
 export function GoogleAdsManager() {
   const envVars = [
-    { name: "NEXT_PUBLIC_SITE_URL", desc: "Domain production (https://minbeauty.vn)" },
+    { name: "ADMIN_USER", desc: "Tên đăng nhập /admin (bắt buộc, không mặc định admin)" },
+    { name: "ADMIN_PASSWORD", desc: "Mật khẩu đăng nhập /admin" },
+    { name: "ADMIN_SESSION_SECRET", desc: "Chuỗi bí mật ký session admin (random, ≥32 ký tự)" },
+    { name: "BLOB_READ_WRITE_TOKEN", desc: "Token Vercel Blob — upload ảnh CMS trên production" },
+    { name: "BLOB_MAX_TOTAL_MB", desc: "Giới hạn tổng dung lượng CMS (mặc định 800MB)" },
+    { name: "BLOB_MAX_FILE_MB", desc: "Giới hạn mỗi ảnh (mặc định 2MB)" },
+    { name: "BLOB_MAX_FILES", desc: "Giới hạn số ảnh CMS (mặc định 150)" },
+    { name: "CMS_ALLOW_FILE_WRITES", desc: "true trên local để lưu CMS; false trên Vercel production" },
+    { name: "NEXT_PUBLIC_SITE_URL", desc: "Domain production (https://www.minbeauty.com.vn)" },
     { name: "NEXT_PUBLIC_GSC_VERIFICATION", desc: "Mã xác minh Google Search Console" },
     { name: "NEXT_PUBLIC_GTM_ID", desc: "Google Tag Manager container ID (GTM-XXXX)" },
     { name: "NEXT_PUBLIC_GA_ID", desc: "Google Analytics 4 measurement ID (G-XXXX)" },

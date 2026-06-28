@@ -4,11 +4,11 @@ Chạy checklist này sau khi deploy production.
 
 ## Indexing
 
-- [ ] `NEXT_PUBLIC_SITE_URL=https://minbeauty.vn` đã cấu hình trên Vercel
+- [ ] `NEXT_PUBLIC_SITE_URL=https://www.minbeauty.com.vn` đã cấu hình trên Vercel
 - [ ] Truy cập `/robots.txt` — allow `/`, disallow `/admin` và `/api/`
 - [ ] Truy cập `/sitemap.xml` — có homepage, services, news, faq, contact, local page
 - [ ] Google Search Console: xác minh domain (dùng `NEXT_PUBLIC_GSC_VERIFICATION`)
-- [ ] Submit sitemap: `https://minbeauty.vn/sitemap.xml`
+- [ ] Submit sitemap: `https://www.minbeauty.com.vn/sitemap.xml`
 - [ ] Kiểm tra Rich Results: https://search.google.com/test/rich-results
 
 ## Canonical & metadata
