@@ -4,9 +4,20 @@ export type CmsService = {
   id: string;
   title: string;
   group: CmsServiceGroup;
-  image: string;
+  homeImage: string;
   description: string;
   visible: boolean;
+  sortOrder: number;
+  updatedAt: string;
+};
+
+export type CmsServiceMediaType = "image" | "youtube";
+
+export type CmsServiceMediaItem = {
+  id: string;
+  type: CmsServiceMediaType;
+  url: string;
+  caption: string;
   sortOrder: number;
   updatedAt: string;
 };
@@ -81,6 +92,7 @@ export type CmsMenuGroup = {
 
 export type CmsData = {
   services: CmsService[];
+  serviceMedia: Record<string, CmsServiceMediaItem[]>;
   seo: CmsSeoSettings;
   posts: CmsPost[];
   pages: CmsPage[];

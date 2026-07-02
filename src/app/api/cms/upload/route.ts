@@ -1,17 +1,20 @@
-import { put } from "@vercel/blob";
 import { promises as fs } from "node:fs";
 import path from "node:path";
 import { NextResponse } from "next/server";
 import { verifySessionFromRequest } from "@/lib/admin-auth";
 import {
   ALLOWED_IMAGE_TYPES,
-  assertBlobUploadAllowed,
-  getBlobMaxFileBytes,
-  isBlobStorageConfigured,
-} from "@/lib/blob-storage";
+  assertSupabaseUploadAllowed,
+  createSupabaseAdmin,
+  getCmsUploadPrefix,
+  getPublicStorageUrl,
+  getSupabaseMaxFileBytes,
+  getStorageBucket,
+  isSupabaseStorageConfigured,
+} from "@/lib/supabase-storage";
 
 function canUploadOnServer() {
-  return process.env.NODE_ENV !== "production" || isBlobStorageConfigured();
+  return process.env.NODE_ENV !== "production" || isSupabaseStorageConfigured();
 }
 
 function safeFileName(name: string) {
@@ -36,7 +39,8 @@ export async function POST(request: Request) {
       {
         ok: false,
         error: "UPLOAD_DISABLED",
-        message: "Chưa cấu hình BLOB_READ_WRITE_TOKEN. Thêm token Vercel Blob trên Vercel hoặc upload trên local.",
+        message:
+          "Chưa cấu hình Supabase Storage. Thêm NEXT_PUBLIC_SUPABASE_URL và SUPABASE_SERVICE_ROLE_KEY trên Vercel hoặc upload trên local.",
       },
       { status: 403 },
     );
@@ -54,14 +58,14 @@ export async function POST(request: Request) {
       {
         ok: false,
         error: "INVALID_FILE_TYPE",
-        message: "Chỉ chấp nhận JPG, PNG hoặc WebP để tiết kiệm dung lượng.",
+        message: "Chỉ chấp nhận JPG, PNG hoặc WebP.",
       },
       { status: 400 },
     );
   }
 
-  const maxFileBytes = isBlobStorageConfigured()
-    ? getBlobMaxFileBytes()
+  const maxFileBytes = isSupabaseStorageConfigured()
+    ? getSupabaseMaxFileBytes()
     : 4 * 1024 * 1024;
 
   if (file.size > maxFileBytes) {
@@ -69,9 +73,10 @@ export async function POST(request: Request) {
   }
 
   const fileName = safeFileName(file.name);
+  const buffer = Buffer.from(await file.arrayBuffer());
 
-  if (isBlobStorageConfigured()) {
-    const guard = await assertBlobUploadAllowed(file.size);
+  if (isSupabaseStorageConfigured()) {
+    const guard = await assertSupabaseUploadAllowed(file.size);
     if (!guard.ok) {
       return NextResponse.json(
         { ok: false, error: guard.code, message: guard.error },
@@ -79,25 +84,34 @@ export async function POST(request: Request) {
       );
     }
 
+    const storagePath = `${getCmsUploadPrefix()}${fileName}`;
+
     try {
-      const blob = await put(`cms/${fileName}`, file, {
-        access: "public",
-        addRandomSuffix: false,
+      const supabase = createSupabaseAdmin();
+      const { error } = await supabase.storage.from(getStorageBucket()).upload(storagePath, buffer, {
+        contentType: file.type,
+        upsert: true,
       });
+
+      if (error) {
+        return NextResponse.json(
+          { ok: false, error: "SUPABASE_UPLOAD_FAILED", message: error.message },
+          { status: 500 },
+        );
+      }
 
       return NextResponse.json({
         ok: true,
-        url: blob.url,
+        url: getPublicStorageUrl(storagePath),
         persisted: true,
-        storage: "blob",
+        storage: "supabase",
         usage: guard.usage,
       });
     } catch {
-      return NextResponse.json({ ok: false, error: "BLOB_UPLOAD_FAILED" }, { status: 500 });
+      return NextResponse.json({ ok: false, error: "SUPABASE_UPLOAD_FAILED" }, { status: 500 });
     }
   }
 
-  const buffer = Buffer.from(await file.arrayBuffer());
   const uploadPath = `/uploads/cms/${fileName}`;
 
   try {

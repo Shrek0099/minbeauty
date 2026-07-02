@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { verifySessionFromRequest } from "@/lib/admin-auth";
-import { isBlobStorageConfigured } from "@/lib/blob-storage";
+import { isSupabaseStorageConfigured } from "@/lib/supabase-storage";
 import { canPersistCmsData, getAnalyticsSummary } from "@/lib/cms-store";
 
 export async function GET(request: Request) {
@@ -12,6 +12,6 @@ export async function GET(request: Request) {
   return NextResponse.json({
     summary,
     canPersist: canPersistCmsData(),
-    blobUploadEnabled: isBlobStorageConfigured(),
+    storageUploadEnabled: isSupabaseStorageConfigured(),
   });
 }

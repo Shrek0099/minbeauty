@@ -1,8 +1,26 @@
 import { blogPosts } from "@/lib/blog";
+import { getResolvedServiceHomeImage } from "@/lib/cms-image-assets";
 import { faqItems as defaultFaqItems } from "@/lib/faq";
+import { resolveStorageUrl } from "@/lib/image-url";
 import { getActiveServices, localPageData } from "@/lib/services-data";
 import { siteConfig } from "@/lib/site-config";
 import type { CmsData, CmsFaqItem, CmsPage, CmsPost, CmsService } from "@/lib/cms-types";
+
+export type CmsMenuItem = {
+  href: string;
+  label: string;
+  description: string;
+  children?: {
+    href: string;
+    label: string;
+    description: string;
+  }[];
+};
+
+export type CmsMenuGroup = {
+  title: string;
+  items: CmsMenuItem[];
+};
 
 const now = "2026-06-24T00:00:00.000Z";
 
@@ -16,12 +34,31 @@ export function buildCatalogCmsServices(): CmsService[] {
     id: service.id,
     title: service.title,
     group: "cosmetic",
-    image: service.heroImage,
+    homeImage: getResolvedServiceHomeImage(service.id),
     description: service.shortDescription,
     visible: true,
     sortOrder: service.order,
     updatedAt: now,
   }));
+}
+
+export function mergeCatalogCmsServices(stored: CmsService[] | undefined): CmsService[] {
+  const storedMap = new Map((stored || []).map((service) => [service.id, service]));
+
+  return buildCatalogCmsServices().map((catalog) => {
+    const saved = storedMap.get(catalog.id);
+    if (!saved) return catalog;
+
+    return {
+      ...catalog,
+      title: saved.title.trim() || catalog.title,
+      homeImage: resolveStorageUrl(saved.homeImage.trim() || catalog.homeImage),
+      description: saved.description.trim() || catalog.description,
+      visible: saved.visible,
+      sortOrder: Number.isFinite(saved.sortOrder) ? saved.sortOrder : catalog.sortOrder,
+      updatedAt: saved.updatedAt || catalog.updatedAt,
+    };
+  });
 }
 
 export const defaultCmsServices: CmsService[] = buildCatalogCmsServices();
@@ -127,6 +164,7 @@ export const defaultCmsPages: CmsPage[] = [
 
 export const defaultCmsData: CmsData = {
   services: defaultCmsServices,
+  serviceMedia: {},
   seo: {
     title: `${siteConfig.name} - ${siteConfig.tagline}`,
     description: siteConfig.description,
@@ -148,7 +186,7 @@ export const defaultCmsData: CmsData = {
   updatedAt: now,
 };
 
-export const cmsMenuGroups = [
+export const cmsMenuGroups: CmsMenuGroup[] = [
   {
     title: "Tổng quan",
     items: [
@@ -171,6 +209,11 @@ export const cmsMenuGroups = [
         href: "/admin/services",
         label: "Dịch vụ",
         description: "Quản lý dịch vụ hiển thị trên landing page.",
+        children: getActiveServices().map((service) => ({
+          href: `/admin/services/${service.id}`,
+          label: service.title,
+          description: `Chỉnh sửa ${service.title}`,
+        })),
       },
     ],
   },
@@ -212,3 +255,5 @@ export const cmsMenuGroups = [
 ];
 
 export const cmsPageKeys = defaultCmsPages.map((page) => page.key);
+
+export const adminServiceIds = getActiveServices().map((service) => service.id);

@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { verifySessionFromRequest } from "@/lib/admin-auth";
-import { isBlobStorageConfigured } from "@/lib/blob-storage";
+import { isSupabaseStorageConfigured } from "@/lib/supabase-storage";
 import { canPersistCmsData, getCmsData, saveCmsData } from "@/lib/cms-store";
 import type { CmsData } from "@/lib/cms-types";
 
@@ -9,7 +9,7 @@ export async function GET() {
   return NextResponse.json({
     data,
     canPersist: canPersistCmsData(),
-    blobUploadEnabled: isBlobStorageConfigured(),
+    storageUploadEnabled: isSupabaseStorageConfigured(),
   });
 }
 
@@ -37,6 +37,10 @@ export async function PUT(request: Request) {
   }
 
   if (!Array.isArray(data.services) || !data.seo || !Array.isArray(data.posts) || !Array.isArray(data.pages) || !Array.isArray(data.faqs)) {
+    return NextResponse.json({ ok: false, error: "INVALID_CMS_DATA" }, { status: 400 });
+  }
+
+  if (data.serviceMedia && typeof data.serviceMedia !== "object") {
     return NextResponse.json({ ok: false, error: "INVALID_CMS_DATA" }, { status: 400 });
   }
 

@@ -1,15 +1,20 @@
 import Link from "next/link";
 import Image from "next/image";
 import { siteConfig } from "@/lib/site-config";
+import { resolveStorageUrl } from "@/lib/image-url";
 import { serviceHasHeroImage, type ServiceData } from "@/lib/services-data";
 import type { BlogPost } from "@/lib/blog";
+import type { CmsServiceMediaItem } from "@/lib/cms-types";
+import { ServiceMediaSection } from "@/components/service-media-section";
 
 type ServicePageContentProps = {
   service: ServiceData;
   relatedPosts: BlogPost[];
+  mediaItems?: CmsServiceMediaItem[];
 };
 
-export function ServicePageContent({ service, relatedPosts }: ServicePageContentProps) {
+export function ServicePageContent({ service, relatedPosts, mediaItems = [] }: ServicePageContentProps) {
+  const heroImage = resolveStorageUrl(service.heroImage);
 
   return (
     <article className="service-lp">
@@ -23,7 +28,7 @@ export function ServicePageContent({ service, relatedPosts }: ServicePageContent
             <span>{service.title}</span>
           </nav>
           <div
-            className={`service-lp-hero-grid${serviceHasHeroImage(service.heroImage) ? "" : " service-lp-hero-grid--no-image"}`}
+            className={`service-lp-hero-grid${serviceHasHeroImage(heroImage) ? "" : " service-lp-hero-grid--no-image"}`}
           >
             <div>
               <p className="section-label mb-3">Dịch vụ tại {siteConfig.city}</p>
@@ -43,10 +48,10 @@ export function ServicePageContent({ service, relatedPosts }: ServicePageContent
                 </a>
               </div>
             </div>
-            {serviceHasHeroImage(service.heroImage) ? (
+            {serviceHasHeroImage(heroImage) ? (
               <div className="service-lp-hero-image">
                 <Image
-                  src={service.heroImage}
+                  src={heroImage}
                   alt={service.title}
                   width={720}
                   height={960}
@@ -96,6 +101,8 @@ export function ServicePageContent({ service, relatedPosts }: ServicePageContent
               ))}
             </ul>
           </section>
+
+          <ServiceMediaSection items={mediaItems} serviceTitle={service.title} />
 
           {service.faqs.length > 0 && (
             <section>

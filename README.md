@@ -56,21 +56,21 @@ CMS_ALLOW_FILE_WRITES=false
 ADMIN_USER=
 ADMIN_PASSWORD=
 ADMIN_SESSION_SECRET=
-BLOB_STORE_ID=
-BLOB_READ_WRITE_TOKEN=
-BLOB_MAX_TOTAL_MB=800
-BLOB_MAX_FILE_MB=2
-BLOB_MAX_FILES=150
+NEXT_PUBLIC_SUPABASE_URL=
+SUPABASE_SERVICE_ROLE_KEY=
+NEXT_PUBLIC_SUPABASE_STORAGE_BUCKET=images
+SUPABASE_MAX_TOTAL_MB=1024
+SUPABASE_MAX_FILE_MB=5
+SUPABASE_MAX_FILES=500
 ```
 
-- `BLOB_MAX_TOTAL_MB=800`: chặn upload trước khi đạt ~800MB (buffer dưới free tier 1GB).
-- `BLOB_MAX_FILE_MB=2`: tối đa 2MB/ảnh (JPG, PNG, WebP).
-- `BLOB_MAX_FILES=150`: tối đa 150 ảnh CMS trên Blob.
+- `NEXT_PUBLIC_SUPABASE_URL` + `SUPABASE_SERVICE_ROLE_KEY`: upload và phục vụ ảnh CMS qua Supabase Storage.
+- `NEXT_PUBLIC_SUPABASE_STORAGE_BUCKET`: bucket public chứa ảnh (cấu trúc giống `public/images/`, ví dụ `services/moi-baby.jpg`).
+- `SUPABASE_MAX_*`: giới hạn upload CMS.
 
 - Đổi `NEXT_PUBLIC_SITE_URL` sang domain production sau khi DNS trỏ xong.
 - `ADMIN_USER` + `ADMIN_PASSWORD` + `ADMIN_SESSION_SECRET`: bắt buộc trên Vercel để bảo vệ `/admin`.
-- `BLOB_READ_WRITE_TOKEN`: upload ảnh CMS trên production qua Vercel Blob (free tier ~1GB).
-- `CMS_ALLOW_FILE_WRITES=true` chỉ trên local. Production: sửa nội dung trang dịch vụ trong code rồi deploy.
+- `CMS_ALLOW_FILE_WRITES=true` chỉ trên local. Production: commit `.cms/cms-store.json` sau khi chỉnh CMS.
 - `NEXT_PUBLIC_GSC_VERIFICATION`: mã xác minh Google Search Console.
 - `NEXT_PUBLIC_GOOGLE_ADS_CONVERSION_LABEL`: conversion cho form lead (`generate_lead`).
 - `NEXT_PUBLIC_GOOGLE_ADS_CONTACT_LABEL`: conversion tùy chọn cho click phone/Zalo.
@@ -92,7 +92,7 @@ Admin CMS tại `/admin` (yêu cầu đăng nhập):
 - Nội dung: quản lý dịch vụ
 - Tăng trưởng: SEO metadata, hướng dẫn Google Ads/tracking, visitor analytics
 
-**Workflow production:** upload ảnh dịch vụ qua CMS (Vercel Blob). Nội dung trang `/services/[slug]` vẫn sửa trong `services-data.ts` rồi deploy.
+**Workflow production:** upload ảnh dịch vụ qua CMS (Supabase Storage). Ảnh có sẵn map từ `public/images/` sang Supabase khi đã cấu hình env. Commit `.cms/cms-store.json` sau khi chỉnh CMS.
 
 Visitor tracker ghi page view qua `/api/analytics/track`; xem tại `/admin/analytics`.
 

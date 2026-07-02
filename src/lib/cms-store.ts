@@ -1,6 +1,6 @@
 import { promises as fs } from "node:fs";
 import path from "node:path";
-import { defaultCmsData, buildCatalogCmsServices } from "@/lib/cms-defaults";
+import { defaultCmsData, buildCatalogCmsServices, mergeCatalogCmsServices } from "@/lib/cms-defaults";
 import type {
   AnalyticsData,
   AnalyticsPageView,
@@ -10,7 +10,10 @@ import type {
   CmsPage,
   CmsPost,
   CmsService,
+  CmsServiceMediaItem,
 } from "@/lib/cms-types";
+import { resolveStorageUrl } from "@/lib/image-url";
+import { getYoutubeEmbedUrl } from "@/lib/youtube";
 
 const cmsDir = path.join(process.cwd(), ".cms");
 const cmsPath = path.join(cmsDir, "cms-store.json");
@@ -41,14 +44,51 @@ async function writeJson<T>(filePath: string, data: T) {
   await fs.writeFile(filePath, `${JSON.stringify(data, null, 2)}\n`, "utf8");
 }
 
-function normalizeService(service: CmsService): CmsService {
+function normalizeServiceMediaItem(item: CmsServiceMediaItem): CmsServiceMediaItem | null {
+  const now = new Date().toISOString();
+  const type = item.type === "youtube" ? "youtube" : "image";
+  const url = item.url.trim();
+
+  if (!url) return null;
+  if (type === "youtube" && !getYoutubeEmbedUrl(url)) return null;
+
+  return {
+    id: item.id || crypto.randomUUID(),
+    type,
+    url: type === "image" ? resolveStorageUrl(url) : url,
+    caption: item.caption.trim(),
+    sortOrder: Number.isFinite(item.sortOrder) ? Number(item.sortOrder) : 999,
+    updatedAt: item.updatedAt || now,
+  };
+}
+
+function normalizeServiceMedia(
+  stored: Record<string, CmsServiceMediaItem[]> | undefined,
+): Record<string, CmsServiceMediaItem[]> {
+  const result: Record<string, CmsServiceMediaItem[]> = {};
+
+  for (const [serviceId, items] of Object.entries(stored || {})) {
+    const normalized = (items || [])
+      .map(normalizeServiceMediaItem)
+      .filter((item): item is CmsServiceMediaItem => Boolean(item))
+      .sort((a, b) => a.sortOrder - b.sortOrder);
+
+    if (normalized.length > 0) {
+      result[serviceId] = normalized;
+    }
+  }
+
+  return result;
+}
+
+function normalizeService(service: CmsService & { image?: string }): CmsService {
   const now = new Date().toISOString();
 
   return {
     id: service.id || crypto.randomUUID(),
     title: service.title.trim(),
     group: "cosmetic",
-    image: service.image.trim(),
+    homeImage: resolveStorageUrl((service.homeImage || service.image || "").trim()),
     description: service.description.trim(),
     visible: Boolean(service.visible),
     sortOrder: Number.isFinite(service.sortOrder) ? Number(service.sortOrder) : 999,
@@ -132,7 +172,8 @@ export async function getCmsData(): Promise<CmsData> {
       ...defaultCmsData.seo,
       ...stored.seo,
     },
-    services: buildCatalogCmsServices(),
+    services: mergeCatalogCmsServices(stored.services),
+    serviceMedia: normalizeServiceMedia(stored.serviceMedia),
     posts: (stored.posts?.length ? stored.posts : defaultCmsData.posts)
       .map(normalizePost)
       .sort((a, b) => b.date.localeCompare(a.date)),
@@ -150,6 +191,7 @@ export async function saveCmsData(data: CmsData): Promise<CmsData> {
       ...normalizeService(service),
       updatedAt: service.updatedAt || now,
     })),
+    serviceMedia: normalizeServiceMedia(data.serviceMedia),
     seo: {
       ...defaultCmsData.seo,
       ...data.seo,

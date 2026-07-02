@@ -1,9 +1,10 @@
 import Image from "next/image";
 import Link from "next/link";
-import { getActiveServices, serviceHasHeroImage } from "@/lib/services-data";
+import { getHomepageServices } from "@/lib/cms-content";
+import { serviceHasHeroImage } from "@/lib/services-data";
 
-export function Services() {
-  const services = getActiveServices();
+export async function Services() {
+  const services = await getHomepageServices();
 
   return (
     <section id="dich-vu" className="site-section section-reveal services-section">
@@ -24,9 +25,9 @@ export function Services() {
               href={`/services/${service.slug}`}
               className="service-card service-card-link"
             >
-              {serviceHasHeroImage(service.heroImage) ? (
+              {serviceHasHeroImage(service.homeImage) ? (
                 <Image
-                  src={service.heroImage}
+                  src={service.homeImage}
                   alt={service.title}
                   width={720}
                   height={960}

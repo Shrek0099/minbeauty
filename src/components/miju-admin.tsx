@@ -10,6 +10,63 @@ type AdminShellProps = {
   children: React.ReactNode;
 };
 
+function isNavItemActive(pathname: string, href: string) {
+  if (href === "/admin") return pathname === "/admin";
+  return pathname === href || pathname.startsWith(`${href}/`);
+}
+
+function MijuAdminNav() {
+  const pathname = usePathname();
+
+  return (
+    <nav className="miju-admin-nav">
+      {cmsMenuGroups.map((group) => (
+        <div key={group.title} className="miju-admin-nav-group">
+          <p>{group.title}</p>
+          {group.items.map((item) => {
+            const isActive = isNavItemActive(pathname, item.href);
+            const hasChildren = Boolean(item.children?.length);
+
+            return (
+              <div
+                key={item.href}
+                className={hasChildren ? "miju-admin-nav-item-with-children" : undefined}
+              >
+                <Link
+                  href={item.href}
+                  title={item.description}
+                  className={isActive ? "is-active" : undefined}
+                  aria-current={isActive ? "page" : undefined}
+                >
+                  {item.label}
+                </Link>
+                {hasChildren ? (
+                  <div className="miju-admin-nav-children">
+                    {item.children!.map((child) => {
+                      const childActive = pathname === child.href;
+                      return (
+                        <Link
+                          key={child.href}
+                          href={child.href}
+                          title={child.description}
+                          className={childActive ? "is-active" : undefined}
+                          aria-current={childActive ? "page" : undefined}
+                        >
+                          {child.label}
+                        </Link>
+                      );
+                    })}
+                  </div>
+                ) : null}
+              </div>
+            );
+          })}
+        </div>
+      ))}
+    </nav>
+  );
+}
+
 function AdminLogoutButton() {
   const router = useRouter();
 
@@ -23,36 +80,6 @@ function AdminLogoutButton() {
     <button type="button" className="miju-admin-plain-button" onClick={logout}>
       Đăng xuất
     </button>
-  );
-}
-
-function MijuAdminNav() {
-  const pathname = usePathname();
-
-  return (
-    <nav className="miju-admin-nav">
-      {cmsMenuGroups.map((group) => (
-        <div key={group.title} className="miju-admin-nav-group">
-          <p>{group.title}</p>
-          {group.items.map((item) => {
-            const isActive =
-              pathname === item.href ||
-              (item.href !== "/admin" && pathname.startsWith(`${item.href}/`));
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                title={item.description}
-                className={isActive ? "is-active" : undefined}
-                aria-current={isActive ? "page" : undefined}
-              >
-                {item.label}
-              </Link>
-            );
-          })}
-        </div>
-      ))}
-    </nav>
   );
 }
 
@@ -106,10 +133,12 @@ export function GoogleAdsManager() {
     { name: "ADMIN_USER", desc: "Tên đăng nhập /admin (bắt buộc, không mặc định admin)" },
     { name: "ADMIN_PASSWORD", desc: "Mật khẩu đăng nhập /admin" },
     { name: "ADMIN_SESSION_SECRET", desc: "Chuỗi bí mật ký session admin (random, ≥32 ký tự)" },
-    { name: "BLOB_READ_WRITE_TOKEN", desc: "Token Vercel Blob — upload ảnh CMS trên production" },
-    { name: "BLOB_MAX_TOTAL_MB", desc: "Giới hạn tổng dung lượng CMS (mặc định 800MB)" },
-    { name: "BLOB_MAX_FILE_MB", desc: "Giới hạn mỗi ảnh (mặc định 2MB)" },
-    { name: "BLOB_MAX_FILES", desc: "Giới hạn số ảnh CMS (mặc định 150)" },
+    { name: "NEXT_PUBLIC_SUPABASE_URL", desc: "URL project Supabase" },
+    { name: "SUPABASE_SERVICE_ROLE_KEY", desc: "Service role key — upload ảnh CMS (server only)" },
+    { name: "NEXT_PUBLIC_SUPABASE_STORAGE_BUCKET", desc: "Tên bucket public (mặc định: images)" },
+    { name: "SUPABASE_MAX_TOTAL_MB", desc: "Giới hạn tổng dung lượng CMS (mặc định 1024MB)" },
+    { name: "SUPABASE_MAX_FILE_MB", desc: "Giới hạn mỗi ảnh (mặc định 5MB)" },
+    { name: "SUPABASE_MAX_FILES", desc: "Giới hạn số ảnh CMS (mặc định 500)" },
     { name: "CMS_ALLOW_FILE_WRITES", desc: "true trên local để lưu CMS; false trên Vercel production" },
     { name: "NEXT_PUBLIC_SITE_URL", desc: "Domain production (https://www.minbeauty.com.vn)" },
     { name: "NEXT_PUBLIC_GSC_VERIFICATION", desc: "Mã xác minh Google Search Console" },

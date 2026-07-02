@@ -1,13 +1,13 @@
+import { getHomepageServices } from "@/lib/cms-content";
 import { getCmsData } from "@/lib/cms-store";
 import { buildGlobalSchemaGraph } from "@/lib/schema";
-import { getActiveServices } from "@/lib/services-data";
 
 export async function JsonLd() {
   const cms = await getCmsData();
-  const services = getActiveServices().map((service) => ({
+  const services = (await getHomepageServices()).map((service) => ({
     title: service.title,
     description: service.shortDescription,
-    image: service.heroImage,
+    image: service.homeImage,
     slug: service.slug,
   }));
 

@@ -1,6 +1,8 @@
 import type { BlogPost } from "@/lib/blog";
+import { getActiveServices } from "@/lib/services-data";
 import { getCmsData } from "@/lib/cms-store";
-import type { CmsFaqItem, CmsPage, CmsPageKey, CmsPost } from "@/lib/cms-types";
+import { resolveStorageUrl } from "@/lib/image-url";
+import type { CmsFaqItem, CmsPage, CmsPageKey, CmsPost, CmsServiceMediaItem } from "@/lib/cms-types";
 
 export function cmsPostToBlogPost(post: CmsPost): BlogPost {
   return {
@@ -56,4 +58,39 @@ export async function getCmsPage(key: CmsPageKey): Promise<CmsPage> {
 export async function getCmsFaqs(): Promise<CmsFaqItem[]> {
   const cms = await getCmsData();
   return cms.faqs.filter((item) => item.isActive);
+}
+
+export type HomepageServiceCard = {
+  slug: string;
+  title: string;
+  shortDescription: string;
+  homeImage: string;
+};
+
+export async function getHomepageServices(): Promise<HomepageServiceCard[]> {
+  const cms = await getCmsData();
+  const cmsMap = new Map(cms.services.map((service) => [service.id, service]));
+
+  return getActiveServices()
+    .filter((service) => cmsMap.get(service.id)?.visible !== false)
+    .sort((a, b) => {
+      const orderA = cmsMap.get(a.id)?.sortOrder ?? a.order;
+      const orderB = cmsMap.get(b.id)?.sortOrder ?? b.order;
+      return orderA - orderB;
+    })
+    .map((service) => {
+      const cmsService = cmsMap.get(service.id);
+
+      return {
+        slug: service.slug,
+        title: cmsService?.title || service.title,
+        shortDescription: cmsService?.description || service.shortDescription,
+        homeImage: resolveStorageUrl(cmsService?.homeImage || service.heroImage),
+      };
+    });
+}
+
+export async function getServiceMedia(serviceId: string): Promise<CmsServiceMediaItem[]> {
+  const cms = await getCmsData();
+  return cms.serviceMedia[serviceId] || [];
 }

@@ -16,7 +16,7 @@ export default function AdminServicesPage() {
   return (
     <MijuAdminShell
       title="Quản lý dịch vụ"
-      description="Tạo, sửa, cập nhật thứ tự và thay đổi hình ảnh cho từng dịch vụ trên landing page."
+      description="Tạo, sửa, cập nhật thứ tự, hình ảnh và thêm hình ảnh/video YouTube cho từng trang dịch vụ."
     >
       <ServiceManager />
     </MijuAdminShell>

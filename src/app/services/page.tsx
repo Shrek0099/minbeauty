@@ -3,9 +3,9 @@ import Link from "next/link";
 import Image from "next/image";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
-import { getCmsPage } from "@/lib/cms-content";
+import { getCmsPage, getHomepageServices } from "@/lib/cms-content";
 import { buildPageMetadata } from "@/lib/seo";
-import { getActiveServices, serviceHasHeroImage } from "@/lib/services-data";
+import { serviceHasHeroImage } from "@/lib/services-data";
 
 export async function generateMetadata(): Promise<Metadata> {
   const page = await getCmsPage("services");
@@ -19,7 +19,7 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function ServicesIndexPage() {
   const page = await getCmsPage("services");
-  const services = getActiveServices();
+  const services = await getHomepageServices();
 
   return (
     <>
@@ -36,9 +36,9 @@ export default async function ServicesIndexPage() {
             <div className="service-grid">
               {services.map((service) => (
                 <Link key={service.slug} href={`/services/${service.slug}`} className="service-card service-card-link">
-                  {serviceHasHeroImage(service.heroImage) ? (
+                  {serviceHasHeroImage(service.homeImage) ? (
                     <Image
-                      src={service.heroImage}
+                      src={service.homeImage}
                       alt={service.title}
                       width={720}
                       height={960}

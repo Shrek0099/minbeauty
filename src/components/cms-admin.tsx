@@ -1,21 +1,23 @@
 "use client";
 /* eslint-disable @next/next/no-img-element */
 
+import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { defaultCmsData } from "@/lib/cms-defaults";
 import type { AnalyticsSummary, CmsData, CmsSeoSettings, CmsService } from "@/lib/cms-types";
+import { ServiceMediaEditor } from "@/components/service-media-admin";
 
 type CmsResponse = {
   data: CmsData;
   canPersist: boolean;
-  blobUploadEnabled: boolean;
+  storageUploadEnabled: boolean;
 };
 
 const emptyService = (): CmsService => ({
   id: crypto.randomUUID(),
   title: "",
   group: "cosmetic",
-  image: "/images/services/moi-baby.jpg",
+  homeImage: "/images/services/moi-baby.jpg",
   description: "",
   visible: true,
   sortOrder: 99,
@@ -24,18 +26,18 @@ const emptyService = (): CmsService => ({
 
 function StatusNote({
   canPersist,
-  blobUploadEnabled,
+  storageUploadEnabled,
 }: {
   canPersist: boolean;
-  blobUploadEnabled: boolean;
+  storageUploadEnabled: boolean;
 }) {
   return (
-    <p className={`miju-admin-note${canPersist || blobUploadEnabled ? "" : " miju-admin-note-warning"}`}>
+    <p className={`miju-admin-note${canPersist || storageUploadEnabled ? "" : " miju-admin-note-warning"}`}>
       {canPersist
         ? "CMS đang lưu được trên máy local. Commit thay đổi rồi deploy lên Vercel."
-        : blobUploadEnabled
-          ? "Production: upload ảnh qua Vercel Blob đã bật. Dữ liệu CMS vẫn chỉ xem — sửa code rồi deploy để đổi nội dung trang dịch vụ."
-          : "Production: chỉ xem CMS. Cấu hình BLOB_READ_WRITE_TOKEN để upload ảnh; nội dung trang dịch vụ sửa trong code rồi deploy."}
+        : storageUploadEnabled
+          ? "Production: upload ảnh qua Supabase Storage đã bật. Dữ liệu CMS lưu trong .cms/cms-store.json — commit rồi deploy."
+          : "Production: chỉ xem CMS. Cấu hình Supabase Storage để upload ảnh; commit .cms/cms-store.json sau khi chỉnh."}
     </p>
   );
 }
@@ -62,7 +64,7 @@ function formatBytes(bytes: number) {
   return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
 }
 
-type BlobUsageState =
+type StorageUsageState =
   | { enabled: false }
   | {
       enabled: true;
@@ -73,15 +75,15 @@ type BlobUsageState =
       percentUsed: number;
     };
 
-function BlobUsageNote({ usage }: { usage: BlobUsageState | null }) {
+function StorageUsageNote({ usage }: { usage: StorageUsageState | null }) {
   if (!usage?.enabled) return null;
 
   const warn = usage.percentUsed >= 80 || usage.fileCount >= usage.maxFiles * 0.8;
 
   return (
     <p className={`miju-admin-note${warn ? " miju-admin-note-warning" : ""}`}>
-      Blob CMS: {formatBytes(usage.usedBytes)} / {formatBytes(usage.maxBytes)} ({usage.percentUsed}%) ·{" "}
-      {usage.fileCount}/{usage.maxFiles} ảnh. Upload bị chặn tự động trước khi vượt free tier.
+      Supabase Storage: {formatBytes(usage.usedBytes)} / {formatBytes(usage.maxBytes)} ({usage.percentUsed}%) ·{" "}
+      {usage.fileCount}/{usage.maxFiles} ảnh.
     </p>
   );
 }
@@ -94,14 +96,14 @@ export function AdminDashboard() {
   const [cms, setCms] = useState<CmsData>(defaultCmsData);
   const [analytics, setAnalytics] = useState<AnalyticsSummary | null>(null);
   const [canPersist, setCanPersist] = useState(false);
-  const [blobUploadEnabled, setBlobUploadEnabled] = useState(false);
+  const [storageUploadEnabled, setStorageUploadEnabled] = useState(false);
 
   useEffect(() => {
     loadCms()
       .then((payload) => {
         setCms(payload.data);
         setCanPersist(payload.canPersist);
-        setBlobUploadEnabled(payload.blobUploadEnabled);
+        setStorageUploadEnabled(payload.storageUploadEnabled);
       })
       .catch(() => setCms(defaultCmsData));
 
@@ -117,7 +119,7 @@ export function AdminDashboard() {
 
   return (
     <div className="miju-admin-stack">
-      <StatusNote canPersist={canPersist} blobUploadEnabled={blobUploadEnabled} />
+      <StatusNote canPersist={canPersist} storageUploadEnabled={storageUploadEnabled} />
 
       <section className="miju-admin-panel">
         <div className="miju-admin-panel-header">
@@ -142,7 +144,7 @@ export function AdminDashboard() {
           <div className="miju-admin-card">
             <span className="miju-admin-card-kicker">Dịch vụ</span>
             <h2>{visibleServices} đang hiển thị</h2>
-            <p>Quản lý tên dịch vụ, nhóm menu, thứ tự và hình ảnh trên landing page.</p>
+            <p>Quản lý tên dịch vụ, nhóm menu, thứ tự, hình ảnh và thêm hình ảnh/video YouTube cho từng trang dịch vụ.</p>
           </div>
           <div className="miju-admin-card">
             <span className="miju-admin-card-kicker">FAQ</span>
@@ -176,12 +178,18 @@ export function AdminDashboard() {
   );
 }
 
-export function ServiceManager() {
+export function ServiceManager({
+  initialServiceId,
+  showServiceList = true,
+}: {
+  initialServiceId?: string;
+  showServiceList?: boolean;
+} = {}) {
   const [cms, setCms] = useState<CmsData>(defaultCmsData);
   const [draft, setDraft] = useState<CmsService>(emptyService());
   const [canPersist, setCanPersist] = useState(false);
-  const [blobUploadEnabled, setBlobUploadEnabled] = useState(false);
-  const [blobUsage, setBlobUsage] = useState<BlobUsageState | null>(null);
+  const [storageUploadEnabled, setStorageUploadEnabled] = useState(false);
+  const [storageUsage, setStorageUsage] = useState<StorageUsageState | null>(null);
   const [message, setMessage] = useState("");
   const [saving, setSaving] = useState(false);
 
@@ -190,19 +198,25 @@ export function ServiceManager() {
       .then((payload) => {
         setCms(payload.data);
         setCanPersist(payload.canPersist);
-        setBlobUploadEnabled(payload.blobUploadEnabled);
+        setStorageUploadEnabled(payload.storageUploadEnabled);
+
+        if (initialServiceId) {
+          const service = payload.data.services.find((item) => item.id === initialServiceId);
+          if (service) setDraft(service);
+        }
       })
       .catch(() => setMessage("Không tải được CMS, đang dùng dữ liệu mặc định."));
 
-    fetch("/api/cms/blob-usage", { cache: "no-store" })
+    fetch("/api/cms/storage-usage", { cache: "no-store" })
       .then((response) => response.json())
-      .then((payload: { usage?: BlobUsageState }) => {
-        if (payload.usage) setBlobUsage(payload.usage);
+      .then((payload: { usage?: StorageUsageState }) => {
+        if (payload.usage) setStorageUsage(payload.usage);
       })
-      .catch(() => setBlobUsage(null));
-  }, []);
+      .catch(() => setStorageUsage(null));
+  }, [initialServiceId]);
 
   const sortedServices = useMemo(() => sortServices(cms.services), [cms.services]);
+  const editingExistingService = cms.services.some((service) => service.id === draft.id);
 
   function updateDraft<K extends keyof CmsService>(key: K, value: CmsService[K]) {
     setDraft((current) => ({ ...current, [key]: value }));
@@ -226,16 +240,16 @@ export function ServiceManager() {
     if (!response.ok || !payload.url) {
       throw new Error(payload.message || "Upload thất bại.");
     }
-    updateDraft("image", payload.url);
+    updateDraft("homeImage", payload.url);
     if (!payload.persisted) {
       setMessage("Ảnh đã được nhúng tạm thời trên máy local.");
       return;
     }
-    if (blobUploadEnabled) {
-      fetch("/api/cms/blob-usage", { cache: "no-store" })
+    if (storageUploadEnabled) {
+      fetch("/api/cms/storage-usage", { cache: "no-store" })
         .then((res) => res.json())
-        .then((data: { usage?: BlobUsageState }) => {
-          if (data.usage) setBlobUsage(data.usage);
+        .then((data: { usage?: StorageUsageState }) => {
+          if (data.usage) setStorageUsage(data.usage);
         })
         .catch(() => undefined);
     }
@@ -256,7 +270,7 @@ export function ServiceManager() {
       group: "cosmetic" as const,
       title: draft.title.trim(),
       description: draft.description.trim(),
-      image: draft.image.trim(),
+      homeImage: draft.homeImage.trim(),
       updatedAt: now,
     };
     const exists = cms.services.some((service) => service.id === draft.id);
@@ -272,9 +286,11 @@ export function ServiceManager() {
       const payload = await saveCms(nextCms);
       setCms(payload.data);
       setCanPersist(payload.canPersist);
-      setBlobUploadEnabled(payload.blobUploadEnabled);
+      setStorageUploadEnabled(payload.storageUploadEnabled);
       setMessage("Đã lưu dịch vụ.");
-      resetForm();
+      if (!initialServiceId) {
+        resetForm();
+      }
     } catch {
       setMessage("Chưa lưu được dịch vụ. Vui lòng thử lại.");
     } finally {
@@ -296,8 +312,8 @@ export function ServiceManager() {
 
   return (
     <div className="miju-admin-stack">
-      <StatusNote canPersist={canPersist} blobUploadEnabled={blobUploadEnabled} />
-      <BlobUsageNote usage={blobUsage} />
+      <StatusNote canPersist={canPersist} storageUploadEnabled={storageUploadEnabled} />
+      <StorageUsageNote usage={storageUsage} />
       {message ? <p className="miju-admin-note">{message}</p> : null}
 
       <section className="miju-admin-panel">
@@ -306,9 +322,15 @@ export function ServiceManager() {
             <p className="miju-admin-eyebrow">Service CMS</p>
             <h2>{cms.services.some((service) => service.id === draft.id) ? "Sửa dịch vụ" : "Tạo dịch vụ mới"}</h2>
           </div>
-          <button type="button" className="miju-admin-plain-button" onClick={resetForm}>
-            Tạo mới
-          </button>
+          {initialServiceId ? (
+            <Link href="/admin/services" className="miju-admin-plain-button">
+              Tất cả dịch vụ
+            </Link>
+          ) : (
+            <button type="button" className="miju-admin-plain-button" onClick={resetForm}>
+              Tạo mới
+            </button>
+          )}
         </div>
 
         <div className="miju-admin-editor-grid">
@@ -344,11 +366,15 @@ export function ServiceManager() {
               />
             </label>
             <label className="miju-admin-field miju-admin-field-wide">
-              <span>URL hình ảnh</span>
-              <input value={draft.image} onChange={(event) => updateDraft("image", event.target.value)} />
+              <span>Ảnh đại diện trang chủ (Supabase)</span>
+              <input
+                value={draft.homeImage}
+                onChange={(event) => updateDraft("homeImage", event.target.value)}
+                placeholder="https://...supabase.co/storage/v1/object/public/images/services/moi-baby.jpg"
+              />
             </label>
             <label className="miju-admin-field miju-admin-field-wide">
-              <span>Đổi hình từ máy</span>
+              <span>Upload ảnh đại diện</span>
               <input
                 type="file"
                 accept="image/*"
@@ -360,9 +386,11 @@ export function ServiceManager() {
             </label>
           </div>
           <div className="miju-admin-preview-card">
-            {draft.image ? <img src={draft.image} alt={draft.title || "Xem trước dịch vụ"} /> : null}
+            {draft.homeImage ? (
+              <img src={draft.homeImage} alt={draft.title || "Xem trước ảnh đại diện"} />
+            ) : null}
             <h3>{draft.title || "Tên dịch vụ"}</h3>
-            <p>{draft.description || "Mô tả dịch vụ sẽ hiển thị tại đây."}</p>
+            <p>{draft.description || "Ảnh này hiển thị trên thẻ dịch vụ ở trang chủ."}</p>
           </div>
         </div>
 
@@ -373,34 +401,57 @@ export function ServiceManager() {
         </div>
       </section>
 
-      <section className="miju-admin-panel">
-        <div className="miju-admin-panel-header">
-          <div>
-            <p className="miju-admin-eyebrow">Dịch vụ thẩm mỹ</p>
-            <h2>{sortedServices.length} dịch vụ</h2>
+      {editingExistingService ? (
+        <ServiceMediaEditor
+          serviceId={draft.id}
+          serviceTitle={draft.title}
+          media={cms.serviceMedia[draft.id] || []}
+          cms={cms}
+          canPersist={canPersist}
+          storageUploadEnabled={storageUploadEnabled}
+          onSaved={(payload) => {
+            setCms(payload.data);
+            setCanPersist(payload.canPersist);
+            setStorageUploadEnabled(payload.storageUploadEnabled);
+          }}
+          onMessage={setMessage}
+        />
+      ) : null}
+
+      {showServiceList ? (
+        <section className="miju-admin-panel">
+          <div className="miju-admin-panel-header">
+            <div>
+              <p className="miju-admin-eyebrow">Dịch vụ thẩm mỹ</p>
+              <h2>{sortedServices.length} dịch vụ</h2>
+            </div>
           </div>
-        </div>
-        <div className="miju-admin-service-list">
-          {sortedServices.map((service) => (
-            <article key={service.id} className="miju-admin-service-row">
-              <img src={service.image} alt={service.title} />
-              <div>
-                <h3>{service.title}</h3>
-                <p>{service.description}</p>
-                <span>{service.visible ? "Đang hiển thị" : "Đang ẩn"}</span>
-              </div>
-              <div className="miju-admin-row-actions">
-                <button type="button" onClick={() => setDraft(service)}>
-                  Sửa
-                </button>
-                <button type="button" className="miju-admin-secondary-button" onClick={() => deleteService(service.id)}>
-                  Xóa
-                </button>
-              </div>
-            </article>
-          ))}
-        </div>
-      </section>
+          <div className="miju-admin-service-list">
+            {sortedServices.map((service) => (
+              <article key={service.id} className="miju-admin-service-row">
+                <img src={service.homeImage} alt={service.title} />
+                <div>
+                  <h3>{service.title}</h3>
+                  <p>{service.description}</p>
+                  <span>{service.visible ? "Đang hiển thị" : "Đang ẩn"}</span>
+                </div>
+                <div className="miju-admin-row-actions">
+                  <Link href={`/admin/services/${service.id}`} className="miju-admin-inline-button">
+                    Sửa
+                  </Link>
+                  <button
+                    type="button"
+                    className="miju-admin-secondary-button"
+                    onClick={() => deleteService(service.id)}
+                  >
+                    Xóa
+                  </button>
+                </div>
+              </article>
+            ))}
+          </div>
+        </section>
+      ) : null}
     </div>
   );
 }
@@ -409,7 +460,7 @@ export function SeoManager() {
   const [cms, setCms] = useState<CmsData>(defaultCmsData);
   const [draft, setDraft] = useState<CmsSeoSettings>(defaultCmsData.seo);
   const [canPersist, setCanPersist] = useState(false);
-  const [blobUploadEnabled, setBlobUploadEnabled] = useState(false);
+  const [storageUploadEnabled, setStorageUploadEnabled] = useState(false);
   const [message, setMessage] = useState("");
   const titleOk = draft.title.length > 0 && draft.title.length <= 60;
   const descriptionOk = draft.description.length >= 120 && draft.description.length <= 160;
@@ -420,7 +471,7 @@ export function SeoManager() {
         setCms(payload.data);
         setDraft(payload.data.seo);
         setCanPersist(payload.canPersist);
-        setBlobUploadEnabled(payload.blobUploadEnabled);
+        setStorageUploadEnabled(payload.storageUploadEnabled);
       })
       .catch(() => setMessage("Không tải được SEO CMS, đang dùng dữ liệu mặc định."));
   }, []);
@@ -453,7 +504,7 @@ export function SeoManager() {
 
   return (
     <div className="miju-admin-stack">
-      <StatusNote canPersist={canPersist} blobUploadEnabled={blobUploadEnabled} />
+      <StatusNote canPersist={canPersist} storageUploadEnabled={storageUploadEnabled} />
       {message ? <p className="miju-admin-note">{message}</p> : null}
 
       <section className="miju-admin-panel">
@@ -530,7 +581,7 @@ export function SeoManager() {
 export function AnalyticsDashboard() {
   const [summary, setSummary] = useState<AnalyticsSummary | null>(null);
   const [canPersist, setCanPersist] = useState(false);
-  const [blobUploadEnabled, setBlobUploadEnabled] = useState(false);
+  const [storageUploadEnabled, setStorageUploadEnabled] = useState(false);
 
   useEffect(() => {
     fetch("/api/analytics", { cache: "no-store" })
@@ -538,18 +589,18 @@ export function AnalyticsDashboard() {
       .then((payload: {
         summary?: AnalyticsSummary;
         canPersist?: boolean;
-        blobUploadEnabled?: boolean;
+        storageUploadEnabled?: boolean;
       }) => {
         setSummary(payload.summary || null);
         setCanPersist(Boolean(payload.canPersist));
-        setBlobUploadEnabled(Boolean(payload.blobUploadEnabled));
+        setStorageUploadEnabled(Boolean(payload.storageUploadEnabled));
       })
       .catch(() => setSummary(null));
   }, []);
 
   return (
     <div className="miju-admin-stack">
-      <StatusNote canPersist={canPersist} blobUploadEnabled={blobUploadEnabled} />
+      <StatusNote canPersist={canPersist} storageUploadEnabled={storageUploadEnabled} />
       <section className="miju-admin-grid">
         <div className="miju-admin-card">
           <span className="miju-admin-card-kicker">Total</span>
